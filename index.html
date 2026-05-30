@@ -30,13 +30,13 @@
     }
 
     .carousel {
-      position: relative;
-      width: 100%;
-      max-width: 100%;
-      aspect-ratio: 16 / 9;
-      margin: 0;
-      overflow: hidden;
-      border-radius: 0;
+  position: relative;
+  width: calc(100% - 44px);
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 0;
     }
 
     .carousel-track {
@@ -121,6 +121,7 @@
 
     @media (max-width: 600px) {
       .carousel {
+        width: calc(100% - 36px);
         aspect-ratio: 16 / 9;
       }
 
