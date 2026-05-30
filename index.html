@@ -154,83 +154,122 @@
   </div>
 
   <script>
-    const track = document.querySelector(".carousel-track");
-    const originalSlides = Array.from(track.children);
-    const nextButton = document.querySelector(".next");
-    const prevButton = document.querySelector(".prev");
-    const dotsContainer = document.querySelector(".carousel-dots");
+    <script>
+  const track = document.querySelector(".carousel-track");
+  const originalSlides = Array.from(track.querySelectorAll("img"));
+  const nextButton = document.querySelector(".next");
+  const prevButton = document.querySelector(".prev");
+  const dotsContainer = document.querySelector(".carousel-dots");
 
-    if (originalSlides.length === 0) {
-      console.error("Aucune image trouvée dans .carousel-track");
-    } else {
-      let currentIndex = 0;
-      const slideCount = originalSlides.length;
+  if (originalSlides.length === 0) {
+    console.error("Aucune image trouvée dans .carousel-track");
+  } else {
+    let currentIndex = 0;
+    const slideCount = originalSlides.length;
+    const transitionDuration = 1200;
+    let autoplay;
 
-      const firstClone = originalSlides[0].cloneNode(true);
-      track.appendChild(firstClone);
+    const firstClone = originalSlides[0].cloneNode(true);
+    firstClone.setAttribute("aria-hidden", "true");
+    track.appendChild(firstClone);
 
-      let slides = Array.from(track.children);
+    originalSlides.forEach((_, index) => {
+      const dot = document.createElement("button");
 
-      originalSlides.forEach((_, index) => {
-        const dot = document.createElement("button");
-        if (index === 0) dot.classList.add("active");
+      if (index === 0) {
+        dot.classList.add("active");
+      }
 
-        dot.addEventListener("click", () => {
-          currentIndex = index;
-          updateCarousel(true);
-        });
-
-        dotsContainer.appendChild(dot);
+      dot.addEventListener("click", () => {
+        goToSlide(index, true);
+        restartAutoplay();
       });
 
-      const dots = Array.from(dotsContainer.children);
+      dotsContainer.appendChild(dot);
+    });
 
-      function updateDots() {
-        dots.forEach(dot => dot.classList.remove("active"));
-        const dotIndex = currentIndex === slideCount ? 0 : currentIndex;
+    const dots = Array.from(dotsContainer.children);
+
+    function setTransition(active) {
+      track.style.transition = active
+        ? `transform ${transitionDuration}ms ease`
+        : "none";
+    }
+
+    function updateDots() {
+      dots.forEach(dot => dot.classList.remove("active"));
+
+      const dotIndex = currentIndex === slideCount ? 0 : currentIndex;
+
+      if (dots[dotIndex]) {
         dots[dotIndex].classList.add("active");
       }
-
-      function updateCarousel(withTransition = true) {
-        track.style.transition = withTransition ? "transform 1.2s ease" : "none";
-        track.style.transform = `translateX(-${currentIndex * 100}%)`;
-        updateDots();
-      }
-
-      function nextSlide() {
-        currentIndex++;
-        updateCarousel(true);
-      }
-
-      function prevSlide() {
-        if (currentIndex === 0) {
-          currentIndex = slideCount;
-          updateCarousel(false);
-
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              currentIndex = slideCount - 1;
-              updateCarousel(true);
-            });
-          });
-        } else {
-          currentIndex--;
-          updateCarousel(true);
-        }
-      }
-
-      track.addEventListener("transitionend", () => {
-        if (currentIndex === slideCount) {
-          currentIndex = 0;
-          updateCarousel(false);
-        }
-      });
-
-      nextButton.addEventListener("click", nextSlide);
-      prevButton.addEventListener("click", prevSlide);
-
-      setInterval(nextSlide, 6000);
     }
+
+    function goToSlide(index, animated) {
+      currentIndex = index;
+      setTransition(animated);
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+      updateDots();
+    }
+
+    function resetToFirstSlideAfterClone() {
+      setTimeout(() => {
+        if (currentIndex === slideCount) {
+          goToSlide(0, false);
+        }
+      }, transitionDuration + 50);
+    }
+
+    function nextSlide() {
+      if (currentIndex >= slideCount) {
+        goToSlide(0, false);
+      }
+
+      goToSlide(currentIndex + 1, true);
+
+      if (currentIndex === slideCount) {
+        resetToFirstSlideAfterClone();
+      }
+    }
+
+    function prevSlide() {
+      if (currentIndex === 0) {
+        goToSlide(slideCount, false);
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            goToSlide(slideCount - 1, true);
+          });
+        });
+      } else {
+        goToSlide(currentIndex - 1, true);
+      }
+    }
+
+    function startAutoplay() {
+      autoplay = setInterval(nextSlide, 6000);
+    }
+
+    function restartAutoplay() {
+      clearInterval(autoplay);
+      startAutoplay();
+    }
+
+    nextButton.addEventListener("click", () => {
+      nextSlide();
+      restartAutoplay();
+    });
+
+    prevButton.addEventListener("click", () => {
+      prevSlide();
+      restartAutoplay();
+    });
+
+    goToSlide(0, false);
+    startAutoplay();
+  }
+</script>
   </script>
 
 </body>
