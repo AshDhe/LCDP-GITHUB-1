@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    .carousel {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      aspect-ratio: 16 / 9;
+      margin: 0;
+      overflow: hidden;
+      border-radius: 0;
+    }
+
+    .carousel-track {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 1.2s ease;
+    }
+
+    .carousel-track img {
+      width: 100%;
+      flex: 0 0 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      display: block;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 999;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.85);
+      color: black;
+      font-size: 34px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .prev {
+      left: 18px;
+    }
+
+    .next {
+      right: 18px;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 35px;
+      left: 0;
+      right: 0;
+      z-index: 998;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .carousel-dots button {
+      width: 9px;
+      height: 9px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .carousel-dots button.active {
+      background: white;
+    }
+
+    @media (max-width: 600px) {
+      .carousel {
+        aspect-ratio: 16 / 9;
+      }
+
+      .carousel-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 28px;
+      }
+
+      .prev {
+        left: 10px;
+      }
+
+      .next {
+        right: 10px;
+      }
+
+      .carousel-dots {
+        bottom: 35px;
+      }
+
+      .carousel-dots button {
+        width: 8px;
+        height: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="carousel">
+    <button class="carousel-btn prev" aria-label="Image précédente">‹</button>
+
+    <div class="carousel-track">
+      <img src="images/IMAG_1.jpg" alt="">
+      <img src="images/IMAG_2.jpg" alt="">
+      <img src="images/IMAG_3.jpg" alt="">
+      <img src="images/IMAG_4.jpg" alt="">
+      <img src="images/IMAG_5.jpg" alt="">
+      <img src="images/IMAG_6.jpg" alt="">
+      <img src="images/IMAG_7.jpg" alt="">
+    </div>
+
+    <button class="carousel-btn next" aria-label="Image suivante">›</button>
+
+    <div class="carousel-dots"></div>
+  </div>
+
+  <script>
+    const track = document.querySelector(".carousel-track");
+    const originalSlides = Array.from(track.children);
+    const nextButton = document.querySelector(".next");
+    const prevButton = document.querySelector(".prev");
+    const dotsContainer = document.querySelector(".carousel-dots");
+
+    if (originalSlides.length === 0) {
+      console.error("Aucune image trouvée dans .carousel-track");
+    } else {
+      let currentIndex = 0;
+      const slideCount = originalSlides.length;
+
+      const firstClone = originalSlides[0].cloneNode(true);
+      track.appendChild(firstClone);
+
+      let slides = Array.from(track.children);
+
+      originalSlides.forEach((_, index) => {
+        const dot = document.createElement("button");
+        if (index === 0) dot.classList.add("active");
+
+        dot.addEventListener("click", () => {
+          currentIndex = index;
+          updateCarousel(true);
+        });
+
+        dotsContainer.appendChild(dot);
+      });
+
+      const dots = Array.from(dotsContainer.children);
+
+      function updateDots() {
+        dots.forEach(dot => dot.classList.remove("active"));
+        const dotIndex = currentIndex === slideCount ? 0 : currentIndex;
+        dots[dotIndex].classList.add("active");
+      }
+
+      function updateCarousel(withTransition = true) {
+        track.style.transition = withTransition ? "transform 1.2s ease" : "none";
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        updateDots();
+      }
+
+      function nextSlide() {
+        currentIndex++;
+        updateCarousel(true);
+      }
+
+      function prevSlide() {
+        if (currentIndex === 0) {
+          currentIndex = slideCount;
+          updateCarousel(false);
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              currentIndex = slideCount - 1;
+              updateCarousel(true);
+            });
+          });
+        } else {
+          currentIndex--;
+          updateCarousel(true);
+        }
+      }
+
+      track.addEventListener("transitionend", () => {
+        if (currentIndex === slideCount) {
+          currentIndex = 0;
+          updateCarousel(false);
+        }
+      });
+
+      nextButton.addEventListener("click", nextSlide);
+      prevButton.addEventListener("click", prevSlide);
+
+      setInterval(nextSlide, 6000);
+    }
+  </script>
+
+</body>
+</html>
