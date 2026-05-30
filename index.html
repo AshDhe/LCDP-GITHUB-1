@@ -30,20 +30,27 @@
     }
 
     .carousel-track {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      transition: transform 1.2s ease;
-    }
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 
-    .carousel-track img {
-      width: 100%;
-      flex: 0 0 100%;
-      height: 100%;
-      object-fit: contain;
-      object-position: center center;
-      display: block;
-    }
+.carousel-track img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  display: block;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.carousel-track img.active {
+  opacity: 1;
+  z-index: 1;
+}
 
     .carousel-btn {
       position: absolute;
@@ -154,26 +161,22 @@
   </div>
 
   <script>
-    <script>
-  const track = document.querySelector(".carousel-track");
-  const originalSlides = Array.from(track.querySelectorAll("img"));
+  const slides = Array.from(document.querySelectorAll(".carousel-track img"));
   const nextButton = document.querySelector(".next");
   const prevButton = document.querySelector(".prev");
   const dotsContainer = document.querySelector(".carousel-dots");
 
-  if (originalSlides.length === 0) {
-    console.error("Aucune image trouvée dans .carousel-track");
+  let currentIndex = 0;
+  let autoplay;
+
+  if (slides.length === 0) {
+    console.error("Aucune image trouvée dans le carrousel");
   } else {
-    let currentIndex = 0;
-    const slideCount = originalSlides.length;
-    const transitionDuration = 1200;
-    let autoplay;
+    slides.forEach((slide, index) => {
+      if (index === 0) {
+        slide.classList.add("active");
+      }
 
-    const firstClone = originalSlides[0].cloneNode(true);
-    firstClone.setAttribute("aria-hidden", "true");
-    track.appendChild(firstClone);
-
-    originalSlides.forEach((_, index) => {
       const dot = document.createElement("button");
 
       if (index === 0) {
@@ -181,7 +184,7 @@
       }
 
       dot.addEventListener("click", () => {
-        goToSlide(index, true);
+        goToSlide(index);
         restartAutoplay();
       });
 
@@ -190,61 +193,24 @@
 
     const dots = Array.from(dotsContainer.children);
 
-    function setTransition(active) {
-      track.style.transition = active
-        ? `transform ${transitionDuration}ms ease`
-        : "none";
-    }
+    function goToSlide(index) {
+      slides[currentIndex].classList.remove("active");
+      dots[currentIndex].classList.remove("active");
 
-    function updateDots() {
-      dots.forEach(dot => dot.classList.remove("active"));
-
-      const dotIndex = currentIndex === slideCount ? 0 : currentIndex;
-
-      if (dots[dotIndex]) {
-        dots[dotIndex].classList.add("active");
-      }
-    }
-
-    function goToSlide(index, animated) {
       currentIndex = index;
-      setTransition(animated);
-      track.style.transform = `translateX(-${currentIndex * 100}%)`;
-      updateDots();
-    }
 
-    function resetToFirstSlideAfterClone() {
-      setTimeout(() => {
-        if (currentIndex === slideCount) {
-          goToSlide(0, false);
-        }
-      }, transitionDuration + 50);
+      slides[currentIndex].classList.add("active");
+      dots[currentIndex].classList.add("active");
     }
 
     function nextSlide() {
-      if (currentIndex >= slideCount) {
-        goToSlide(0, false);
-      }
-
-      goToSlide(currentIndex + 1, true);
-
-      if (currentIndex === slideCount) {
-        resetToFirstSlideAfterClone();
-      }
+      const nextIndex = (currentIndex + 1) % slides.length;
+      goToSlide(nextIndex);
     }
 
     function prevSlide() {
-      if (currentIndex === 0) {
-        goToSlide(slideCount, false);
-
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            goToSlide(slideCount - 1, true);
-          });
-        });
-      } else {
-        goToSlide(currentIndex - 1, true);
-      }
+      const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+      goToSlide(prevIndex);
     }
 
     function startAutoplay() {
@@ -266,7 +232,6 @@
       restartAutoplay();
     });
 
-    goToSlide(0, false);
     startAutoplay();
   }
 </script>
