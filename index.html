@@ -178,6 +178,14 @@
   line-height: 1.5;
  }
 
+.mot-guillemets::before {
+  content: "«\202F";
+}
+
+.mot-guillemets::after {
+  content: "\202F»";
+}
+
 @media (max-width: 600px) {
   .landing-text {
     padding: 16px 14px 24px;
@@ -209,7 +217,7 @@
 <!-- LANDING TEXT HAUT -->
 
 <section class="landing-text">
-  <h1>Faîtes des "accès" de bien-être !</h1>
+  <h1>Faîtes des <span class="mot-guillemets">accès</span> de bien-être !</h1>
   <p>
      La Clé du Parc vous ouvre l’accès contrôlé au 1er réseau de parcs privés remarquables de France.
   </p>
@@ -247,9 +255,40 @@
 <!-- LANDING TEXT BAS -->
 
 <section class="landing-text">
-  <h2>Découvrir les parcs</h2>
-  <h2>Comment ça marche ?</h2>
-  <h2>M'inscrire comme invité (gratuit)</h2>
+  
+<h2>
+  <a 
+    href="https://https://app.notion.com/p/LES-PARCS-37027019cf9680a1ba31c088dbf21ba5" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    class="h2-link"
+  >
+    Découvrir les parcs
+  </a>
+</h2>
+  
+<h2>
+  <a 
+    href="https://https://app.notion.com/p/PROGRAMMEZ-VOTRE-VENUE-37027019cf96809783b0e1c064dd7bac" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    class="h2-link"
+  >
+    Comment ça marche ?
+  </a>
+</h2>
+
+<h2>
+  <a 
+    href="https://https://app.notion.com/p/INSCRIPTION-INVIT-S-37027019cf968044b16cea124d9bf47c" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    class="h2-link"
+  >
+    M'inscrire comme invité
+  </a>
+</h2>  
+
 </section>
 
 <!-- FIN LANDING TEXT BAS -->
