@@ -235,6 +235,75 @@
   .landing-text p {
     font-size: 15px;
  }
+
+/* FOCUS LANDING MENU DES TITRES H2 BAS DE LA PAGE */
+
+.landing-menu {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 0 18px 28px;
+  font-family: Arial, sans-serif;
+  background: transparent;
+}
+
+.landing-menu h2 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+.landing-menu h2 a {
+  min-height: 72px;
+  padding: 14px 12px;
+  border: 1px solid rgba(31, 42, 36, 0.22);
+  border-radius: 14px;
+  color: #1f2a24;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.landing-menu h2 a:visited {
+  color: #1f2a24;
+}
+
+.landing-menu h2 a:hover {
+  border-color: rgba(31, 42, 36, 0.55);
+  background: rgba(31, 42, 36, 0.05);
+}
+
+.landing-menu h2 a:active {
+  opacity: 0.7;
+}
+
+.menu-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+@media (max-width: 600px) {
+  .landing-menu {
+    grid-template-columns: 1fr;
+    padding: 0 14px 24px;
+    gap: 10px;
+  }
+
+  .landing-menu h2 {
+    font-size: 17px;
+  }
+
+  .landing-menu h2 a {
+    min-height: 58px;
+    justify-content: flex-start;
+    text-align: left;
+  }
+ }
 }
   </style>
 
@@ -250,17 +319,29 @@
 
 <!-- LANDING TEXT HAUT -->
 
-<section class="landing-text">
-  <h1>Faîtes des <span class="mot-guillemets">accès</span> de bien-être !</h1>
-  <p>
-     La Clé du Parc vous ouvre l’accès contrôlé au 1er réseau de parcs privés remarquables de France.
-  </p>
-  <p>
-     Nous vous proposons des lieux de plein air préservés pour vous permettre de vous ressourcer physiquement et mentalement dans un cadre d'exception qui rend unique votre bien-être.   
-  </p>
-  <p>
-     Des moments privilégiés à pratiquer seul(e), en famille, en petit groupe ou comme invité(e), avec ou sans excès pour votre bien-être mais toujours avec un accès autorisé et contrôlé.
-  </p>
+<section class="landing-menu" aria-label="Navigation d’accueil">
+
+  <h2>
+    <a href="https://ton-lien-notion-1" target="_blank" rel="noopener noreferrer">
+      <span class="menu-icon" aria-hidden="true">🌳</span>
+      <span>Découvrir les parcs</span>
+    </a>
+  </h2>
+
+  <h2>
+    <a href="https://ton-lien-notion-2" target="_blank" rel="noopener noreferrer">
+      <span class="menu-icon" aria-hidden="true">🗝️</span>
+      <span>Comment ça marche ?</span>
+    </a>
+  </h2>
+
+  <h2>
+    <a href="https://ton-lien-notion-3" target="_blank" rel="noopener noreferrer">
+      <span class="menu-icon" aria-hidden="true">✍️</span>
+      <span>M’inscrire comme invité</span>
+    </a>
+  </h2>
+
 </section>
 
 <!-- FIN LANDING TEXT HAUT -->
@@ -289,44 +370,50 @@
 <!-- LANDING TEXT BAS -->
 
 <section class="landing-text">
-  
-<p>
-     La Clé du Parc est une association loi 1901 à but non lucratif et indépendante. Pour autant, nous sommes soumins à l'impératif financier d'équilibrer nos comptes.
-
-     En participant au club comme membre abonné, vous contribuez directement à soutenir financièrement le patrimoine d'exception, à la fois esthétique, naturel et culturel, que représente le réseau de ces parcs remarquables puisqu'une partie significative de nos recettes d'abonnement contribue à financer directement des travaux ciblés d'entretien et d'aménagement de ce patrimoine unique en France.   
+  <p>
+    La Clé du Parc est une association loi 1901 à but non lucratif et indépendante. Pour autant, nous sommes soumis à l'impératif financier d'équilibrer nos comptes.
   </p>
-<h2>
-  <a 
-    href="https://substantial-dish-b51.notion.site/LES-PARCS-37027019cf9680a1ba31c088dbf21ba5" 
-    target="_blank" 
-    rel="noopener noreferrer"
-    class="h2-link"
-  >
-    Découvrir les parcs
-  </a>
-</h2>
-  
-<h2>
-  <a 
-    href="https://substantial-dish-b51.notion.site/PROGRAMMEZ-VOTRE-VENUE-37027019cf96809783b0e1c064dd7bac" 
-    target="_blank" 
-    rel="noopener noreferrer"
-    class="h2-link"
-  >
-    Comment ça marche ?
-  </a>
-</h2>
 
-<h2>
-  <a 
-    href="https://substantial-dish-b51.notion.site/INSCRIPTION-INVIT-S-37027019cf968044b16cea124d9bf47c" 
-    target="_blank" 
-    rel="noopener noreferrer"
-    class="h2-link"
-  >
-    M'inscrire comme invité(e)
-  </a>
-</h2>  
+  <p>
+    En participant au club comme membre abonné, vous contribuez directement à soutenir financièrement le patrimoine d'exception, à la fois esthétique, naturel et culturel, que représente le réseau de ces parcs remarquables puisqu'une partie significative de nos recettes d'abonnement contribue à financer directement des travaux ciblés d'entretien et d'aménagement de ce patrimoine unique en France.
+  </p>
+
+</section>
+
+<section class="landing-menu" aria-label="Navigation d’accueil">
+
+  <h2>
+    <a 
+      href="https://substantial-dish-b51.notion.site/LES-PARCS-37027019cf9680a1ba31c088dbf21ba5" 
+      target="_blank" 
+      rel="noopener noreferrer"
+    >
+      <span class="menu-icon" aria-hidden="true">🌳</span>
+      <span>Découvrir les parcs</span>
+    </a>
+  </h2>
+
+  <h2>
+    <a 
+      href="https://substantial-dish-b51.notion.site/PROGRAMMEZ-VOTRE-VENUE-37027019cf96809783b0e1c064dd7bac" 
+      target="_blank" 
+      rel="noopener noreferrer"
+    >
+      <span class="menu-icon" aria-hidden="true">🗝️</span>
+      <span>Comment ça marche ?</span>
+    </a>
+  </h2>
+
+  <h2>
+    <a 
+      href="https://substantial-dish-b51.notion.site/INSCRIPTION-INVIT-S-37027019cf968044b16cea124d9bf47c" 
+      target="_blank" 
+      rel="noopener noreferrer"
+    >
+      <span class="menu-icon" aria-hidden="true">✍️</span>
+      <span>M'inscrire comme invité(e)</span>
+    </a>
+  </h2>
 
 </section>
 
