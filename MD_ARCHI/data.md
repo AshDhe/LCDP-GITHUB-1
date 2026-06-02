@@ -10,15 +10,29 @@
 
 \- idmembre
 
-\- nom
+\- nommembre
 
-\- prenom
+\- prenommembre
+
+\- dptmtmembre
 
 \- emailmembre
 
 \- emailvalid
 
 \- dateemailvalid
+
+
+
+\### majdptmtmembre
+
+\- idmaj
+
+\- idmembre
+
+\- dptmtmembre
+
+\- datedptmt
 
 
 
