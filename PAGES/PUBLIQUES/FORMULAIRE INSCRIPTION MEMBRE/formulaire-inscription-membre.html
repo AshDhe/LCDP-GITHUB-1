@@ -51,7 +51,7 @@
           Conformément à votre état-civil et majuscules de préférence. Votre nom est vérifié
           si vous décidez de prendre un abonnement personnel.
         </p>
-        <input type="text" id="nom" name="nom" placeholder="Votre réponse" required />
+        <input type="text" id="nommembre" name="nommembre" placeholder="Votre réponse" required />
       </div>
 
 
@@ -61,7 +61,7 @@
           Conformément à votre état-civil et majuscules de préférence. Votre prénom est vérifié
           si vous décidez de prendre un abonnement personnel.
         </p>
-        <input type="text" id="prenom" name="prenom" placeholder="Votre réponse" required />
+        <input type="text" id="prenommembre" name="prenommembre" placeholder="Votre réponse" required />
       </div>
 
 
@@ -71,7 +71,7 @@
           Le numéro du département permet de sélectionner les informations proches de vous en priorité.
           Vous pouvez le modifier autant que nécessaire.
         </p>
-        <input type="text" id="departement" name="departement" placeholder="Votre réponse" required />
+        <input type="text" id="dptmtmembre" name="dptmtmembre" placeholder="Votre réponse" required />
       </div>
 
 
@@ -135,11 +135,38 @@
         Ce formulaire et les données qu'il contient est soumis au règlement du club et au règlement de l'application.
       </p>
 
+
+.formulaire-message {
+  margin: 18px 0 0;
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.formulaire-message-succes {
+  color: #1f2a24;
+}
+
+.formulaire-message-erreur {
+  color: #8a2d2d;
+}
+
+.formulaire-actions button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+
     </form>
 
 <!-- FIN STRUCTURE HTML POST FORMULAIRE -->
 
   </main>
+
+<!-- INTEGRATION DU JAVASCRIPT DE CE FORMULAIRE -->
+
+     <script src="formulaire-inscription-membre.js"></script>
+
+<!-- FIN INTEGRATION DU JAVASCRIPT DE CE FORMULAIRE -->
 
 </body>
 
