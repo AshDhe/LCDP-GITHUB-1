@@ -144,7 +144,15 @@
 
 <!-- INTEGRATION DU JAVASCRIPT DE CE FORMULAIRE -->
 
-     <script src="formulaire-inscription-membre.js"></script>
+ <div id="formulaire-lightbox" class="formulaire-lightbox-overlay" hidden>
+  <div class="formulaire-lightbox" role="dialog" aria-modal="true" aria-labelledby="formulaire-lightbox-titre">
+    <h2 id="formulaire-lightbox-titre"></h2>
+    <p id="formulaire-lightbox-message"></p>
+    <button type="button" id="formulaire-lightbox-ok">OK</button>
+  </div>
+</div>   
+
+ <script src="formulaire-inscription-membre.js"></script>
 
 <!-- FIN INTEGRATION DU JAVASCRIPT DE CE FORMULAIRE -->
 
