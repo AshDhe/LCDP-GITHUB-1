@@ -248,3 +248,54 @@ body {
     cursor: not-allowed;
   }
 }
+
+.formulaire-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  background: rgba(31, 42, 36, 0.42);
+}
+
+.formulaire-lightbox {
+  width: 100%;
+  max-width: 420px;
+  padding: 28px 26px;
+  border-radius: 16px;
+  background: #f1f8ef;
+  box-shadow: 0 16px 44px rgba(31, 42, 36, 0.22);
+  text-align: center;
+}
+
+.formulaire-lightbox p {
+  margin: 0 0 24px;
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #1f2a24;
+}
+
+.formulaire-lightbox button {
+  min-height: 48px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: white;
+  background: #2b2b2b;
+  cursor: pointer;
+}
+
+.formulaire-lightbox button:hover {
+  background: #1f2a24;
+}
+
+.formulaire-lightbox button:active {
+  opacity: 0.75;
+}
