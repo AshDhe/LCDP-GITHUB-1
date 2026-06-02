@@ -9,334 +9,9 @@
 
 
 <!-- STYLES CSS -->
-  
-
   <style>
 
-
-/* CARROUSEL */
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      overflow-x: hidden;
-      background: transparent;
-    }
-
-    .carousel {
-  position: relative;
-  width: calc(100% - 44px);
-  max-width: 100%;
-  aspect-ratio: 16 / 9;
-  margin: 0 auto;
-  overflow: hidden;
-  border-radius: 0;
-    }
-
-    .carousel-track {
-  position: relative;
-  width: 100%;
-  height: 100%;
-    }
-
-.carousel-track img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center center;
-  display: block;
-  opacity: 0;
-  transition: opacity 1.2s ease;
-    }
-
-.carousel-track img.active {
-  opacity: 1;
-  z-index: 1;
-    }
-
-    .carousel-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 999;
-      width: 44px;
-      height: 44px;
-      padding: 0;
-      border: none;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.85);
-      color: black;
-      font-size: 34px;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
-    .prev {
-      left: 18px;
-    }
-
-    .next {
-      right: 18px;
-    }
-
-    .carousel-dots {
-      position: absolute;
-      bottom: 35px;
-      left: 0;
-      right: 0;
-      z-index: 998;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .carousel-dots button {
-      width: 9px;
-      height: 9px;
-      padding: 0;
-      border: none;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.65);
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
-    .carousel-dots button.active {
-      background: white;
-    }
-
-    @media (max-width: 600px) {
-      .carousel {
-        width: calc(100% - 36px);
-        aspect-ratio: 16 / 9;
-      }
-
-      .carousel-btn {
-        width: 34px;
-        height: 34px;
-        font-size: 28px;
-      }
-
-      .prev {
-        left: 10px;
-      }
-
-      .next {
-        right: 10px;
-      }
-
-      .carousel-dots {
-        bottom: 35px;
-      }
-
-      .carousel-dots button {
-        width: 8px;
-        height: 8px;
-      }
-   }
-    
-
-/* LANDING TEXT */
-
-.landing-text {
-  padding: 22px;
-  font-family: Arial, sans-serif;
-  color: #1f2a24;
-  background: transparent;
-}
-
-.landing-text h1 {
-  margin: 0 0 8px;
-  font-size: 28px;
-  line-height: 1.2;
-  font-weight: 700;
-}
-
-.landing-text h2 {
-  margin: 0 0 10px;
-  font-size: 22px;
-  line-height: 1.25;
-  font-weight: 600;
- }
-
-.landing-text h2 a {
-  color: #1f2a24;
-  text-decoration: none;
-  font: inherit;
-  font-weight: inherit;
-}
-
-.landing-text h2 a:visited {
-  color: #1f2a24;
-}
-
-.landing-text h2 a:hover {
-  text-decoration: underline;
-}
-
-.landing-text h2 a:focus {
-  outline: none;
-}
-
-.landing-text p {
-  margin: 0 0 14px;
-  font-size: 16px;
-  line-height: 1.5;
- }
-
-.landing-text p a {
-  color: #1f2a24;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  font-weight: 600;
-}
-
-.landing-text p a:visited {
-  color: #1f2a24;
-}
-
-.landing-text p a:hover {
-  color: #1f2a24;
-  text-decoration-thickness: 2px;
-}
-
-.landing-text p a:active {
-  opacity: 0.7;
-}
-
-.mot-guillemets::before {
-  content: "«\202F";
-}
-
-.mot-guillemets::after {
-  content: "\202F»";
-}
-
-@media (max-width: 600px) {
-  .landing-text {
-    padding: 18px;
- }
-
-  .landing-text h1 {
-    font-size: 24px;
-  }
-  .landing-text h2 {
-    font-size: 20px;
- }
-  .landing-text h2 a {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 0;
-    text-decoration: none;
-  }
-  .landing-text h2 a::after {
-    content: "›";
-    font-size: 24px;
-    line-height: 1;
-  }
-  .landing-text h2 a:active {
-    opacity: 0.65;
-  }
-  .landing-text p {
-    font-size: 15px;
- }
-}
-
-/* FOCUS LANDING MENU DES TITRES H2 BAS DE LA PAGE */
-
-.landing-menu {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  padding: 22px 22px 8px;
-  font-family: Arial, sans-serif;
-  background: transparent;
-}
-
-.landing-menu + .landing-text {
-  padding-top: 8px;
-}
-
-.landing-menu h2 {
-  margin: 0;
-  font-size: 17px;
-  line-height: 1.25;
-  font-weight: 600;
-}
-
-.landing-menu h2 a {
-  min-height: 72px;
-  padding: 18px;
-  border: 1px solid rgba(31, 42, 36, 0.22);
-  border-radius: 14px;
-  color: #1f2a24;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.55);
-}
-
-.landing-menu h2 a:visited {
-  color: #1f2a24;
-}
-
-.landing-menu h2 a:hover {
-  border-color: rgba(31, 42, 36, 0.55);
-  background: rgba(31, 42, 36, 0.05);
-}
-
-.landing-menu h2 a:active {
-  opacity: 0.7;
-}
-
-.menu-icon {
-  font-size: 20px;
-  line-height: 1;
-}
-
-@media (max-width: 600px) {
-  .landing-menu {
-  grid-template-columns: 1fr;
-  padding: 18px 18px 8px;
-  gap: 10px;
-  }
-
-.landing-menu + .landing-text {
-  padding-top: 8px;
-  }
-
-  .landing-menu h2 {
-    font-size: 17px;
-  }
-
-  .landing-menu h2 a {
-    min-height: 58px;
-    padding: 18px;
-    justify-content: flex-start;
-    text-align: left;
-  }
- }
   </style>
-
-
 <!-- FIN DES STYLES CSS -->
 
 </head>
@@ -349,168 +24,47 @@
 <!-- LANDING TEXT HAUT -->
 
 <section class="landing-text">
-  <h1>Faites des <span class="mot-guillemets">accès</span> de bien-être !</h1>
-  <p>
-     La Clé du Parc vous ouvre l’accès contrôlé au 1er réseau de parcs privés remarquables de France. Nous vous ouvrons des lieux préservés de plein air pour vous permettre de vous ressourcer physiquement et mentalement dans un cadre unique. Votre bien-être est valorisé.   
-  </p>
-  <p>
-     Appréciez ces moments seul(e), en famille, en petit groupe ou comme invité(e). Faîtes des excès de bien-être (<span class="menu-icon upside-sun" aria-hidden="true">🌞</span>) mais jamais sans accès !
-  </p>
+
 </section>
 
 <!-- FIN LANDING TEXT HAUT -->
 
-<!-- CARROUSEL -->
-
-  <div class="carousel">
-    <button class="carousel-btn prev" aria-label="Image précédente">‹</button>
-
-    <div class="carousel-track">
-      <img src="images/IMAG_1.jpg" alt="">
-      <img src="images/IMAG_2.jpg" alt="">
-      <img src="images/IMAG_3.jpg" alt="">
-      <img src="images/IMAG_4.jpg" alt="">
-      <img src="images/IMAG_5.jpg" alt="">
-      <img src="images/IMAG_6.jpg" alt="">
-      <img src="images/IMAG_7.jpg" alt="">
-    </div>
-
-    <button class="carousel-btn next" aria-label="Image suivante">›</button>
-
-    <div class="carousel-dots"></div>
-  </div>
 
 
-<!-- LANDING TEXT BAS -->
+<!-- IMAGE D'ACCUEIL -->
+
+<!-- FIN IMAGE D'ACCUEIL -->
+
+
+
+<!-- LANDING (EXIT) MENU -->
 
 <section class="landing-menu" aria-label="Navigation d’accueil">
 
   <h2>
     <a 
-      href="https://substantial-dish-b51.notion.site/LES-PARCS-37027019cf9680a1ba31c088dbf21ba5" 
-      target="_blank" 
-      rel="noopener noreferrer"
+      href="https://substantial-dish-b51.notion.site/La-Cl-du-Parc-36f27019cf968011b085c739fdadf019"
     >
-      <span class="menu-icon" aria-hidden="true">🔎</span>
-      <span>Découvrir les parcs</span>
-    </a>
-  </h2>
-
-  <h2>
-    <a 
-      href="https://substantial-dish-b51.notion.site/PROGRAMMEZ-VOTRE-VENUE-37027019cf96809783b0e1c064dd7bac" 
-      target="_blank" 
-      rel="noopener noreferrer"
-    >
-      <span class="menu-icon" aria-hidden="true">❓</span>
-      <span>Comment ça marche ?</span>
+      Retour à l'accueil
     </a>
   </h2>
 
   <h2>
     <a 
       href="https://substantial-dish-b51.notion.site/INSCRIPTION-INVIT-S-37027019cf968044b16cea124d9bf47c" 
-      target="_blank" 
-      rel="noopener noreferrer"
     >
       <span class="menu-icon" aria-hidden="true">❤️</span>
-      <span>M'inscrire comme invité(e)</span>
+      <span>Ouvrir un compte gratuit</span>
     </a>
   </h2>
 
 </section>
 
-<section class="landing-text">
-  <p>
-    La Clé du Parc est une association indépendante non lucrative qui regroupe des membres passionnés ou amateurs de bien-être en plein air (abonnés, invités, coachs). L'association équilibre ses comptes et contribue ainsi à l'entretien et à l'aménagement de parcs grâce aux recettes issues des abonnements et aux actions ponctuelles de bénévolat des membres pour les parcs. <a href="https://substantial-dish-b51.notion.site/ASSOCIATION-A-BUT-NON-LUCRATIF-37027019cf968098972bc3c0b632672f" target="_blank" rel="noopener noreferrer">En savoir plus</a> sur notre association.
-  </p>
+<!-- FIN LANDING (EXIT) MENU -->
 
-</section>
-
-<!-- FIN LANDING TEXT BAS -->
 
 <!-- ANIMATIONS JAVASCRIPT DES ELEMENTS -->
 
-<!-- ANIMATION DU CARROUSEL -->
-
-  <script>
-  const slides = Array.from(document.querySelectorAll(".carousel-track img"));
-  const nextButton = document.querySelector(".next");
-  const prevButton = document.querySelector(".prev");
-  const dotsContainer = document.querySelector(".carousel-dots");
-
-  let currentIndex = 0;
-  let autoplay;
-
-  if (slides.length === 0) {
-    console.error("Aucune image trouvée dans le carrousel");
-  } else {
-    slides.forEach((slide, index) => {
-      if (index === 0) {
-        slide.classList.add("active");
-      }
-
-      const dot = document.createElement("button");
-
-      if (index === 0) {
-        dot.classList.add("active");
-      }
-
-      dot.addEventListener("click", () => {
-        goToSlide(index);
-        restartAutoplay();
-      });
-
-      dotsContainer.appendChild(dot);
-    });
-
-    const dots = Array.from(dotsContainer.children);
-
-    function goToSlide(index) {
-      slides[currentIndex].classList.remove("active");
-      dots[currentIndex].classList.remove("active");
-
-      currentIndex = index;
-
-      slides[currentIndex].classList.add("active");
-      dots[currentIndex].classList.add("active");
-    }
-
-    function nextSlide() {
-      const nextIndex = (currentIndex + 1) % slides.length;
-      goToSlide(nextIndex);
-    }
-
-    function prevSlide() {
-      const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
-      goToSlide(prevIndex);
-    }
-
-    function startAutoplay() {
-      autoplay = setInterval(nextSlide, 4700);
-    }
-
-    function restartAutoplay() {
-      clearInterval(autoplay);
-      startAutoplay();
-    }
-
-    nextButton.addEventListener("click", () => {
-      nextSlide();
-      restartAutoplay();
-    });
-
-    prevButton.addEventListener("click", () => {
-      prevSlide();
-      restartAutoplay();
-    });
-
-    startAutoplay();
-  }
-
-</script>
-
-<!-- FIN ANIMATION DU CARROUSEL -->
 <!-- FIN ANIMATIONS JAVASCRIPT DES ELEMENTS -->
 
 </body>
