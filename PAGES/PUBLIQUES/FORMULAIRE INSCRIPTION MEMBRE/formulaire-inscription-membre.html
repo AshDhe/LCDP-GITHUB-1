@@ -1,1 +1,150 @@
+<!DOCTYPE html>
 
+<!-- OUVERTURE DE LA PAGE : DOCUMENT HTML -->
+
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Formulaire d'inscription (membre invité)</title>
+  
+  <link rel="stylesheet" href="../../../OBJETS/CSS/formulaires.css">
+
+
+<!-- STYLES CSS -->
+  <style>
+
+  </style>
+<!-- FIN DES STYLES CSS -->
+
+</head>
+
+
+<!-- STRUCTURE HTML VISIBLE -->
+
+<body>
+
+<main class="formulaire-page">
+
+<!-- STRUCTURE HTML INTRO FORMULAIRE -->
+
+    <section class="formulaire-intro">
+      <h1>Formulaire d’inscription à La Clef du Parc (membre invité)</h1>
+
+      <p>
+        Ce formulaire est une demande d’inscription à la Clé du Parc en tant que membre invité.
+        L’inscription est gratuite de même que votre maintien en tant que membre sans limitation
+        de durée. Il n’est pas nécessaire d’être parrainé pour remplir votre demande d’inscription.
+      </p>
+    </section>
+
+<!-- FIN STRUCTURE HTML INTRO FORMULAIRE -->
+
+<!-- STRUCTURE HTML POST FORMULAIRE -->
+
+    <form class="formulaire-inscription" action="#" method="post">
+
+      <div class="formulaire-champ">
+        <label for="nom">Votre NOM<span>*</span></label>
+        <p>
+          Conformément à votre état-civil et majuscules de préférence. Votre nom est vérifié
+          si vous décidez de prendre un abonnement personnel.
+        </p>
+        <input type="text" id="nom" name="nom" placeholder="Votre réponse" required />
+      </div>
+
+
+      <div class="formulaire-champ">
+        <label for="prenom">Votre Prénom<span>*</span></label>
+        <p>
+          Conformément à votre état-civil et majuscules de préférence. Votre prénom est vérifié
+          si vous décidez de prendre un abonnement personnel.
+        </p>
+        <input type="text" id="prenom" name="prenom" placeholder="Votre réponse" required />
+      </div>
+
+
+      <div class="formulaire-champ">
+        <label for="departement">Numéro du département<span>*</span></label>
+        <p>
+          Le numéro du département permet de sélectionner les informations proches de vous en priorité.
+          Vous pouvez le modifier autant que nécessaire.
+        </p>
+        <input type="text" id="departement" name="departement" placeholder="Votre réponse" required />
+      </div>
+
+
+      <div class="formulaire-champ">
+        <label for="email">Votre adresse e-mail d’identification<span>*</span></label>
+        <p>
+          L’adresse e-mail est votre identifiant informatique de membre de l’association.
+          Un mail de confirmation vous est envoyé après l’envoi du formulaire. Vous n’êtes pas
+          membre du club tant que votre adresse e-mail n’est pas confirmée.
+        </p>
+        <input type="email" id="emailmembre" name="emailmembre" placeholder="Votre réponse" required />
+      </div>
+
+      <div class="formulaire-champ">
+        <label for="email-parrain">L’adresse e-mail du parrain (si parrain)</label>
+        <p>
+          L’adresse e-mail du parrain doit être son identifiant informatique de membre du club.
+          Elle permet au parrain de vous inviter par la suite dans le cadre de son abonnement personnel
+          (membre abonné) pour vous autoriser l’accès au parc conformément au règlement du club
+          et au règlement de l’application. Vous pouvez changer de parrain autant que nécessaire
+          conformément au règlement du club et au règlement de l’application.
+        </p>
+        <input type="email" id="emailparrain" name="emailparrain" placeholder="Votre réponse" />
+      </div>
+
+      <div class="formulaire-champ formulaire-checkbox">
+        <h2>Règlement du club (membres)<span>*</span></h2>
+        <p>
+          En envoyant votre demande d’inscription vous reconnaissez avoir pris connaissance du règlement
+          du club (membres) à la présente date et accepter ce règlement en tant que membre du club.
+          En cas de mise à jour ultérieure du règlement du club, vous disposez d’un délai minimum de 30 jours
+          pour accepter le nouveau règlement ou ne plus être membre du club.
+        </p>
+
+        <label class="checkbox-ligne" for="reglement-club">
+          <input type="checkbox" id="regleclub_v1" name="regleclub_v1" required />
+          <span>J’ai pris connaissance du règlement du club</span>
+        </label>
+      </div>
+
+      <div class="formulaire-champ formulaire-checkbox">
+        <h2>Règlement de l’application (membres)<span>*</span></h2>
+        <p>
+          En envoyant votre demande d’inscription vous reconnaissez avoir pris connaissance du règlement
+          de l’application (membres) à la présente date et accepter ce règlement en tant que membre du club.
+          En cas de mise à jour ultérieure du règlement de l'application, vous disposez d’un délai minimum de 30 jours
+          pour accepter le nouveau règlement ou ne plus être membre du club.
+        </p>
+
+        <label class="checkbox-ligne" for="reglement-application">
+          <input type="checkbox" id="regleapp_v1" name="regleapp_v1" required />
+          <span>J’ai pris connaissance du règlement de l’application</span>
+        </label>
+      </div>
+
+      <div class="formulaire-actions">
+        <button type="submit">Envoyer</button>
+      </div>
+
+      <p class="formulaire-note">
+        Ce formulaire et les données qu'il contient est soumis au règlement du club et au règlement de l'application.
+      </p>
+
+    </form>
+
+<!-- FIN STRUCTURE HTML POST FORMULAIRE -->
+
+  </main>
+
+</body>
+
+<!-- FIN DE LA STRUCTURE HTML VISIBLE -->
+
+</html>
+
+<!-- FERMETURE DE LA PAGE : DOCUMENT HTML -->
