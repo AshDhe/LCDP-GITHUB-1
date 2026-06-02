@@ -243,7 +243,7 @@
 
 /* FOCUS LANDING MENU DES TITRES H2 BAS DE LA PAGE */
 
-.landing-menu {
+.exit-menu-bas {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
@@ -252,18 +252,18 @@
   background: transparent;
 }
 
-.landing-menu + .landing-text {
+.exit-menu-bas + .landing-text {
   padding-top: 8px;
 }
 
-.landing-menu h2 {
+.exit-menu-bas h2 {
   margin: 0;
   font-size: 17px;
   line-height: 1.25;
   font-weight: 600;
 }
 
-.landing-menu h2 a {
+.exit-menu-bas h2 a {
   min-height: 72px;
   padding: 18px;
   border: 1px solid rgba(31, 42, 36, 0.22);
@@ -278,16 +278,16 @@
   background: rgba(255, 255, 255, 0.55);
 }
 
-.landing-menu h2 a:visited {
+.exit-menu-bas h2 a:visited {
   color: #1f2a24;
 }
 
-.landing-menu h2 a:hover {
+.exit-menu-bas h2 a:hover {
   border-color: rgba(31, 42, 36, 0.55);
   background: rgba(31, 42, 36, 0.05);
 }
 
-.landing-menu h2 a:active {
+.exit-menu-bas h2 a:active {
   opacity: 0.7;
 }
 
@@ -297,21 +297,21 @@
 }
 
 @media (max-width: 600px) {
-  .landing-menu {
+  .exit-menu-bas {
   grid-template-columns: 1fr;
   padding: 18px 18px 8px;
   gap: 10px;
   }
 
-.landing-menu + .landing-text {
+.exit-menu-bas + .landing-text {
   padding-top: 8px;
   }
 
-  .landing-menu h2 {
+  .exit-menu-bas h2 {
     font-size: 17px;
   }
 
-  .landing-menu h2 a {
+  .exit-menu-bas h2 a {
     min-height: 58px;
     padding: 18px;
     justify-content: flex-start;
