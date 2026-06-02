@@ -9,7 +9,7 @@
   width: 100%;
   padding: 12px 22px 8px;
   font-family: Arial, sans-serif;
-  background: transparent;
+  background: #f1f8ef;
 }
 
 .exit-menu-bas + .landing-text {
@@ -240,7 +240,7 @@
   padding: 22px;
   font-family: Arial, sans-serif;
   color: #1f2a24;
-  background: transparent;
+  background: #f1f8ef;
 }
 
 .landing-text h1 {
