@@ -20,9 +20,9 @@
   margin: 0;
   width: 255px;
   min-height: 88px;
-  font-size: 17px;
-  line-height: 1.25;
-  font-weight: 600;
+  font-size: 19px;
+  line-height: 1.22;
+  font-weight: 700;
   display: flex;
 }
 
@@ -74,10 +74,12 @@
   }
 
   .exit-menu-bas h2 {
-    width: 100%;
-    max-width: 360px;
-    min-height: 58px;
-    font-size: 17px;
+  width: 100%;
+  max-width: 360px;
+  min-height: 58px;
+  font-size: 18px;
+  line-height: 1.22;
+  font-weight: 700;
   }
 
   .exit-menu-bas h2 a {
