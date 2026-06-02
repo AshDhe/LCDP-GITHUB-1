@@ -52,7 +52,7 @@ body {
   margin-bottom: 44px;
 }
 
-.formulaire-champ label,
+.formulaire-champ > label,
 .formulaire-champ h2 {
   display: block;
   margin: 0 0 14px;
@@ -62,7 +62,7 @@ body {
   color: #1f2a24;
 }
 
-.formulaire-champ label span,
+.formulaire-champ > label span,
 .formulaire-champ h2 span {
   color: #8a8f8b;
   font-weight: 700;
@@ -137,12 +137,12 @@ body {
 }
 
 .formulaire-actions button {
-  min-height: 44px;
-  padding: 10px 16px;
+  min-height: 54px;
+  padding: 14px 22px;
   border: none;
-  border-radius: 7px;
+  border-radius: 8px;
   font-family: Arial, sans-serif;
-  font-size: 17px;
+  font-size: 19px;
   line-height: 1.2;
   font-weight: 700;
   color: white;
@@ -162,8 +162,8 @@ body {
 
 .formulaire-note {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 17px;
+  line-height: 1.35;
   color: #6f7370;
 }
 
@@ -191,7 +191,7 @@ body {
     margin-bottom: 36px;
   }
 
-  .formulaire-champ label,
+  .formulaire-champ > label,
   .formulaire-champ h2 {
     font-size: 25px;
     line-height: 1.25;
@@ -211,9 +211,10 @@ body {
   }
 
   .checkbox-ligne {
-    align-items: flex-start;
+    align-items: center;
     font-size: 17px;
-    gap: 12px;
+    line-height: 1.35;
+    gap: 10px;
   }
 
   .checkbox-ligne input[type="checkbox"] {
