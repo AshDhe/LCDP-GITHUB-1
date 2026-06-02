@@ -1,4 +1,5 @@
 const WORKER_URL = "https://lcdp-github-1.hugues-pavret.workers.dev/";
+const REDIRECT_URL = "index.html";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector(".formulaire-inscription");
@@ -63,13 +64,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      afficherMessage(
-        message,
-        "Votre demande d’inscription a bien été enregistrée.",
-        "succes"
-      );
-
       form.reset();
+
+        ouvrirLightboxConfirmation(
+           "Votre demande a bien été enregistrée.",
+           REDIRECT_URL
+      );
 
     } catch (error) {
       afficherMessage(
@@ -144,4 +144,30 @@ function afficherMessage(element, texte, type) {
   } else {
     element.className = "formulaire-message formulaire-message-erreur";
   }
+}
+
+function ouvrirLightboxConfirmation(texte, redirectUrl) {
+  const overlay = document.createElement("div");
+  overlay.className = "formulaire-lightbox-overlay";
+
+  const box = document.createElement("div");
+  box.className = "formulaire-lightbox";
+
+  const message = document.createElement("p");
+  message.textContent = texte;
+
+  const bouton = document.createElement("button");
+  bouton.type = "button";
+  bouton.textContent = "OK";
+
+  bouton.addEventListener("click", () => {
+    window.location.href = redirectUrl;
+  });
+
+  box.appendChild(message);
+  box.appendChild(bouton);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  bouton.focus();
 }
