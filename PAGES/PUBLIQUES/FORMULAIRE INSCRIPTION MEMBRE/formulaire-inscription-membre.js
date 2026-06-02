@@ -9,34 +9,41 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const message = document.createElement("p");
-  message.className = "formulaire-message";
-  form.appendChild(message);
+  const champsAControler = [
+    "nommembre",
+    "prenommembre",
+    "dptmtmembre",
+    "emailmembre",
+    "emailparrain"
+  ];
+
+  champsAControler.forEach((name) => {
+    const champ = form.querySelector(`[name="${name}"]`);
+
+    if (!champ) return;
+
+    champ.addEventListener("blur", () => {
+      const data = lireDonneesFormulaire(form);
+      const erreur = verifierChamp(name, data);
+
+      if (erreur) {
+        ouvrirLightbox(erreur);
+      }
+    });
+  });
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    message.textContent = "";
-    message.className = "formulaire-message";
 
     const submitButton = form.querySelector("button[type='submit']");
     submitButton.disabled = true;
     submitButton.textContent = "Envoi en cours...";
 
-    const data = {
-      nommembre: getValue(form, "nommembre"),
-      prenommembre: getValue(form, "prenommembre"),
-      dptmtmembre: getValue(form, "dptmtmembre"),
-      emailmembre: getValue(form, "emailmembre"),
-      emailparrain: getValue(form, "emailparrain"),
-      regleclub_v1: getChecked(form, "regleclub_v1"),
-      regleapp_v1: getChecked(form, "regleapp_v1")
-    };
-
+    const data = lireDonneesFormulaire(form);
     const erreurs = verifierFormulaire(data);
 
     if (erreurs.length > 0) {
-      afficherMessage(message, erreurs.join(" "), "erreur");
+      ouvrirLightbox(erreurs[0]);
       submitButton.disabled = false;
       submitButton.textContent = "Envoyer";
       return;
@@ -55,10 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!response.ok || !result.success) {
         const texteErreur = result.erreurs
-          ? result.erreurs.join(" ")
+          ? result.erreurs[0]
           : result.message || "Erreur lors de l’envoi du formulaire.";
 
-        afficherMessage(message, texteErreur, "erreur");
+        ouvrirLightbox(texteErreur);
         submitButton.disabled = false;
         submitButton.textContent = "Envoyer";
         return;
@@ -66,18 +73,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       form.reset();
 
-        ouvrirLightboxConfirmation(
-           "Votre demande a bien été enregistrée.",
-           REDIRECT_URL
+      ouvrirLightbox(
+        "Votre demande a bien été enregistrée.",
+        () => {
+          window.location.href = REDIRECT_URL;
+        }
       );
 
     } catch (error) {
-      afficherMessage(
-        message,
-        "Impossible d’envoyer le formulaire pour le moment.",
-        "erreur"
-      );
-
+      ouvrirLightbox("Impossible d’envoyer le formulaire pour le moment.");
       submitButton.disabled = false;
       submitButton.textContent = "Envoyer";
       return;
@@ -88,6 +92,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+function lireDonneesFormulaire(form) {
+  return {
+    nommembre: getValue(form, "nommembre"),
+    prenommembre: getValue(form, "prenommembre"),
+    dptmtmembre: getValue(form, "dptmtmembre"),
+    emailmembre: getValue(form, "emailmembre"),
+    emailparrain: getValue(form, "emailparrain"),
+    regleclub_v1: getChecked(form, "regleclub_v1"),
+    regleapp_v1: getChecked(form, "regleapp_v1")
+  };
+}
+
 function getValue(form, name) {
   const field = form.querySelector(`[name="${name}"]`);
   return field ? field.value.trim() : "";
@@ -96,6 +112,44 @@ function getValue(form, name) {
 function getChecked(form, name) {
   const field = form.querySelector(`[name="${name}"]`);
   return field ? field.checked : false;
+}
+
+function verifierChamp(name, data) {
+  if (name === "nommembre" && !data.nommembre) {
+    return "Le nom est obligatoire.";
+  }
+
+  if (name === "prenommembre" && !data.prenommembre) {
+    return "Le prénom est obligatoire.";
+  }
+
+  if (name === "dptmtmembre") {
+    if (!data.dptmtmembre) {
+      return "Le département est obligatoire.";
+    }
+
+    if (!/^(?:\d{2,3}|2A|2B)$/i.test(data.dptmtmembre)) {
+      return "Le numéro de département est invalide.";
+    }
+  }
+
+  if (name === "emailmembre") {
+    if (!data.emailmembre) {
+      return "L’adresse e-mail est obligatoire.";
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.emailmembre)) {
+      return "L’adresse e-mail est invalide.";
+    }
+  }
+
+  if (name === "emailparrain" && data.emailparrain) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.emailparrain)) {
+      return "L’adresse e-mail du parrain est invalide.";
+    }
+  }
+
+  return "";
 }
 
 function verifierFormulaire(data) {
@@ -136,17 +190,13 @@ function verifierFormulaire(data) {
   return erreurs;
 }
 
-function afficherMessage(element, texte, type) {
-  element.textContent = texte;
+function ouvrirLightbox(texte, actionOk = null) {
+  const ancienneLightbox = document.querySelector(".formulaire-lightbox-overlay");
 
-  if (type === "succes") {
-    element.className = "formulaire-message formulaire-message-succes";
-  } else {
-    element.className = "formulaire-message formulaire-message-erreur";
+  if (ancienneLightbox) {
+    ancienneLightbox.remove();
   }
-}
 
-function ouvrirLightboxConfirmation(texte, redirectUrl) {
   const overlay = document.createElement("div");
   overlay.className = "formulaire-lightbox-overlay";
 
@@ -161,7 +211,11 @@ function ouvrirLightboxConfirmation(texte, redirectUrl) {
   bouton.textContent = "OK";
 
   bouton.addEventListener("click", () => {
-    window.location.href = redirectUrl;
+    overlay.remove();
+
+    if (typeof actionOk === "function") {
+      actionOk();
+    }
   });
 
   box.appendChild(message);
