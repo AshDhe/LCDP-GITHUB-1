@@ -330,7 +330,7 @@ p {
 
 .section-recontact {
   padding: var(--space-6) 0 var(--space-3);
-  text-align: center;
+  text-align: left;
 }
 
 .section-recontact h2 {
@@ -338,8 +338,8 @@ p {
 }
 
 .section-recontact p {
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 
