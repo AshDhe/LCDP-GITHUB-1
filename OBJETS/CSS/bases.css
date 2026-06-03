@@ -4,10 +4,10 @@
 .exit-menu-bas {
   display: flex;
   justify-content: center;
-  align-items: stretch;
+  align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 10px 22px 14px;
+  padding: 8px 22px 12px;
   font-family: Arial, sans-serif;
   background: #f1f8ef;
 }
@@ -28,8 +28,8 @@
 
 .exit-menu-bas h2 a {
   width: 100%;
-  min-height: 88px;
-  padding: 18px;
+  min-height: 82px;
+  padding: 14px 18px;
   border: 1px solid rgba(31, 42, 36, 0.22);
   border-radius: 14px;
   color: #1f2a24;
@@ -65,11 +65,11 @@
 
 @media (max-width: 600px) {
   .exit-menu-bas {
-    flex-direction: column;
-    align-items: center;
-    padding: 8px 18px 8px;
-    gap: 10px;
-  }
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 18px 12px;
+  gap: 10px;
+}
 
   .exit-menu-bas + .landing-text {
     padding-top: 8px;
@@ -85,8 +85,8 @@
   }
 
   .exit-menu-bas h2 a {
-    min-height: 58px;
-    padding: 16px 18px;
+    min-height: 64px;
+    padding: 12px 18px;
     justify-content: center;
     text-align: center;
   }
