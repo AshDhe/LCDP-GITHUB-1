@@ -130,6 +130,15 @@ body {
   font-size: clamp(28px, 3vw, 46px);
   line-height: 1.15;
   font-weight: 800;
+  display: block;
+}
+
+.landing-text .site-subtitle .menu-icon {
+  display: inline-block;
+  font-size: 1em;
+  line-height: 1;
+  margin-right: 10px;
+  vertical-align: baseline;
 }
 
 /* CARROUSEL */
@@ -459,5 +468,13 @@ body > h1 {
 
   .landing-text p {
     font-size: 15px;
+  }
+
+  .landing-text .site-subtitle .menu-icon {
+    display: inline-block;
+    font-size: 1em;
+    line-height: 1;
+    margin-right: 8px;
+    vertical-align: baseline;
   }
 }
