@@ -48,24 +48,25 @@
 
 <!-- CARROUSEL -->
 
-  <div class="carousel">
-    <button class="carousel-btn prev" aria-label="Image précédente">‹</button>
+  <!-- CARROUSEL -->
 
-    <div class="carousel-track">
-      <img src="images/IMAG_1.jpg" alt="">
-      <img src="images/IMAG_2.jpg" alt="">
-      <img src="images/IMAG_3.jpg" alt="">
-      <img src="images/IMAG_4.jpg" alt="">
-      <img src="images/IMAG_5.jpg" alt="">
-      <img src="images/IMAG_6.jpg" alt="">
-      <img src="images/IMAG_7.jpg" alt="">
-    </div>
+<div class="carousel" aria-label="Images de présentation de La Clé du Parc">
+  <button class="carousel-btn prev" type="button" aria-label="Image précédente">‹</button>
 
-    <button class="carousel-btn next" aria-label="Image suivante">›</button>
-
-    <div class="carousel-dots"></div>
+  <div class="carousel-track">
+    <img class="active" src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_1.jpg" alt="es lieux privés d'exception">
+    <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_2.jpg" alt="Venez vous ressourcer">
+    <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_3.jpg" alt="Seul ou en groupe">
+    <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_4.jpg" alt="Avec ou sans coach">
+    <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_5.jpg" alt="Un contexte adapté à chacun">
+    <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_6.jpg" alt="Et pour les grands">
+    <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_7.jpg" alt="Un parc près de chez vous">
   </div>
 
+  <button class="carousel-btn next" type="button" aria-label="Image suivante">›</button>
+
+  <div class="carousel-dots" aria-label="Navigation du carrousel"></div>
+</div>
 
 <!-- FIN CARROUSEL -->
 
@@ -136,17 +137,97 @@
     </a>
   </h2>
 
-  
-
 </section>
 
-<!-- FIN LANDING (EXIT) MENU 1 -->
+<!-- FIN LANDING (EXIT) MENU 2 -->
 
 
 
 <!-- ANIMATIONS JAVASCRIPT DES ELEMENTS -->
 
+<!-- ANIMATION DU CARROUSEL -->
+
+  <script>
+  const slides = Array.from(document.querySelectorAll(".carousel-track img"));
+  const nextButton = document.querySelector(".next");
+  const prevButton = document.querySelector(".prev");
+  const dotsContainer = document.querySelector(".carousel-dots");
+
+  let currentIndex = 0;
+  let autoplay;
+
+  if (slides.length === 0) {
+    console.error("Aucune image trouvée dans le carrousel");
+  } else {
+    slides.forEach((slide, index) => {
+      if (index === 0) {
+        slide.classList.add("active");
+      }
+
+      const dot = document.createElement("button");
+
+      if (index === 0) {
+        dot.classList.add("active");
+      }
+
+      dot.addEventListener("click", () => {
+        goToSlide(index);
+        restartAutoplay();
+      });
+
+      dotsContainer.appendChild(dot);
+    });
+
+    const dots = Array.from(dotsContainer.children);
+
+    function goToSlide(index) {
+      slides[currentIndex].classList.remove("active");
+      dots[currentIndex].classList.remove("active");
+
+      currentIndex = index;
+
+      slides[currentIndex].classList.add("active");
+      dots[currentIndex].classList.add("active");
+    }
+
+    function nextSlide() {
+      const nextIndex = (currentIndex + 1) % slides.length;
+      goToSlide(nextIndex);
+    }
+
+    function prevSlide() {
+      const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+      goToSlide(prevIndex);
+    }
+
+    function startAutoplay() {
+      autoplay = setInterval(nextSlide, 4700);
+    }
+
+    function restartAutoplay() {
+      clearInterval(autoplay);
+      startAutoplay();
+    }
+
+    nextButton.addEventListener("click", () => {
+      nextSlide();
+      restartAutoplay();
+    });
+
+    prevButton.addEventListener("click", () => {
+      prevSlide();
+      restartAutoplay();
+    });
+
+    startAutoplay();
+  }
+
+</script>
+
+<!-- FIN ANIMATION DU CARROUSEL -->
+
 <!-- FIN ANIMATIONS JAVASCRIPT DES ELEMENTS -->
+
 
 </body>
 
