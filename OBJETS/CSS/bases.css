@@ -46,6 +46,7 @@
   --radius-large: 22px;
 
   --shadow-soft: 0 12px 30px rgba(31, 42, 36, 0.08);
+  --shadow-button: 0 8px 20px rgba(31, 42, 36, 0.06);
 }
 
 
@@ -250,13 +251,13 @@ p {
 }
 
 
-/* BOUTONS ET CARTES */
+/* BOUTONS ET LIENS EN BOUTONS */
 
 .button,
 .exit-menu-bas h2 a,
 .formulaire-actions button {
-  min-height: 54px;
-  padding: 14px 22px;
+  min-height: 58px;
+  padding: 15px 24px;
   border: 1.5px solid var(--color-border-strong);
   border-radius: var(--radius-medium);
   font-family: var(--font-main);
@@ -264,19 +265,41 @@ p {
   line-height: 1.2;
   font-weight: 700;
   color: var(--color-text);
-  background: rgba(255, 255, 255, 0.88);
+  background: var(--color-surface);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   cursor: pointer;
+  box-shadow: var(--shadow-button);
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .button:hover,
 .exit-menu-bas h2 a:hover {
   border-color: var(--color-primary);
   background: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(31, 42, 36, 0.09);
+}
+
+.button:active,
+.exit-menu-bas h2 a:active,
+.formulaire-actions button:active {
+  transform: translateY(0);
+  opacity: 0.78;
+}
+
+.button:focus-visible,
+.exit-menu-bas h2 a:focus-visible,
+.formulaire-actions button:focus-visible {
+  outline: 3px solid rgba(35, 68, 56, 0.22);
+  outline-offset: 3px;
 }
 
 
@@ -417,6 +440,7 @@ p {
 
   .exit-menu-bas h2 a {
     width: 100%;
+    min-height: 56px;
   }
 
   .section-recontact {
