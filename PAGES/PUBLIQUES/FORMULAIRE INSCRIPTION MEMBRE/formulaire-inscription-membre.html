@@ -1,166 +1,118 @@
 <!DOCTYPE html>
-
-<!-- OUVERTURE DE LA PAGE : DOCUMENT HTML -->
-
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Formulaire d'inscription (membre invité)</title>
-  
+
+  <title>Formulaire d’inscription - La Clé du Parc</title>
+
   <link rel="stylesheet" href="../../../OBJETS/CSS/bases.css">
-  <<link rel="stylesheet" href="../../../OBJETS/CSS/formulaires.css">
-
-
-<!-- STYLES CSS -->
-  <style>
-
-  </style>
-<!-- FIN DES STYLES CSS -->
-
+  <link rel="stylesheet" href="../../../OBJETS/CSS/formulaires.css">
 </head>
-
-
-<!-- STRUCTURE HTML VISIBLE -->
 
 <body>
 
 <main class="formulaire-page">
 
-<!-- STRUCTURE HTML INTRO FORMULAIRE -->
+  <section class="formulaire-intro">
+    <h1>Formulaire d’inscription à La Clé du Parc (membre invité)</h1>
 
-    <section class="formulaire-intro">
-      <h1>Formulaire d’inscription à La Clef du Parc (membre invité)</h1>
+    <p>
+      Ce formulaire est une demande d’inscription à La Clé du Parc en tant que membre invité. Les réponses précédées de * sont obligatoires.
+    </p>
 
+    <p>
+      L’inscription est gratuite, de même que votre maintien en tant que membre sans limitation de durée. Il n’est pas nécessaire d’être parrainé pour remplir votre demande d’inscription.
+    </p>
+  </section>
+
+  <form class="formulaire-inscription" action="#" method="post" novalidate>
+
+    <div class="formulaire-champ">
+      <label for="nommembre">Votre NOM<span>*</span></label>
       <p>
-        Ce formulaire est une demande d’inscription à la Clé du Parc en tant que membre invité. Les réponses précédées de * sont obligatoires.
-
-        L’inscription est gratuite de même que votre maintien en tant que membre sans limitation
-        de durée. Il n’est pas nécessaire d’être parrainé pour remplir votre demande d’inscription.
+        Conforme à votre état civil et en majuscules de préférence. Votre nom est vérifié si vous décidez de prendre un abonnement personnel.
       </p>
-    </section>
+      <input type="text" id="nommembre" name="nommembre" placeholder="Votre réponse" required />
+    </div>
 
-<!-- FIN STRUCTURE HTML INTRO FORMULAIRE -->
+    <div class="formulaire-champ">
+      <label for="prenommembre">Votre Prénom<span>*</span></label>
+      <p>
+        Conforme à votre état civil et en minuscules de préférence, avec la première lettre du prénom en majuscule. Votre prénom est vérifié si vous décidez de prendre un abonnement personnel.
+      </p>
+      <input type="text" id="prenommembre" name="prenommembre" placeholder="Votre réponse" required />
+    </div>
 
-<!-- STRUCTURE HTML POST FORMULAIRE -->
+    <div class="formulaire-champ">
+      <label for="dptmtmembre">Numéro du département<span>*</span></label>
+      <p>
+        Le numéro du département permet de sélectionner les informations proches de vous en priorité. Vous pouvez le modifier autant que nécessaire.
+      </p>
+      <input type="text" id="dptmtmembre" name="dptmtmembre" placeholder="Votre réponse" required />
+    </div>
 
-    <form class="formulaire-inscription" action="#" method="post" novalidate>
+    <div class="formulaire-champ">
+      <label for="emailmembre">Votre adresse e-mail d’identification<span>*</span></label>
+      <p>
+        L’adresse e-mail est votre identifiant informatique de membre de l’association. Un mail de confirmation vous est envoyé après l’envoi du formulaire. Vous n’êtes pas membre du club tant que votre adresse e-mail n’est pas confirmée.
+      </p>
+      <input type="email" id="emailmembre" name="emailmembre" placeholder="Votre réponse" required />
+    </div>
 
-      <div class="formulaire-champ">
-        <label for="nom">Votre NOM<span>*</span></label>
-        <p>
-          Conforme à votre état-civil et en majuscules de préférence. Votre nom est vérifié
-          si vous décidez de prendre un abonnement personnel.
-        </p>
-        <input type="text" id="nommembre" name="nommembre" placeholder="Votre réponse" required />
-      </div>
+    <div class="formulaire-champ">
+      <label for="emailparrain">L’adresse e-mail du parrain (si parrain)</label>
+      <p>
+        L’adresse e-mail du parrain doit être son identifiant informatique de membre du club. Elle permet au parrain de vous inviter par la suite dans le cadre de son abonnement personnel.
+      </p>
+      <input type="email" id="emailparrain" name="emailparrain" placeholder="Votre réponse" />
+    </div>
 
-
-      <div class="formulaire-champ">
-        <label for="prenom">Votre Prénom<span>*</span></label>
-        <p>
-          Conforme à votre état-civil et en minuscules de préférence avec première lettre du prénom en majuscule. Votre prénom est vérifié
-          si vous décidez de prendre un abonnement personnel.
-        </p>
-        <input type="text" id="prenommembre" name="prenommembre" placeholder="Votre réponse" required />
-      </div>
-
-
-      <div class="formulaire-champ">
-        <label for="departement">Numéro du département<span>*</span></label>
-        <p>
-          Le numéro du département permet de sélectionner les informations proches de vous en priorité.
-          Vous pouvez le modifier autant que nécessaire.
-        </p>
-        <input type="text" id="dptmtmembre" name="dptmtmembre" placeholder="Votre réponse" required />
-      </div>
-
-
-      <div class="formulaire-champ">
-        <label for="email">Votre adresse e-mail d’identification<span>*</span></label>
-        <p>
-          L’adresse e-mail est votre identifiant informatique de membre de l’association.
-          Un mail de confirmation vous est envoyé après l’envoi du formulaire. Vous n’êtes pas
-          membre du club tant que votre adresse e-mail n’est pas confirmée.
-        </p>
-        <input type="email" id="emailmembre" name="emailmembre" placeholder="Votre réponse" required />
-      </div>
-
-      <div class="formulaire-champ">
-        <label for="email-parrain">L’adresse e-mail du parrain (si parrain)</label>
-        <p>
-          L’adresse e-mail du parrain doit être son identifiant informatique de membre du club.
-          Elle permet au parrain de vous inviter par la suite dans le cadre de son abonnement personnel
-          (membre abonné) pour vous autoriser l’accès au parc conformément au règlement du club
-          et au règlement de l’application. Vous pouvez changer de parrain autant que nécessaire
-          conformément au règlement du club et au règlement de l’application.
-        </p>
-        <input type="email" id="emailparrain" name="emailparrain" placeholder="Votre réponse" />
-      </div>
-
-      <div class="formulaire-champ formulaire-checkbox">
-        <h2>Règlement du club (membres)<span>*</span></h2>
-        <p>
-          En envoyant votre demande d’inscription vous reconnaissez avoir pris connaissance du règlement
-          du club (membres) à la présente date et accepter ce règlement en tant que membre du club.
-          En cas de mise à jour ultérieure du règlement du club, vous disposez d’un délai minimum de 30 jours
-          pour accepter le nouveau règlement ou ne plus être membre du club.
-        </p>
-
-        <label class="checkbox-ligne" for="reglement-club">
-          <input type="checkbox" id="regleclub_v1" name="regleclub_v1" required />
-          <span>J’ai pris connaissance du règlement du club</span>
-        </label>
-      </div>
-
-      <div class="formulaire-champ formulaire-checkbox">
-        <h2>Règlement de l’application (membres)<span>*</span></h2>
-        <p>
-          En envoyant votre demande d’inscription vous reconnaissez avoir pris connaissance du règlement
-          de l’application (membres) à la présente date et accepter ce règlement en tant que membre du club.
-          En cas de mise à jour ultérieure du règlement de l'application, vous disposez d’un délai minimum de 30 jours
-          pour accepter le nouveau règlement ou ne plus être membre du club.
-        </p>
-
-        <label class="checkbox-ligne" for="reglement-application">
-          <input type="checkbox" id="regleapp_v1" name="regleapp_v1" required />
-          <span>J’ai pris connaissance du règlement de l’application</span>
-        </label>
-      </div>
-
-      <div class="formulaire-actions">
-        <button type="submit">Envoyer</button>
-      </div>
-
-      <p class="formulaire-note">
-        Ce formulaire et les données qu'il contient est soumis au règlement du club et au règlement de l'application.
+    <div class="formulaire-champ formulaire-checkbox">
+      <h2>Règlement du club (membres)<span>*</span></h2>
+      <p>
+        En envoyant votre demande d’inscription, vous reconnaissez avoir pris connaissance du règlement du club et accepter ce règlement en tant que membre du club.
       </p>
 
-    </form>
+      <label class="checkbox-ligne" for="regleclub_v1">
+        <input type="checkbox" id="regleclub_v1" name="regleclub_v1" required />
+        <span>J’ai pris connaissance du règlement du club</span>
+      </label>
+    </div>
 
-<!-- FIN STRUCTURE HTML POST FORMULAIRE -->
+    <div class="formulaire-champ formulaire-checkbox">
+      <h2>Règlement de l’application (membres)<span>*</span></h2>
+      <p>
+        En envoyant votre demande d’inscription, vous reconnaissez avoir pris connaissance du règlement de l’application et accepter ce règlement en tant que membre du club.
+      </p>
 
-  </main>
+      <label class="checkbox-ligne" for="regleapp_v1">
+        <input type="checkbox" id="regleapp_v1" name="regleapp_v1" required />
+        <span>J’ai pris connaissance du règlement de l’application</span>
+      </label>
+    </div>
 
-<!-- INTEGRATION DU JAVASCRIPT DE CE FORMULAIRE -->
+    <div class="formulaire-actions">
+      <button type="submit">Envoyer</button>
+    </div>
 
- <div id="formulaire-lightbox" class="formulaire-lightbox-overlay" hidden>
+    <p class="formulaire-note">
+      Ce formulaire et les données qu’il contient sont soumis au règlement du club et au règlement de l’application.
+    </p>
+
+  </form>
+
+</main>
+
+<div id="formulaire-lightbox" class="formulaire-lightbox-overlay" hidden>
   <div class="formulaire-lightbox" role="dialog" aria-modal="true" aria-labelledby="formulaire-lightbox-titre">
     <h2 id="formulaire-lightbox-titre"></h2>
     <p id="formulaire-lightbox-message"></p>
     <button type="button" id="formulaire-lightbox-ok">OK</button>
   </div>
-</div>   
+</div>
 
- <script src="formulaire-inscription-membre.js"></script>
-
-<!-- FIN INTEGRATION DU JAVASCRIPT DE CE FORMULAIRE -->
+<script src="formulaire-inscription-membre.js"></script>
 
 </body>
-
-<!-- FIN DE LA STRUCTURE HTML VISIBLE -->
-
 </html>
-
-<!-- FERMETURE DE LA PAGE : DOCUMENT HTML -->
