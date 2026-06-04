@@ -1,125 +1,104 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Devenir membre - La Clé du Parc</title>
 
-  <link rel="stylesheet" href="../../../OBJETS/CSS/bases.css">
+  <script>
+    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+    document.write('<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">');
+  </script>
 </head>
 
 <body>
 
-<header class="site-header">
-  <div class="site-header-inner">
-    <a href="index.html" class="site-logo">La Clef du Parc</a>
+  <div id="burger-menu-container"></div>
+  <div id="lightbox-information-container"></div>
 
-    <button class="burger-button" type="button" aria-label="Ouvrir le menu" aria-expanded="false">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+  <main class="site-page">
 
-    <nav class="burger-nav" aria-label="Navigation principale">
-      <a href="index.html">Accueil</a>
-      <a href="mon-compte.html">Mon compte</a>
-      <a href="planning.html">Planning</a>
-      <a href="parcs.html">Parcs</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </div>
-</header>
+    <section class="landing-text hero-text">
+      <h1 class="site-title">Devenir membre du club</h1>
 
-<main class="site-page">
+      <h2 class="site-subtitle">
+        Être membre invité est gratuit. Vous profitez des parcs sans abonnement.
+      </h2>
 
-  <section class="landing-text hero-text">
-    <h1 class="site-title">Devenir membre du club</h1>
+      <p>
+        L’inscription permet d’ouvrir un compte membre invité et d’accéder ensuite aux informations utiles du club.
+      </p>
+    </section>
 
-    <h2 class="site-subtitle">
-      Être membre invité est gratuit. Vous profitez des parcs sans abonnement.
-    </h2>
+    <section class="exit-menu-bas" aria-label="Inscription membre">
+      <h2>
+        <a href="/PAGES/PUBLIQUES/FORMULAIRE%20INSCRIPTION%20MEMBRE/formulaire-inscription-membre.html?source=devenir-membre">
+          Je complète le formulaire d’inscription
+        </a>
+      </h2>
+    </section>
 
-    <p>
-      L’inscription permet d’ouvrir un compte membre invité et d’accéder ensuite aux informations utiles du club.
-    </p>
-  </section>
+    <section class="section-recontact">
+      <h2>Faites-vous inviter gratuitement</h2>
+      <p>
+        Un membre abonné peut inviter un membre invité de son réseau à chaque invitation.
+      </p>
 
-  <section class="exit-menu-bas" aria-label="Inscription membre">
-    <h2>
-      <a href="../FORMULAIRE%20INSCRIPTION%20MEMBRE/formulaire-inscription-membre.html?source=devenir-membre">
-        Je complète le formulaire d’inscription
-      </a>
-    </h2>
-  </section>
+      <h2>Invitation gratuite en famille</h2>
+      <p>
+        Un membre abonné famille peut inviter les membres invités de sa famille à chaque invitation.
+      </p>
 
-  <section class="section-recontact">
-    <h2>Faites-vous inviter gratuitement</h2>
-    <p>
-      Un membre abonné peut inviter un membre invité de son réseau à chaque invitation.
-    </p>
+      <h2>Invitation gratuite par un coach</h2>
+      <p>
+        Un coach peut inviter des membres invités de son réseau à chaque invitation.
+      </p>
 
-    <h2>Invitation gratuite en famille</h2>
-    <p>
-      Un membre abonné famille peut inviter les membres invités de sa famille à chaque invitation.
-    </p>
+      <h2>Lire les règlements avant de m’inscrire</h2>
+      <p>
+        Le règlement du club et le règlement de l’application précisent les conditions d’usage du service.
+      </p>
+    </section>
 
-    <h2>Invitation gratuite par un coach</h2>
-    <p>
-      Un coach peut inviter des membres invités de son réseau à chaque invitation.
-    </p>
+    <section class="exit-menu-bas" aria-label="Règlements">
+      <h2>
+        <a href="/PAGES/PUBLIQUES/LE%20REGLEMENT%20DU%20CLUB/le-reglement-du-club.html?source=devenir-membre">
+          Lire le règlement du club
+        </a>
+      </h2>
 
-    <h2>Lire les règlements avant de m’inscrire</h2>
-    <p>
-      Le règlement du club et le règlement de l’application précisent les conditions d’usage du service.
-    </p>
-  </section>
+      <h2>
+        <a href="/PAGES/PUBLIQUES/LE%20REGLEMENT%20DE%20LAPPLICATION/le-reglement-de-lapplication.html?source=devenir-membre">
+          Lire le règlement de l’application
+        </a>
+      </h2>
+    </section>
 
-  <section class="exit-menu-bas" aria-label="Règlements">
-    <h2>
-      <a href="../LE%20REGLEMENT%20DU%20CLUB/le-reglement-du-club.html?source=devenir-membre">
-        Lire le règlement du club
-      </a>
-    </h2>
+  </main>
 
-    <h2>
-      <a href="../LE%20REGLEMENT%20DE%20LAPPLICATION/le-reglement-de-lapplication.html?source=devenir-membre">
-        Lire le règlement de l’application
-      </a>
-    </h2>
-  </section>
+  <div id="footer-container"></div>
 
-  <footer class="site-footer">
-    <a href="../../../index.html?source=devenir-membre">Retour à l’accueil</a>
-    <br>
-    <a href="../MENTIONS%20LEGALES/mentions-legales.html?source=devenir-membre">Mentions légales</a>
-  </footer>
-
-</main>
-
-<script>
-  const burgerButton = document.querySelector(".burger-button");
-  const burgerNav = document.querySelector(".burger-nav");
-
-  if (burgerButton && burgerNav) {
-    burgerButton.addEventListener("click", () => {
-      const isOpen = burgerButton.classList.toggle("is-open");
-      burgerNav.classList.toggle("is-open", isOpen);
-      burgerButton.setAttribute("aria-expanded", String(isOpen));
+  <script>
+    document.querySelectorAll("a[href^='/']").forEach((lien) => {
+      lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
     });
 
-    document.addEventListener("click", (event) => {
-      const clickInsideMenu = burgerNav.contains(event.target);
-      const clickOnButton = burgerButton.contains(event.target);
+    function chargerScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+    }
 
-      if (!clickInsideMenu && !clickOnButton) {
-        burgerButton.classList.remove("is-open");
-        burgerNav.classList.remove("is-open");
-        burgerButton.setAttribute("aria-expanded", "false");
-      }
-    });
-  }
-</script>
+    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/burger-menu.js"))
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js"));
+  </script>
 
 </body>
 </html>
