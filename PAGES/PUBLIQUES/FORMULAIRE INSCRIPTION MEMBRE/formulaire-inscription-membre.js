@@ -1,5 +1,5 @@
 const WORKER_URL = "https://lcdp-github-1.hugues-pavret.workers.dev/";
-const REDIRECT_URL = "index.html";
+const REDIRECT_URL = "/PAGES/PUBLIQUES/LA%20CLE%20DU%20PARC/la-cle-du-parc.html?source=formulaire-inscription-membre";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector(".formulaire-inscription");
