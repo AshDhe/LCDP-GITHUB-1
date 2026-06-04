@@ -67,6 +67,7 @@ body {
 }
 
 body {
+  padding-top: 72px;
   font-family: var(--font-main);
   font-size: var(--font-size-body);
   line-height: var(--line-normal);
@@ -547,6 +548,10 @@ p {
 /* RESPONSIVE */
 
 @media (max-width: 600px) {
+  body {
+    padding-top: 66px;
+  }
+
   :root {
     --container-padding: 18px;
     --font-size-body: 17px;
