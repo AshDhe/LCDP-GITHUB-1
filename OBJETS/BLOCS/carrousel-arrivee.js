@@ -3,8 +3,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!container) return;
 
+  const siteBase = window.SITE_BASE || "";
+
   try {
-    const response = await fetch("/OBJETS/BLOCS/carrousel-arrivee.html");
+    const response = await fetch(siteBase + "/OBJETS/BLOCS/carrousel-arrivee.html");
 
     if (!response.ok) {
       throw new Error("Impossible de charger le carrousel");
@@ -13,11 +15,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     const html = await response.text();
     container.innerHTML = html;
 
+    corrigerImagesAvecSiteBase(container);
     initCarrousel(container);
   } catch (error) {
     console.error("Erreur de chargement du carrousel :", error);
   }
 });
+
+function corrigerImagesAvecSiteBase(scope) {
+  const siteBase = window.SITE_BASE || "";
+
+  if (!siteBase) return;
+
+  scope.querySelectorAll("img[src^='/']").forEach((image) => {
+    image.setAttribute("src", siteBase + image.getAttribute("src"));
+  });
+}
 
 function initCarrousel(container) {
   const carousel = container.querySelector(".carousel");

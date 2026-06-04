@@ -3,8 +3,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!container) return;
 
+  const siteBase = window.SITE_BASE || "";
+
   try {
-    const response = await fetch("/OBJETS/BLOCS/burger-menu.html");
+    const response = await fetch(siteBase + "/OBJETS/BLOCS/burger-menu.html");
 
     if (!response.ok) {
       throw new Error("Impossible de charger le menu");
@@ -12,6 +14,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const html = await response.text();
     container.innerHTML = html;
+
+    corrigerLiensAvecSiteBase(container);
 
     const burgerButton = container.querySelector(".burger-button");
     const burgerNav = container.querySelector(".burger-nav");
@@ -50,3 +54,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Erreur de chargement du burger menu :", error);
   }
 });
+
+function corrigerLiensAvecSiteBase(scope) {
+  const siteBase = window.SITE_BASE || "";
+
+  if (!siteBase) return;
+
+  scope.querySelectorAll("a[href^='/']").forEach((lien) => {
+    lien.setAttribute("href", siteBase + lien.getAttribute("href"));
+  });
+
+  scope.querySelectorAll("img[src^='/']").forEach((image) => {
+    image.setAttribute("src", siteBase + image.getAttribute("src"));
+  });
+}

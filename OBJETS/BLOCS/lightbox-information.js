@@ -9,8 +9,10 @@ async function chargerLightboxInformation() {
 
   if (!container) return;
 
+  const siteBase = window.SITE_BASE || "";
+
   try {
-    const response = await fetch("/OBJETS/BLOCS/lightbox-information.html");
+    const response = await fetch(siteBase + "/OBJETS/BLOCS/lightbox-information.html");
 
     if (!response.ok) {
       throw new Error("Impossible de charger la lightbox d'information");
@@ -48,7 +50,13 @@ window.afficherLightboxInformation = async function (
     lightbox.hidden = true;
 
     if (options.redirectUrl) {
-      window.location.href = options.redirectUrl;
+      const siteBase = window.SITE_BASE || "";
+
+      if (options.redirectUrl.startsWith("/")) {
+        window.location.href = siteBase + options.redirectUrl;
+      } else {
+        window.location.href = options.redirectUrl;
+      }
     }
   };
 };
