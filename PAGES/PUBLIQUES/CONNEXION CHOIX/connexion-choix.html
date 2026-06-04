@@ -7,7 +7,10 @@
 
   <title>Me connecter - La Clé du Parc</title>
 
-  <link rel="stylesheet" href="/OBJETS/CSS/bases.css">
+  <script>
+    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+    document.write('<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">');
+  </script>
 </head>
 
 <body>
@@ -61,9 +64,25 @@
 
   <div id="footer-container"></div>
 
-  <script src="/OBJETS/BLOCS/lightbox-information.js"></script>
-  <script src="/OBJETS/BLOCS/burger-menu.js"></script>
-  <script src="/OBJETS/BLOCS/footer.js"></script>
+  <script>
+    document.querySelectorAll("a[href^='/']").forEach((lien) => {
+      lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
+    });
+
+    function chargerScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+    }
+
+    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/burger-menu.js"))
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js"));
+  </script>
 
 </body>
 </html>
