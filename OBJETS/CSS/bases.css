@@ -519,6 +519,16 @@ p {
   color: var(--color-text);
 }
 
+.footer-links a {
+  text-decoration: underline;
+}
+
+.footer-separator {
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 4px;
+}
+
 
 /* RESPONSIVE */
 
