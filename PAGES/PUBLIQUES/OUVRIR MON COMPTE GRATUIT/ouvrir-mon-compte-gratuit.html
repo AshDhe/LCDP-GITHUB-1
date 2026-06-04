@@ -11,6 +11,26 @@
 
 <body>
 
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="index.html" class="site-logo">La Clef du Parc</a>
+
+    <button class="burger-button" type="button" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="burger-nav" aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a href="mon-compte.html">Mon compte</a>
+      <a href="planning.html">Planning</a>
+      <a href="parcs.html">Parcs</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
 <main class="site-page">
 
   <section class="landing-text hero-text">
@@ -123,6 +143,30 @@
   </footer>
 
 </main>
+
+<script>
+  const burgerButton = document.querySelector(".burger-button");
+  const burgerNav = document.querySelector(".burger-nav");
+
+  if (burgerButton && burgerNav) {
+    burgerButton.addEventListener("click", () => {
+      const isOpen = burgerButton.classList.toggle("is-open");
+      burgerNav.classList.toggle("is-open", isOpen);
+      burgerButton.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.addEventListener("click", (event) => {
+      const clickInsideMenu = burgerNav.contains(event.target);
+      const clickOnButton = burgerButton.contains(event.target);
+
+      if (!clickInsideMenu && !clickOnButton) {
+        burgerButton.classList.remove("is-open");
+        burgerNav.classList.remove("is-open");
+        burgerButton.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+</script>
 
 </body>
 </html>
