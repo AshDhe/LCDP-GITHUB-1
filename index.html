@@ -1,20 +1,39 @@
 <!DOCTYPE html>
 
 <html lang="fr">
+
+
+/* */
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>La Clé du Parc</title>
 
-  <link rel="stylesheet" href="./OBJETS/CSS/bases.css">
+  <link rel="stylesheet" href="/OBJETS/CSS/bases.css">
 </head>
+
+/* */
+
+
+/* */
 
 <body>
 
+
+/* */
+
+<div id="burger-menu-container"></div>
+
+/* */
+
+
+/* */
+
 <main class="site-page">
 
-  <!-- INTRODUCTION -->
+/* */
 
   <section class="landing-text hero-text">
     <h1 class="site-title">La Clé du Parc</h1>
@@ -28,51 +47,33 @@
     </p>
   </section>
 
-  <!-- CARROUSEL -->
+/* */
 
-  <section aria-label="Images de présentation de La Clé du Parc">
-    <div class="carousel">
-      <button class="carousel-btn prev" type="button" aria-label="Image précédente">‹</button>
+  <div id="carrousel-container"></div>
 
-      <div class="carousel-track">
-        <img class="active" src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_1.jpg" alt="Lieu privé d’exception">
-        <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_2.jpg" alt="Parc privé pour se ressourcer">
-        <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_3.jpg" alt="Activité en parc privé">
-        <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_4.jpg" alt="Parc accessible avec ou sans coach">
-        <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_5.jpg" alt="Cadre naturel adapté à chacun">
-        <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_6.jpg" alt="Espace extérieur pour adultes">
-        <img src="./OBJETS/IMAGES/ARRIVEE-CARROUSEL/IMAG_7.jpg" alt="Parc proche de chez vous">
-      </div>
-
-      <button class="carousel-btn next" type="button" aria-label="Image suivante">›</button>
-
-      <div class="carousel-dots" aria-label="Navigation du carrousel"></div>
-    </div>
-  </section>
-
-  <!-- MENU PRINCIPAL -->
+/* */
 
   <section class="exit-menu-bas" aria-label="Navigation principale">
     <h2>
-      <a href="./PAGES/PUBLIQUES/CONNEXION%20A%20MON%20COMPTE/connexion-choix.html?source=entree">
+      <a href="/PAGES/PUBLIQUES/CONNEXION%20A%20MON%20COMPTE/connexion-choix.html?source=entree">
         Me connecter
       </a>
     </h2>
 
     <h2>
-      <a href="./PAGES/PUBLIQUES/OUVRIR%20MON%20COMPTE%20GRATUIT/ouvrir-mon-compte-gratuit.html?source=entree">
+      <a href="/PAGES/PUBLIQUES/OUVRIR%20MON%20COMPTE%20GRATUIT/ouvrir-mon-compte-gratuit.html?source=entree">
         Mon compte gratuit
       </a>
     </h2>
 
     <h2>
-      <a href="./PAGES/PUBLIQUES/LA%20CLE%20DU%20PARC/la-cle-du-parc.html?source=entree">
+      <a href="/PAGES/PUBLIQUES/LA%20CLE%20DU%20PARC/la-cle-du-parc.html?source=entree">
         En savoir plus
       </a>
     </h2>
   </section>
 
-  <!-- CONTACT -->
+/* */
 
   <section class="section-recontact">
     <h2>Demandez à être recontacté</h2>
@@ -84,103 +85,33 @@
 
   <section class="exit-menu-bas" aria-label="Demandes de contact">
     <h2>
-      <a href="./PAGES/PUBLIQUES/FORMULAIRE%20CONTACT%20PARC/formulaire-contact-parc.html?source=entree">
+      <a href="/PAGES/PUBLIQUES/FORMULAIRE%20CONTACT%20PARC/formulaire-contact-parc.html?source=entree">
         Je suis en charge d’un parc
       </a>
     </h2>
 
     <h2>
-      <a href="./PAGES/PUBLIQUES/FORMULAIRE%20CONTACT%20COACH/formulaire-contact-coach.html?source=entree">
+      <a href="/PAGES/PUBLIQUES/FORMULAIRE%20CONTACT%20COACH/formulaire-contact-coach.html?source=entree">
         Je propose une activité
       </a>
     </h2>
   </section>
 
-  <!-- FOOTER -->
-
-  <footer class="site-footer">
-    <a href="./PAGES/PUBLIQUES/MENTIONS%20LEGALES/mentions-legales.html?source=entree">
-      Mentions légales
-    </a>
-  </footer>
+/* */
 
 </main>
 
-<script>
-  const slides = Array.from(document.querySelectorAll(".carousel-track img"));
-  const nextButton = document.querySelector(".next");
-  const prevButton = document.querySelector(".prev");
-  const dotsContainer = document.querySelector(".carousel-dots");
+/* */
 
-  let currentIndex = 0;
-  let autoplay;
+  <div id="footer-container"></div>
 
-  if (slides.length > 0 && nextButton && prevButton && dotsContainer) {
-    slides.forEach((slide, index) => {
-      if (index === 0) {
-        slide.classList.add("active");
-      }
+/* */
 
-      const dot = document.createElement("button");
-      dot.type = "button";
-      dot.setAttribute("aria-label", "Afficher l’image " + (index + 1));
+  <script src="/OBJETS/burger-menu.js"></script>
+  <script src="/OBJETS/footer.js"></script>
+  <script src="/OBJETS/carrousel-arrivee.js"></script>
 
-      if (index === 0) {
-        dot.classList.add("active");
-      }
-
-      dot.addEventListener("click", () => {
-        goToSlide(index);
-        restartAutoplay();
-      });
-
-      dotsContainer.appendChild(dot);
-    });
-
-    const dots = Array.from(dotsContainer.children);
-
-    function goToSlide(index) {
-      slides[currentIndex].classList.remove("active");
-      dots[currentIndex].classList.remove("active");
-
-      currentIndex = index;
-
-      slides[currentIndex].classList.add("active");
-      dots[currentIndex].classList.add("active");
-    }
-
-    function nextSlide() {
-      const nextIndex = (currentIndex + 1) % slides.length;
-      goToSlide(nextIndex);
-    }
-
-    function prevSlide() {
-      const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
-      goToSlide(prevIndex);
-    }
-
-    function startAutoplay() {
-      autoplay = setInterval(nextSlide, 4700);
-    }
-
-    function restartAutoplay() {
-      clearInterval(autoplay);
-      startAutoplay();
-    }
-
-    nextButton.addEventListener("click", () => {
-      nextSlide();
-      restartAutoplay();
-    });
-
-    prevButton.addEventListener("click", () => {
-      prevSlide();
-      restartAutoplay();
-    });
-
-    startAutoplay();
-  }
-</script>
+/* */
 
 </body>
 </html>
