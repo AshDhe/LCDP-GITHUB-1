@@ -198,17 +198,26 @@ p {
   outline-offset: 3px;
 }
 
-
 /* BURGER MENU */
 
-.site-header {
-  position: sticky;
+#burger-menu-container {
+  position: fixed;
   top: 0;
-  z-index: 1000;
+  left: 0;
+  width: 100%;
+  z-index: 10000;
+  background: white;
+  overflow: visible;
+}
+
+.site-header {
+  position: relative;
+  z-index: 10001;
   width: 100%;
   background: rgba(255, 255, 255, 0.96);
   border-bottom: 1px solid var(--color-border);
   backdrop-filter: blur(10px);
+  overflow: visible;
 }
 
 .site-header-inner {
@@ -268,10 +277,11 @@ p {
 }
 
 .burger-nav {
-  position: absolute;
+  position: fixed;
   top: 72px;
   right: max(24px, calc((100vw - var(--container-width)) / 2));
   width: min(320px, calc(100vw - 48px));
+  max-height: calc(100vh - 88px);
   padding: var(--space-2);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-large);
@@ -280,6 +290,8 @@ p {
   display: none;
   flex-direction: column;
   gap: var(--space-1);
+  overflow-y: auto;
+  z-index: 10002;
 }
 
 .burger-nav.is-open {
@@ -308,7 +320,6 @@ p {
   outline: 3px solid rgba(35, 68, 56, 0.22);
   outline-offset: 3px;
 }
-
 
 /* CARROUSEL */
 
@@ -577,22 +588,23 @@ p {
     margin-right: 8px;
   }
 
-
   /* RESPONSIVE - BURGER MENU */
 
-  .site-header-inner {
-    width: 100%;
-    padding: 0 var(--container-padding);
-    min-height: 66px;
-  }
+.site-header-inner {
+  width: 100%;
+  padding: 0 var(--container-padding);
+  min-height: 66px;
+ }
 
-  .burger-nav {
-    top: 66px;
-    right: var(--container-padding);
-    left: var(--container-padding);
-    width: auto;
-  }
-
+.burger-nav {
+  position: fixed;
+  top: 66px;
+  left: var(--container-padding);
+  right: var(--container-padding);
+  width: auto;
+  max-height: calc(100vh - 82px);
+  overflow-y: auto;
+ } 
 
   /* RESPONSIVE - CARROUSEL */
 
