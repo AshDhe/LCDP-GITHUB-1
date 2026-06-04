@@ -1,5 +1,10 @@
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", chargerFooter);
+} else {
+  chargerFooter();
+}
 
-document.addEventListener("DOMContentLoaded", async () => {
+async function chargerFooter() {
   const container = document.getElementById("footer-container");
 
   if (!container) return;
@@ -20,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (error) {
     console.error("Erreur de chargement du footer :", error);
   }
-});
+}
 
 function corrigerLiensFooterAvecSiteBase(scope) {
   const siteBase = window.SITE_BASE || "";

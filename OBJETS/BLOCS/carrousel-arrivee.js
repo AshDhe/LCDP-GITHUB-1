@@ -1,5 +1,11 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  const container = document.getElementById("carrousel-container");
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", chargerCarrouselArrivee);
+} else {
+  chargerCarrouselArrivee();
+}
+
+async function chargerCarrouselArrivee() {
+  const container = document.getElementById("carousel-container");
 
   if (!container) return;
 
@@ -15,14 +21,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const html = await response.text();
     container.innerHTML = html;
 
-    corrigerImagesAvecSiteBase(container);
+    corrigerImagesCarrouselAvecSiteBase(container);
     initCarrousel(container);
   } catch (error) {
     console.error("Erreur de chargement du carrousel :", error);
   }
-});
+}
 
-function corrigerImagesAvecSiteBase(scope) {
+function corrigerImagesCarrouselAvecSiteBase(scope) {
   const siteBase = window.SITE_BASE || "";
 
   if (!siteBase) return;

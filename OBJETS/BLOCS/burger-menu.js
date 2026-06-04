@@ -1,4 +1,10 @@
-document.addEventListener("DOMContentLoaded", async () => {
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", chargerBurgerMenu);
+} else {
+  chargerBurgerMenu();
+}
+
+async function chargerBurgerMenu() {
   const container = document.getElementById("burger-menu-container");
 
   if (!container) return;
@@ -53,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (error) {
     console.error("Erreur de chargement du burger menu :", error);
   }
-});
+}
 
 function corrigerLiensAvecSiteBase(scope) {
   const siteBase = window.SITE_BASE || "";

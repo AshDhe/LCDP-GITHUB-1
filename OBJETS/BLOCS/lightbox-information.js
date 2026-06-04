@@ -1,8 +1,14 @@
 let lightboxInformationReady = null;
 
-document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initialiserLightboxInformation);
+} else {
+  initialiserLightboxInformation();
+}
+
+function initialiserLightboxInformation() {
   lightboxInformationReady = chargerLightboxInformation();
-});
+}
 
 async function chargerLightboxInformation() {
   const container = document.getElementById("lightbox-information-container");
