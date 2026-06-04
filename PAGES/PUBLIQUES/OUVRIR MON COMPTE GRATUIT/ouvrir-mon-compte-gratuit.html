@@ -1,172 +1,151 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Ouvrir mon compte gratuit - La Clé du Parc</title>
 
-  <link rel="stylesheet" href="../../../OBJETS/CSS/bases.css">
+  <script>
+    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+    document.write('<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">');
+  </script>
 </head>
 
 <body>
 
-<header class="site-header">
-  <div class="site-header-inner">
-    <a href="index.html" class="site-logo">La Clef du Parc</a>
+  <div id="burger-menu-container"></div>
+  <div id="lightbox-information-container"></div>
 
-    <button class="burger-button" type="button" aria-label="Ouvrir le menu" aria-expanded="false">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+  <main class="site-page">
 
-    <nav class="burger-nav" aria-label="Navigation principale">
-      <a href="index.html">Accueil</a>
-      <a href="mon-compte.html">Mon compte</a>
-      <a href="planning.html">Planning</a>
-      <a href="parcs.html">Parcs</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </div>
-</header>
+    <section class="landing-text hero-text">
+      <h1 class="site-title">Ouvrir mon compte gratuit</h1>
 
-<main class="site-page">
+      <h2 class="site-subtitle">
+        La Clé du Parc vous donne un accès nominatif et contrôlé à des lieux privés de plein air proches de vous.
+      </h2>
 
-  <section class="landing-text hero-text">
-    <h1 class="site-title">Ouvrir mon compte gratuit</h1>
+      <p>
+        L’occasion de vous ressourcer toute l’année dans des lieux d’exception et de renforcer votre bien-être.
+      </p>
+    </section>
 
-    <h2 class="site-subtitle">
-      La Clé du Parc vous donne un accès nominatif et contrôlé à des lieux privés de plein air proches de vous.
-    </h2>
+    <section class="exit-menu-bas" aria-label="Ouverture de compte">
+      <h2>
+        <a href="/PAGES/PUBLIQUES/CONNEXION%20CHOIX/connexion-choix.html?source=ouvrir-mon-compte-gratuit">
+          J’ai déjà un compte
+        </a>
+      </h2>
 
-    <p>
-      L’occasion de vous ressourcer toute l’année dans des lieux d’exception et de renforcer votre bien-être.
-    </p>
-  </section>
+      <h2>
+        <a href="/PAGES/PUBLIQUES/DEVENIR%20MEMBRE/devenir-membre.html?source=ouvrir-mon-compte-gratuit">
+          J’ouvre mon compte gratuit
+        </a>
+      </h2>
+    </section>
 
-  <section class="exit-menu-bas" aria-label="Ouverture de compte">
-    <h2>
-      <a href="../CONNEXION%20A%20MON%20COMPTE/connexion-choix.html?source=ouvrir-mon-compte-gratuit">
-        J’ai déjà un compte
-      </a>
-    </h2>
+    <section class="section-recontact">
+      <h2>Vous ressourcer</h2>
+      <p>
+        Accédez à des espaces privés de plein air pour prendre du temps dans un cadre calme, naturel et sécurisé.
+      </p>
 
-    <h2>
-      <a href="../DEVENIR%20MEMBRE/devenir-membre.html?source=ouvrir-mon-compte-gratuit">
-        J’ouvre mon compte gratuit
-      </a>
-    </h2>
-  </section>
+      <h2>Partager vos passions</h2>
+      <p>
+        Rejoignez un réseau qui valorise les activités de plein air, les rencontres choisies et les usages respectueux des lieux.
+      </p>
 
-  <section class="section-recontact">
-    <h2>Vous ressourcer</h2>
-    <p>
-      Accédez à des espaces privés de plein air pour prendre du temps dans un cadre calme, naturel et sécurisé.
-    </p>
+      <h2>Des parcs inoubliables</h2>
+      <p>
+        Découvrez des lieux sélectionnés pour leur qualité, leur environnement et leur capacité à offrir une vraie respiration.
+      </p>
 
-    <h2>Partager vos passions</h2>
-    <p>
-      Rejoignez un réseau qui valorise les activités de plein air, les rencontres choisies et les usages respectueux des lieux.
-    </p>
+      <h2>Seul ou en groupe</h2>
+      <p>
+        Selon les règles du club et du parc concerné, vous pouvez profiter des lieux seul, en famille ou avec des invités.
+      </p>
 
-    <h2>Des parcs inoubliables</h2>
-    <p>
-      Découvrez des lieux sélectionnés pour leur qualité, leur environnement et leur capacité à offrir une vraie respiration.
-    </p>
+      <h2>Avec ou sans activité</h2>
+      <p>
+        Vous pouvez venir simplement vous ressourcer ou participer à une activité proposée dans le cadre du club.
+      </p>
+    </section>
 
-    <h2>Seul ou en groupe</h2>
-    <p>
-      Selon les règles du club et du parc concerné, vous pouvez profiter des lieux seul, en famille ou avec des invités.
-    </p>
+    <section class="exit-menu-bas" aria-label="Devenir membre">
+      <h2>
+        <a href="/PAGES/PUBLIQUES/DEVENIR%20MEMBRE/devenir-membre.html?source=ouvrir-mon-compte-gratuit">
+          Je veux devenir membre
+        </a>
+      </h2>
+    </section>
 
-    <h2>Avec ou sans activité</h2>
-    <p>
-      Vous pouvez venir simplement vous ressourcer ou participer à une activité proposée dans le cadre du club.
-    </p>
-  </section>
+    <section class="section-recontact">
+      <h2>Comment ça marche</h2>
+      <p>
+        Le compte gratuit permet de rejoindre le club comme membre invité. Les accès aux parcs sont ensuite organisés selon les règles applicables.
+      </p>
 
-  <section class="exit-menu-bas" aria-label="Devenir membre">
-    <h2>
-      <a href="../DEVENIR%20MEMBRE/devenir-membre.html?source=ouvrir-mon-compte-gratuit">
-        Je veux devenir membre
-      </a>
-    </h2>
-  </section>
+      <h2>En savoir plus</h2>
+      <p>
+        Une page dédiée présente le fonctionnement du club, son cadre associatif et les conditions générales d’usage.
+      </p>
+    </section>
 
-  <section class="section-recontact">
-    <h2>Comment ça marche</h2>
-    <p>
-      Le compte gratuit permet de rejoindre le club comme membre invité. Les accès aux parcs sont ensuite organisés selon les règles applicables.
-    </p>
+    <section class="exit-menu-bas" aria-label="Informations complémentaires">
+      <h2>
+        <a href="/PAGES/PUBLIQUES/LA%20CLE%20DU%20PARC/la-cle-du-parc.html?source=ouvrir-mon-compte-gratuit">
+          En savoir plus sur le club et l’association
+        </a>
+      </h2>
+    </section>
 
-    <h2>En savoir plus</h2>
-    <p>
-      Une page dédiée présente le fonctionnement du club, son cadre associatif et les conditions générales d’usage.
-    </p>
-  </section>
+    <section class="section-recontact">
+      <h2>Demandez à être recontacté</h2>
 
-  <section class="exit-menu-bas" aria-label="Informations complémentaires">
-    <h2>
-      <a href="../LA%20CLE%20DU%20PARC/la-cle-du-parc.html?source=ouvrir-mon-compte-gratuit">
-        En savoir plus sur le club et l’association
-      </a>
-    </h2>
-  </section>
+      <p>
+        Vous êtes responsable d’un parc ou vous proposez une activité ? Vous pouvez demander à être recontacté.
+      </p>
+    </section>
 
-  <section class="section-recontact">
-    <h2>Demandez à être recontacté</h2>
+    <section class="exit-menu-bas" aria-label="Demandes de contact">
+      <h2>
+        <a href="/PAGES/PUBLIQUES/FORMULAIRE%20CONTACT%20PARC/formulaire-contact-parc.html?source=ouvrir-mon-compte-gratuit">
+          Je gère un parc
+        </a>
+      </h2>
 
-    <p>
-      Vous êtes responsable d’un parc ou vous proposez une activité ? Vous pouvez demander à être recontacté.
-    </p>
-  </section>
+      <h2>
+        <a href="/PAGES/PUBLIQUES/FORMULAIRE%20CONTACT%20COACH/formulaire-contact-coach.html?source=ouvrir-mon-compte-gratuit">
+          J’organise une activité
+        </a>
+      </h2>
+    </section>
 
-  <section class="exit-menu-bas" aria-label="Demandes de contact">
-    <h2>
-      <a href="../FORMULAIRE%20CONTACT%20PARC/formulaire-contact-parc.html?source=ouvrir-mon-compte-gratuit">
-        Je gère un parc
-      </a>
-    </h2>
+  </main>
 
-    <h2>
-      <a href="../FORMULAIRE%20CONTACT%20COACH/formulaire-contact-coach.html?source=ouvrir-mon-compte-gratuit">
-        J’organise une activité
-      </a>
-    </h2>
-  </section>
+  <div id="footer-container"></div>
 
-  <footer class="site-footer">
-    <a href="../../../index.html?source=ouvrir-mon-compte-gratuit">Retour à l’accueil</a>
-    <br>
-    <a href="../MENTIONS%20LEGALES/mentions-legales.html?source=ouvrir-mon-compte-gratuit">Mentions légales</a>
-  </footer>
-
-</main>
-
-<script>
-  const burgerButton = document.querySelector(".burger-button");
-  const burgerNav = document.querySelector(".burger-nav");
-
-  if (burgerButton && burgerNav) {
-    burgerButton.addEventListener("click", () => {
-      const isOpen = burgerButton.classList.toggle("is-open");
-      burgerNav.classList.toggle("is-open", isOpen);
-      burgerButton.setAttribute("aria-expanded", String(isOpen));
+  <script>
+    document.querySelectorAll("a[href^='/']").forEach((lien) => {
+      lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
     });
 
-    document.addEventListener("click", (event) => {
-      const clickInsideMenu = burgerNav.contains(event.target);
-      const clickOnButton = burgerButton.contains(event.target);
+    function chargerScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+    }
 
-      if (!clickInsideMenu && !clickOnButton) {
-        burgerButton.classList.remove("is-open");
-        burgerNav.classList.remove("is-open");
-        burgerButton.setAttribute("aria-expanded", "false");
-      }
-    });
-  }
-</script>
+    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/burger-menu.js"))
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js"));
+  </script>
 
 </body>
 </html>
