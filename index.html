@@ -81,21 +81,25 @@
   <div id="footer-container"></div>
 
   <script>
-    function chargerScript(src) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.body.appendChild(script);
-      });
-    }
+  document.querySelectorAll("a[href^='/']").forEach((lien) => {
+    lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
+  });
 
-    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
-      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/burger-menu.js"))
-      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js"))
-      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/carrousel-arrivee.js"));
-  </script>
+  function chargerScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  }
+
+  chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
+    .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/burger-menu.js"))
+    .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js"))
+    .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/carrousel-arrivee.js"));
+</script>
 
 </body>
 </html>
