@@ -11,82 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const submitButton = form.querySelector("button[type='submit']");
 
-  const lightbox = document.getElementById("formulaire-lightbox");
-  const lightboxBox = lightbox ? lightbox.querySelector(".formulaire-lightbox") : null;
-  const lightboxTitre = document.getElementById("formulaire-lightbox-titre");
-  const lightboxMessage = document.getElementById("formulaire-lightbox-message");
-  const lightboxOk = document.getElementById("formulaire-lightbox-ok");
-
-  if (!lightbox || !lightboxBox || !lightboxTitre || !lightboxMessage || !lightboxOk) {
-    console.error("Lightbox introuvable ou incomplète.");
-    return;
-  }
-
-  let actionValidation = null;
-  let dernierChampErreur = null;
-
-  lightboxOk.addEventListener("click", () => {
-    fermerLightbox();
-
-    if (typeof actionValidation === "function") {
-      actionValidation();
-      return;
-    }
-
-    if (dernierChampErreur) {
-      dernierChampErreur.focus();
-    }
-  });
-
-  const champsTexte = [
-    "nommembre",
-    "prenommembre",
-    "dptmtmembre",
-    "emailmembre",
-    "emailparrain"
-  ];
-
-  champsTexte.forEach((name) => {
-    const champ = form.querySelector(`[name="${name}"]`);
-
-    if (!champ) return;
-
-    champ.addEventListener("blur", () => {
-      const erreur = verifierChamp(champ);
-
-      if (erreur) {
-        dernierChampErreur = champ;
-        ouvrirLightboxErreur(erreur);
-      }
-    });
-  });
-
-  const checkboxes = [
-    "regleclub_v1",
-    "regleapp_v1"
-  ];
-
-  checkboxes.forEach((name) => {
-    const checkbox = form.querySelector(`[name="${name}"]`);
-
-    if (!checkbox) return;
-
-    checkbox.addEventListener("change", () => {
-      if (!checkbox.checked) {
-        dernierChampErreur = checkbox;
-        ouvrirLightboxErreur("Ce règlement doit être accepté pour envoyer le formulaire.");
-      }
-    });
-  });
-
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const premierControle = verifierPremierChampInvalide(form);
+    const erreur = verifierFormulaire(form);
 
-    if (premierControle) {
-      dernierChampErreur = premierControle.champ;
-      ouvrirLightboxErreur(premierControle.message);
+    if (erreur) {
+      afficherAlerte("Attention", erreur);
       return;
     }
 
@@ -107,11 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        const texteErreur = result.erreurs
+        const messageErreur = result.erreurs
           ? result.erreurs[0]
           : result.message || "Erreur lors de l’envoi du formulaire.";
 
-        ouvrirLightboxErreur(texteErreur);
+        afficherAlerte("Attention", messageErreur);
+
         submitButton.disabled = false;
         submitButton.textContent = "Envoyer";
         return;
@@ -119,15 +51,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       form.reset();
 
-      ouvrirLightboxValidation(
-        "Votre demande a bien été enregistrée.",
-        () => {
-          window.location.href = REDIRECT_URL;
-        }
+      afficherValidation(
+        "Enregistrement confirmé",
+        "Votre demande a bien été enregistrée."
       );
 
     } catch (error) {
-      ouvrirLightboxErreur("Impossible d’envoyer le formulaire pour le moment.");
+      afficherAlerte(
+        "Attention",
+        "Impossible d’envoyer le formulaire pour le moment."
+      );
+
       submitButton.disabled = false;
       submitButton.textContent = "Envoyer";
       return;
@@ -136,44 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
     submitButton.disabled = false;
     submitButton.textContent = "Envoyer";
   });
-
-  function ouvrirLightboxErreur(message) {
-    actionValidation = null;
-
-    lightboxTitre.textContent = "Attention";
-    lightboxMessage.textContent = message;
-
-    lightboxBox.classList.remove("formulaire-lightbox-validation");
-    lightboxBox.classList.add("formulaire-lightbox-erreur");
-
-    lightbox.hidden = false;
-    document.body.classList.add("formulaire-lightbox-active");
-
-    lightboxOk.focus();
-  }
-
-  function ouvrirLightboxValidation(message, actionOk) {
-    actionValidation = actionOk;
-
-    lightboxTitre.textContent = "Confirmation";
-    lightboxMessage.textContent = message;
-
-    lightboxBox.classList.remove("formulaire-lightbox-erreur");
-    lightboxBox.classList.add("formulaire-lightbox-validation");
-
-    lightbox.hidden = false;
-    document.body.classList.add("formulaire-lightbox-active");
-
-    lightboxOk.focus();
-  }
-
-  function fermerLightbox() {
-    lightbox.hidden = true;
-    document.body.classList.remove("formulaire-lightbox-active");
-
-    lightboxBox.classList.remove("formulaire-lightbox-erreur");
-    lightboxBox.classList.remove("formulaire-lightbox-validation");
-  }
 });
 
 function lireDonneesFormulaire(form) {
@@ -198,119 +94,76 @@ function getChecked(form, name) {
   return field ? field.checked : false;
 }
 
-function verifierChamp(champ) {
-  const name = champ.name;
-  const value = champ.value.trim();
+function verifierFormulaire(form) {
+  const nommembre = getValue(form, "nommembre");
+  const prenommembre = getValue(form, "prenommembre");
+  const dptmtmembre = getValue(form, "dptmtmembre");
+  const emailmembre = getValue(form, "emailmembre");
+  const emailparrain = getValue(form, "emailparrain");
+  const regleclub = getChecked(form, "regleclub_v1");
+  const regleapp = getChecked(form, "regleapp_v1");
 
-  if (name === "nommembre" && !value) {
+  if (!nommembre) {
     return "Le nom est obligatoire.";
   }
 
-  if (name === "prenommembre" && !value) {
+  if (!prenommembre) {
     return "Le prénom est obligatoire.";
   }
 
-  if (name === "dptmtmembre") {
-    if (!value) {
-      return "Le département est obligatoire.";
-    }
-
-    if (!/^(?:\d{2,3}|2A|2B)$/i.test(value)) {
-      return "Le numéro de département est invalide.";
-    }
+  if (!dptmtmembre) {
+    return "Le département est obligatoire.";
   }
 
-  if (name === "emailmembre") {
-    if (!value) {
-      return "L’adresse e-mail est obligatoire.";
-    }
-
-    if (!isValidEmail(value)) {
-      return "L’adresse e-mail est invalide.";
-    }
+  if (!/^(?:\d{2,3}|2A|2B)$/i.test(dptmtmembre)) {
+    return "Le numéro de département est invalide.";
   }
 
-  if (name === "emailparrain" && value && !isValidEmail(value)) {
+  if (!emailmembre) {
+    return "L’adresse e-mail est obligatoire.";
+  }
+
+  if (!isValidEmail(emailmembre)) {
+    return "L’adresse e-mail est invalide.";
+  }
+
+  if (emailparrain && !isValidEmail(emailparrain)) {
     return "L’adresse e-mail du parrain est invalide.";
+  }
+
+  if (!regleclub) {
+    return "Le règlement du club doit être accepté.";
+  }
+
+  if (!regleapp) {
+    return "Le règlement de l’application doit être accepté.";
   }
 
   return "";
 }
 
-function verifierPremierChampInvalide(form) {
-  const controles = [
-    {
-      name: "nommembre",
-      message: "Le nom est obligatoire."
-    },
-    {
-      name: "prenommembre",
-      message: "Le prénom est obligatoire."
-    },
-    {
-      name: "dptmtmembre",
-      message: "Le département est obligatoire."
-    },
-    {
-      name: "emailmembre",
-      message: "L’adresse e-mail est obligatoire."
-    }
-  ];
-
-  for (const controle of controles) {
-    const champ = form.querySelector(`[name="${controle.name}"]`);
-
-    if (!champ || !champ.value.trim()) {
-      return {
-        champ,
-        message: controle.message
-      };
-    }
-
-    const erreur = verifierChamp(champ);
-
-    if (erreur) {
-      return {
-        champ,
-        message: erreur
-      };
-    }
-  }
-
-  const emailParrain = form.querySelector('[name="emailparrain"]');
-
-  if (emailParrain) {
-    const erreurParrain = verifierChamp(emailParrain);
-
-    if (erreurParrain) {
-      return {
-        champ: emailParrain,
-        message: erreurParrain
-      };
-    }
-  }
-
-  const regleClub = form.querySelector('[name="regleclub_v1"]');
-
-  if (!regleClub || !regleClub.checked) {
-    return {
-      champ: regleClub,
-      message: "Le règlement du club doit être accepté."
-    };
-  }
-
-  const regleApp = form.querySelector('[name="regleapp_v1"]');
-
-  if (!regleApp || !regleApp.checked) {
-    return {
-      champ: regleApp,
-      message: "Le règlement de l’application doit être accepté."
-    };
-  }
-
-  return null;
-}
-
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function afficherAlerte(titre, message) {
+  if (typeof window.afficherLightboxInformation === "function") {
+    window.afficherLightboxInformation(titre, message, {
+      type: "erreur"
+    });
+  } else {
+    alert(message);
+  }
+}
+
+function afficherValidation(titre, message) {
+  if (typeof window.afficherLightboxInformation === "function") {
+    window.afficherLightboxInformation(titre, message, {
+      type: "validation",
+      redirectUrl: REDIRECT_URL
+    });
+  } else {
+    alert(message);
+    window.location.href = REDIRECT_URL;
+  }
 }
