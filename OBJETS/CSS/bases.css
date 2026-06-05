@@ -574,6 +574,26 @@ p {
   display: none;
 }
 
+.lightbox-box.lightbox-erreur {
+  border: 2px solid #8a2d2d;
+}
+
+.lightbox-box.lightbox-erreur h2 {
+  color: #8a2d2d;
+}
+
+.lightbox-box.lightbox-validation {
+  border: 2px solid var(--color-border-strong);
+}
+
+.lightbox-box.lightbox-validation h2 {
+  color: var(--color-text);
+}
+
+.lightbox-box.lightbox-information-simple {
+  border: 1px solid var(--color-border);
+}
+
 
 /* SECTION RECONTACT */
 
