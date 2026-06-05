@@ -9,10 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const submitButton = form.querySelector("button[type='submit']");
+  const submitButton = document.getElementById("bouton-envoyer-inscription");
 
-  form.addEventListener("submit", async (event) => {
+  form.addEventListener("submit", (event) => {
     event.preventDefault();
+  });
+
+  submitButton.addEventListener("click", async () => {
 
     const erreur = verifierFormulaire(form);
 
