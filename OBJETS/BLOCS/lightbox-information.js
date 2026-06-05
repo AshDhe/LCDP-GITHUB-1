@@ -13,7 +13,10 @@ function initialiserLightboxInformation() {
 async function chargerLightboxInformation() {
   const container = document.getElementById("lightbox-information-container");
 
-  if (!container) return;
+  if (!container) {
+    console.error("Conteneur lightbox-information-container introuvable.");
+    return false;
+  }
 
   const siteBase = window.SITE_BASE || "";
 
@@ -26,8 +29,11 @@ async function chargerLightboxInformation() {
 
     const html = await response.text();
     container.innerHTML = html;
+
+    return true;
   } catch (error) {
     console.error("Erreur lightbox d'information :", error);
+    return false;
   }
 }
 
@@ -46,9 +52,16 @@ window.afficherLightboxInformation = async function (
   const messageElement = document.getElementById("lightbox-information-message");
   const okButton = document.getElementById("lightbox-information-ok");
 
-  if (!lightbox || !box || !titleElement || !messageElement || !okButton) return;
+  if (!lightbox || !box || !titleElement || !messageElement || !okButton) {
+    console.error("Lightbox d'information introuvable ou incomplète.");
+    return false;
+  }
 
-  box.classList.remove("lightbox-erreur", "lightbox-validation", "lightbox-information-simple");
+  box.classList.remove(
+    "lightbox-erreur",
+    "lightbox-validation",
+    "lightbox-information-simple"
+  );
 
   if (options.type === "validation") {
     box.classList.add("lightbox-validation");
@@ -66,7 +79,11 @@ window.afficherLightboxInformation = async function (
   okButton.onclick = () => {
     lightbox.hidden = true;
 
-    box.classList.remove("lightbox-erreur", "lightbox-validation", "lightbox-information-simple");
+    box.classList.remove(
+      "lightbox-erreur",
+      "lightbox-validation",
+      "lightbox-information-simple"
+    );
 
     if (options.redirectUrl) {
       const siteBase = window.SITE_BASE || "";
@@ -76,8 +93,16 @@ window.afficherLightboxInformation = async function (
       } else {
         window.location.href = options.redirectUrl;
       }
+
+      return;
+    }
+
+    if (typeof options.onClose === "function") {
+      options.onClose();
     }
   };
 
   okButton.focus();
+
+  return true;
 };
