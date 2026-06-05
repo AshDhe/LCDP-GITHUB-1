@@ -116,6 +116,7 @@
   <div id="footer-container"></div>
 
   <script>
+  
   document.querySelectorAll("a[href^='/']").forEach((lien) => {
     lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
   });
@@ -138,10 +139,10 @@
 
   chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js")
     .catch((error) => console.error(error));
-
-  chargerScript(window.SITE_BASE + "/PAGES/PUBLIQUES/FORMULAIRE%20INSCRIPTION%20MEMBRE/formulaire-inscription-membre.js")
-    .catch((error) => console.error(error));
 </script>
+
+<script src="formulaire-inscription-membre.js"></script>
+
 
 </body>
 </html>
