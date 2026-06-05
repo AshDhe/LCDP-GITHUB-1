@@ -430,6 +430,21 @@ p {
   background: #ffffff;
 }
 
+/* LOGO CENTRAL */
+
+.logo-central-section {
+  padding: var(--space-5) 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-central {
+  width: clamp(120px, 16vw, 220px);
+  aspect-ratio: 1 / 1;
+  display: block;
+  object-fit: contain;
+}
 
 /* MENUS DE NAVIGATION BAS DE PAGE */
 
@@ -452,7 +467,6 @@ p {
 .exit-menu-bas h2 a {
   width: 100%;
 }
-
 
 /* LIGHTBOX */
 
@@ -661,6 +675,14 @@ p {
     height: 8px;
   }
 
+/* RESPONSIVE - LOGO CENTRAL */
+  .logo-central-section {
+    padding: var(--space-4) 0;
+  }
+
+  .logo-central {
+    width: clamp(110px, 42vw, 170px);
+  }
 
   /* RESPONSIVE - MENUS DE NAVIGATION BAS DE PAGE */
 
