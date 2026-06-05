@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Devenir membre - La Clé du Parc</title>
+  <title>Devenir membre invité - La Clé du Parc</title>
 
   <script>
     window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
@@ -21,15 +21,11 @@
   <main class="site-page">
 
     <section class="landing-text hero-text">
-      <h1 class="site-title">Devenir membre du club</h1>
+      <h1 class="site-title">Membre invité</h1>
 
       <h2 class="site-subtitle">
-        Être membre invité est gratuit. Vous profitez des parcs sans abonnement.
+        Profitez des parcs sans payer d'abonnement
       </h2>
-
-      <p>
-        L’inscription permet d’ouvrir un compte membre invité et d’accéder ensuite aux informations utiles du club.
-      </p>
     </section>
 
     <section class="exit-menu-bas" aria-label="Inscription membre">
@@ -40,49 +36,81 @@
       </h2>
     </section>
 
-    <section class="section-recontact">
-      <h2>Faites-vous inviter gratuitement</h2>
+<section class="section-galerie section-galerie-compte" aria-label="Les avantages du club">
+
+  <header class="section-galerie-header">
+    <h2>Pourquoi ouvrir un compte abonné ?</h2>
+  </header>
+
+  <div class="galerie-grid">
+
+    <article class="galerie-card">
+      <h3>Faîtes-vous inviter</h3>
+      <img src="/OBJETS/IMAGES/GALERIE/MEMBRE%2°ABONNE/membre-invite.jpg" alt="Membre invité La Clef du Parc">
       <p>
         Un membre abonné peut inviter un membre invité de son réseau à chaque invitation.
       </p>
+    </article>
 
-      <h2>Invitation gratuite en famille</h2>
+    <article class="galerie-card">
+      <h3>Invité(e) en famille</h3>
+      <img src="/OBJETS/IMAGES/GALERIE/MEMBRE%2°ABONNE/invite-famille.jpg" alt="Invité famille La Clef du Parc">
       <p>
         Un membre abonné famille peut inviter les membres invités de sa famille à chaque invitation.
       </p>
+    </article>
 
-      <h2>Invitation gratuite par un coach</h2>
+    <article class="galerie-card">
+      <h3>Invité(e) par un coach</h3>
+      <img src="/OBJETS/IMAGES/GALERIE/MEMBRE%2°ABONNE/invite-coach.jpg" alt="Invité coach La Clef du Parc">
       <p>
         Un coach peut inviter des membres invités de son réseau à chaque invitation.
       </p>
+    </article>
 
-      <h2>Lire les règlements avant de m’inscrire</h2>
+    <article class="galerie-card">
+      <h3>Partagez des moments d'exception</h3>
+      <img src="/OBJETS/IMAGES/GALERIE/MEMBRE%2°ABONNE/moment-invite.jpg" alt="Moments invité La Clef du Parc">
       <p>
-        Le règlement du club et le règlement de l’application précisent les conditions d’usage du service.
+        Accédez gratuitement à des moments d'exception pour vous ressourcer toute l’année.
+      </p>
+    </article>
+
+  </div>
+</section>
+
+    <section class="section-recontact">
+      <h2>Lire les règlements avant de s'inscrire</h2>
+      <p>
+        Le règlement du club et le règlement de l’application précisent les conditions d’usage du service et de bénéfice du droit d'accès aux parcs.
       </p>
     </section>
 
     <section class="exit-menu-bas" aria-label="Règlements">
       <h2>
         <a href="/PAGES/PUBLIQUES/LE%20REGLEMENT%20DU%20CLUB/le-reglement-du-club.html?source=devenir-membre">
-          Lire le règlement du club
+          Le règlement du club
         </a>
       </h2>
 
       <h2>
         <a href="/PAGES/PUBLIQUES/LE%20REGLEMENT%20DE%20LAPPLICATION/le-reglement-de-lapplication.html?source=devenir-membre">
-          Lire le règlement de l’application
+          Le règlement de l’application
         </a>
       </h2>
     </section>
 
   </main>
 
-  <div id="footer-container"></div>
+  <div id="footer-container"></div>inscription
 
   <script>
     document.querySelectorAll("a[href^='/']").forEach((lien) => {
       lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
+    });
+
+    document.querySelectorAll("img[src^='/']").forEach((image) => {
+    image.setAttribute("src", window.SITE_BASE + image.getAttribute("src"));
     });
 
     function chargerScript(src) {
