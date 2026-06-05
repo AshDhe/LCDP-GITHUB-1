@@ -499,36 +499,75 @@ p {
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
-  background: rgba(31, 42, 36, 0.45);
-  backdrop-filter: blur(3px);
+  background: rgba(31, 42, 36, 0.52);
+  backdrop-filter: blur(6px);
 }
 
 .lightbox-box,
 .lightbox-information {
-  width: min(100%, 560px);
-  padding: var(--space-5);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-large);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-soft);
+  width: min(100%, 440px);
+  padding: 34px 32px 30px;
+  border: 1px solid rgba(31, 42, 36, 0.14);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 24px 70px rgba(31, 42, 36, 0.22);
   text-align: center;
+}
+
+.lightbox-box::before,
+.lightbox-information::before {
+  content: "✓";
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: rgba(35, 68, 56, 0.1);
+  color: var(--color-primary);
+  font-size: 30px;
+  line-height: 52px;
+  font-weight: 700;
+  display: block;
 }
 
 .lightbox-box h2,
 .lightbox-information h2 {
-  margin-bottom: var(--space-3);
+  max-width: 320px;
+  margin: 0 auto var(--space-3);
+  font-size: clamp(30px, 4vw, 42px);
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
 }
 
 .lightbox-box p,
 .lightbox-information p {
-  max-width: none;
+  max-width: 320px;
   margin: 0 auto var(--space-4);
-  color: var(--color-text);
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--color-text-muted);
 }
 
 .lightbox-box .button,
 .lightbox-information .button {
-  min-width: 140px;
+  min-width: 150px;
+  min-height: 54px;
+  padding: 14px 28px;
+  border: 1px solid var(--color-primary);
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(35, 68, 56, 0.18);
+}
+
+.lightbox-box .button:hover,
+.lightbox-information .button:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: #ffffff;
 }
 
 .lightbox-overlay[hidden] {
@@ -827,15 +866,31 @@ p {
 
   /* RESPONSIVE - LIGHTBOX */
 
-  .lightbox-overlay {
-    padding: var(--space-3);
-  }
+ .lightbox-box,
+.lightbox-information {
+  width: min(100%, 360px);
+  padding: 28px 22px 24px;
+  border-radius: 22px;
+}
 
-  .lightbox-box,
-  .lightbox-information {
-    padding: var(--space-4);
-    border-radius: var(--radius-medium);
-  }
+.lightbox-box::before,
+.lightbox-information::before {
+  width: 46px;
+  height: 46px;
+  margin-bottom: 16px;
+  font-size: 26px;
+  line-height: 46px;
+}
+
+.lightbox-box h2,
+.lightbox-information h2 {
+  font-size: 30px;
+}
+
+.lightbox-box p,
+.lightbox-information p {
+  font-size: 16px;
+}
 
 
   /* RESPONSIVE - SECTION RECONTACT */
