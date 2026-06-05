@@ -153,21 +153,23 @@
 .formulaire-actions button {
   min-height: 54px;
   padding: 14px 22px;
-  border: none;
+  border: 1px solid var(--color-primary);
   border-radius: 8px;
   font-family: Arial, sans-serif;
   font-size: 19px;
   line-height: 1.2;
   font-weight: 700;
-  color: white;
-  background: #2b2b2b;
+  color: #ffffff;
+  background: var(--color-primary);
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
 }
 
 .formulaire-actions button:hover {
-  background: var(--texte-principal);
+  color: #ffffff;
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .formulaire-actions button:active {
