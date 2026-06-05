@@ -430,6 +430,15 @@ p {
   background: #ffffff;
 }
 
+/* TAILLE DES IMAGES */
+
+.logo-cle {
+  width: min(75vw, 460px);
+  height: auto;
+}
+
+
+
 /* LOGO CENTRAL */
 
 .logo-central-section {
