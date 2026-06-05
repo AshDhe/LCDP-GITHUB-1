@@ -437,8 +437,6 @@ p {
   height: auto;
 }
 
-
-
 /* LOGO CENTRAL */
 
 .logo-central-section {
@@ -540,6 +538,11 @@ p {
   max-width: var(--text-width);
   margin-left: 0;
   margin-right: 0;
+}
+
+.texte-recontact span {
+  display: block;
+  margin-bottom: 14px;
 }
 
 /* FOOTER */
