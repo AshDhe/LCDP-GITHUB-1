@@ -548,19 +548,19 @@ p {
 .lightbox-information h2 {
   max-width: 300px;
   margin: 0 auto var(--space-2);
-  font-size: clamp(26px, 3vw, 34px);
-  line-height: 1.12;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: clamp(22px, 2.5vw, 28px);
+  line-height: 1.18;
+  font-weight: 650;
+  letter-spacing: -0.01em;
   color: var(--color-text);
 }
 
 .lightbox-box p,
 .lightbox-information p {
   max-width: 300px;
-  margin: 0 auto var(--space-4);
-  font-size: 16px;
-  line-height: 1.42;
+  margin: 0 auto var(--space-3);
+  font-size: 15px;
+  line-height: 1.45;
   color: var(--color-text-muted);
 }
 
@@ -918,12 +918,12 @@ p {
 
 .lightbox-box h2,
 .lightbox-information h2 {
-  font-size: 26px;
+  font-size: 23px;
 }
 
 .lightbox-box p,
 .lightbox-information p {
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .lightbox-box .button,
