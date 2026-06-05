@@ -55,14 +55,14 @@ document.addEventListener("DOMContentLoaded", () => {
       form.reset();
 
       afficherValidation(
-        "Enregistrement confirmé",
-        "Votre demande a bien été enregistrée."
+        "Vos informations sont transmises, merci",
+        "Un e-mail de validation de votre adresse mail vous a été envoyé. Vous devez valider votre adresse mail pour devenir membre invité."
       );
 
     } catch (error) {
       afficherAlerte(
-        "Attention",
-        "Impossible d’envoyer le formulaire pour le moment."
+        "Information technique",
+        "Il n'est pas possible d'envoyer le formulaire pour le moment."
       );
 
       submitButton.disabled = false;
@@ -103,42 +103,43 @@ function verifierFormulaire(form) {
   const dptmtmembre = getValue(form, "dptmtmembre");
   const emailmembre = getValue(form, "emailmembre");
   const emailparrain = getValue(form, "emailparrain");
-  const regleclub = getChecked(form, "regleclub_v1");
-  const regleapp = getChecked(form, "regleapp_v1");
+
+  const regleclub = form.querySelector("#regleclub_v1");
+  const regleapp = form.querySelector("#regleapp_v1");
 
   if (!nommembre) {
-    return "Le nom est obligatoire.";
+    return "Votre nom est obligatoire.";
   }
 
   if (!prenommembre) {
-    return "Le prénom est obligatoire.";
+    return "Votre prénom est obligatoire.";
   }
 
   if (!dptmtmembre) {
-    return "Le département est obligatoire.";
+    return "Un département est conseillé.";
   }
 
   if (!/^(?:\d{2,3}|2A|2B)$/i.test(dptmtmembre)) {
-    return "Le numéro de département est invalide.";
+    return "Le numéro de département n'est pas valide.";
   }
 
   if (!emailmembre) {
-    return "L’adresse e-mail est obligatoire.";
+    return "Votre adresse e-mail est obligatoire.";
   }
 
   if (!isValidEmail(emailmembre)) {
-    return "L’adresse e-mail est invalide.";
+    return "Votre adresse e-mail n'est pas valide.";
   }
 
   if (emailparrain && !isValidEmail(emailparrain)) {
-    return "L’adresse e-mail du parrain est invalide.";
+    return "L’adresse e-mail du parrain n'est pas valide.";
   }
 
-  if (!regleclub) {
+  if (!regleclub || regleclub.checked !== true) {
     return "Le règlement du club doit être accepté.";
   }
 
-  if (!regleapp) {
+  if (!regleapp || regleapp.checked !== true) {
     return "Le règlement de l’application doit être accepté.";
   }
 
