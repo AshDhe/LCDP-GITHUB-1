@@ -455,7 +455,7 @@ p {
 
 /* IMAGES SPOT */
 
-.image-contenu {
+.image-spot {
   width: 100%;
   max-width: 100%;
   aspect-ratio: 16 / 9;
@@ -800,7 +800,7 @@ p {
 
   /* RESPONSIVE - IMAGES SPOT */
 
-  .image-contenu {
+  .image-spot {
     border-radius: var(--radius-medium);
     margin: var(--space-3) auto;
   }
