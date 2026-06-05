@@ -516,17 +516,32 @@ p {
 
 .lightbox-box::before,
 .lightbox-information::before {
-  content: "✓";
   width: 52px;
   height: 52px;
   margin: 0 auto 18px;
   border-radius: 50%;
-  background: rgba(35, 68, 56, 0.1);
-  color: var(--color-primary);
   font-size: 30px;
   line-height: 52px;
   font-weight: 700;
   display: block;
+}
+
+.lightbox-box.lightbox-validation::before {
+  content: "✓";
+  background: rgba(35, 68, 56, 0.1);
+  color: var(--color-primary);
+}
+
+.lightbox-box.lightbox-erreur::before {
+  content: "!";
+  background: rgba(138, 45, 45, 0.1);
+  color: #8a2d2d;
+}
+
+.lightbox-box.lightbox-information-simple::before {
+  content: "i";
+  background: rgba(31, 42, 36, 0.08);
+  color: var(--color-text);
 }
 
 .lightbox-box h2,
