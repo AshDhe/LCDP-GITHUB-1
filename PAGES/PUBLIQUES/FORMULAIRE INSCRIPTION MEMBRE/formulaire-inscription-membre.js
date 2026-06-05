@@ -11,16 +11,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const submitButton = document.getElementById("bouton-envoyer-inscription");
 
+  if (!submitButton) {
+    console.error("Bouton d'envoi introuvable.");
+    return;
+  }
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
   });
 
   submitButton.addEventListener("click", async () => {
+    if (submitButton.disabled) return;
 
     const erreur = verifierFormulaire(form);
 
     if (erreur) {
-      afficherAlerte("Attention", erreur);
+      await afficherAlerte("Attention", erreur);
       return;
     }
 
@@ -45,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ? result.erreurs[0]
           : result.message || "Erreur lors de l’envoi du formulaire.";
 
-        afficherAlerte("Attention", messageErreur);
+        await afficherAlerte("Attention", messageErreur);
 
         submitButton.disabled = false;
         submitButton.textContent = "Envoyer";
@@ -54,24 +60,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
       form.reset();
 
-      afficherValidation(
+      submitButton.disabled = false;
+      submitButton.textContent = "Envoyer";
+
+      await afficherValidation(
         "Vos informations sont transmises, merci",
         "Un e-mail de validation de votre adresse mail vous a été envoyé. Vous devez valider votre adresse mail pour devenir membre invité."
       );
 
     } catch (error) {
-      afficherAlerte(
+      await afficherAlerte(
         "Information technique",
         "Il n'est pas possible d'envoyer le formulaire pour le moment."
       );
 
       submitButton.disabled = false;
       submitButton.textContent = "Envoyer";
-      return;
     }
-
-    submitButton.disabled = false;
-    submitButton.textContent = "Envoyer";
   });
 });
 
@@ -150,24 +155,32 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function afficherAlerte(titre, message) {
+async function afficherAlerte(titre, message) {
   if (typeof window.afficherLightboxInformation === "function") {
-    window.afficherLightboxInformation(titre, message, {
+    const affichageOk = await window.afficherLightboxInformation(titre, message, {
       type: "erreur"
     });
-  } else {
-    alert(message);
+
+    if (affichageOk === true) {
+      return;
+    }
   }
+
+  alert(message);
 }
 
-function afficherValidation(titre, message) {
+async function afficherValidation(titre, message) {
   if (typeof window.afficherLightboxInformation === "function") {
-    window.afficherLightboxInformation(titre, message, {
+    const affichageOk = await window.afficherLightboxInformation(titre, message, {
       type: "validation",
       redirectUrl: REDIRECT_URL
     });
-  } else {
-    alert(message);
-    window.location.href = REDIRECT_URL;
+
+    if (affichageOk === true) {
+      return;
+    }
   }
+
+  alert(message);
+  window.location.href = REDIRECT_URL;
 }
