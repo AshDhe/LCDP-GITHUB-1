@@ -453,6 +453,20 @@ p {
   object-fit: contain;
 }
 
+/* IMAGES SPOT */
+
+.image-contenu {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  margin: var(--space-4) auto;
+  border-radius: var(--radius-large);
+  object-fit: cover;
+  object-position: center center;
+}
+
+
 /* MENUS DE NAVIGATION BAS DE PAGE */
 
 .exit-menu-bas {
@@ -783,6 +797,14 @@ p {
   .logo-central {
     width: clamp(110px, 42vw, 170px);
   }
+
+  /* RESPONSIVE - IMAGES SPOT */
+
+  .image-contenu {
+    border-radius: var(--radius-medium);
+    margin: var(--space-3) auto;
+  }
+
 
   /* RESPONSIVE - MENUS DE NAVIGATION BAS DE PAGE */
 
