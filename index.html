@@ -56,10 +56,9 @@
 
         <section class="logo-central-section" aria-label="Logo La Clé du Parc">
             <img 
-              class="logo-central"
-              src="/OBJETS/IMAGES/LOGO/logo.png"
+              id="logo-central-img"
+              class="logo-central logo-cle"
               alt="La Clé du Parc"
-              class="logo-cle"
             >
          </section>
     
@@ -92,9 +91,18 @@ La Clé du Parc recherche également des coachs d'activité artistiques, culture
   <div id="footer-container"></div>
 
   <script>
+
   document.querySelectorAll("a[href^='/']").forEach((lien) => {
     lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
   });
+
+
+  const logoCentral = document.getElementById("logo-central-img");
+
+  if (logoCentral) {
+    logoCentral.src = window.SITE_BASE + "/OBJETS/IMAGES/LOGO/logo.png";
+  }
+
 
   function chargerScript(src) {
     return new Promise((resolve, reject) => {
@@ -110,6 +118,7 @@ La Clé du Parc recherche également des coachs d'activité artistiques, culture
     .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/burger-menu.js"))
     .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js"))
     .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/carrousel-arrivee.js"));
+
 </script>
 
 </body>
