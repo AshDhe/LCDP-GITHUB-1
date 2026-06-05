@@ -41,11 +41,22 @@ window.afficherLightboxInformation = async function (
   }
 
   const lightbox = document.getElementById("lightbox-information");
+  const box = lightbox ? lightbox.querySelector(".lightbox-box") : null;
   const titleElement = document.getElementById("lightbox-information-title");
   const messageElement = document.getElementById("lightbox-information-message");
   const okButton = document.getElementById("lightbox-information-ok");
 
-  if (!lightbox || !titleElement || !messageElement || !okButton) return;
+  if (!lightbox || !box || !titleElement || !messageElement || !okButton) return;
+
+  box.classList.remove("lightbox-erreur", "lightbox-validation", "lightbox-information-simple");
+
+  if (options.type === "validation") {
+    box.classList.add("lightbox-validation");
+  } else if (options.type === "erreur") {
+    box.classList.add("lightbox-erreur");
+  } else {
+    box.classList.add("lightbox-information-simple");
+  }
 
   titleElement.textContent = titre;
   messageElement.textContent = message;
@@ -54,6 +65,8 @@ window.afficherLightboxInformation = async function (
 
   okButton.onclick = () => {
     lightbox.hidden = true;
+
+    box.classList.remove("lightbox-erreur", "lightbox-validation", "lightbox-information-simple");
 
     if (options.redirectUrl) {
       const siteBase = window.SITE_BASE || "";
@@ -65,4 +78,6 @@ window.afficherLightboxInformation = async function (
       }
     }
   };
+
+  okButton.focus();
 };
