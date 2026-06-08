@@ -36,46 +36,63 @@
         Accéder à mon compte membre.
       </h2>
 
-      <form id="formulaire-connexion-membre" class="formulaire-inscription" novalidate>
+      <div class="formulaire-page">
 
-        <div class="formulaire-champ">
-          <label for="identifiant-compte">
-            Identifiant du compte (email)
-          </label>
+        <form
+          id="formulaire-connexion-membre"
+          class="formulaire-inscription"
+          novalidate
+          onsubmit="return false;"
+        >
 
-          <input
-            type="email"
-            id="identifiant-compte"
-            name="identifiant-compte"
-            autocomplete="username"
-            required
-          />
-        </div>
+          <div class="formulaire-champ">
+            <label for="emailmembre">
+              Identifiant du compte (email)
+            </label>
 
-        <div class="formulaire-champ">
-          <label for="mot-de-passe-compte">
-            Mot de passe du compte
-          </label>
+            <input
+              type="email"
+              id="emailmembre"
+              name="emailmembre"
+              autocomplete="username"
+              required
+            />
+          </div>
 
-          <input
-            type="password"
-            id="mot-de-passe-compte"
-            name="mot-de-passe-compte"
-            autocomplete="current-password"
-            required
-          />
-        </div>
+          <div class="formulaire-champ">
+            <label for="mdpmembre">
+              Mot de passe du compte
+            </label>
 
-        <div class="formulaire-actions">
-          <button
-            type="submit"
-            id="bouton-valider-formulaire"
-          >
-            Connexion
-          </button>
-        </div>
+            <input
+              type="password"
+              id="mdpmembre"
+              name="mdpmembre"
+              autocomplete="current-password"
+              required
+            />
 
-      </form>
+            <label class="checkbox-ligne" for="afficher-mdp-membre">
+              <input
+                type="checkbox"
+                id="afficher-mdp-membre"
+              />
+              <span>Afficher le mot de passe</span>
+            </label>
+          </div>
+
+          <div class="formulaire-actions">
+            <button
+              type="button"
+              id="bouton-valider-formulaire"
+            >
+              Connexion
+            </button>
+          </div>
+
+        </form>
+
+      </div>
 
       <div class="section-recontact">
         <p class="formulaire-note">
@@ -106,7 +123,8 @@
       });
     }
 
-    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js");
+    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
+      .then(() => chargerScript(window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.js"));
   </script>
 
 </body>
