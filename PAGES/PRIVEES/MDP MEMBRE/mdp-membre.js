@@ -101,7 +101,10 @@ if (afficherMotDePasse) {
       const data = await response.json().catch(() => null);
 
       if (!response.ok || !data || data.success !== true) {
-        afficherInformation(
+        
+          console.error("Réponse erreur worker MDP :", data);
+
+          afficherInformation(
           "Demande non enregistrée",
           data?.message || "La demande n’a pas pu être enregistrée.",
           "erreur"
