@@ -84,7 +84,8 @@
 /* CHAMPS DE SAISIE */
 
 .formulaire-champ input[type="text"],
-.formulaire-champ input[type="email"] {
+.formulaire-champ input[type="email"] 
+.formulaire-champ input[type="password"] {
   width: 100%;
   height: 47px;
   padding: 10px 12px;
@@ -253,7 +254,8 @@
   }
 
   .formulaire-champ input[type="text"],
-  .formulaire-champ input[type="email"] {
+  .formulaire-champ input[type="email"]
+  .formulaire-champ input[type="password"] {
     height: 46px;
     font-size: 17px;
   }
