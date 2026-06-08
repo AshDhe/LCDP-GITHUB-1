@@ -13,6 +13,11 @@
   --color-border: rgba(31, 42, 36, 0.22);
   --color-border-strong: rgba(31, 42, 36, 0.42);
 
+  --texte-principal: var(--color-text);
+  --texte-secondaire: var(--color-text-muted);
+  --bordure-bouton: var(--color-border-strong);
+  --bordure-bouton-hover: var(--color-primary);
+
   /* Typographie */
   --font-main: Arial, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
