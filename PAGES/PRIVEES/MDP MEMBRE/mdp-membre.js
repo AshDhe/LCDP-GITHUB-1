@@ -8,6 +8,7 @@ function initialiserPageMdpMembre() {
   const formulaire = document.getElementById("formulaire-mdp-compte");
   const champMotDePasse = document.getElementById("mdp-membre");
   const boutonValider = document.getElementById("bouton-valider-formulaire");
+  const afficherMotDePasse = document.getElementById("afficher-mdp-membre");
 
   const params = new URLSearchParams(window.location.search);
 
@@ -28,6 +29,12 @@ function initialiserPageMdpMembre() {
     );
     return;
   }
+
+if (afficherMotDePasse) {
+  afficherMotDePasse.addEventListener("change", () => {
+    champMotDePasse.type = afficherMotDePasse.checked ? "text" : "password";
+  });
+}
 
   if (!token) {
     champMotDePasse.disabled = true;
