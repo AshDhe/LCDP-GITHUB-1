@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       afficherMessage("Votre demande est enregistrée", () => {
         window.location.href =
-          window.SITE_BASE + "/PAGES/PRIVEES/MON%20COMPTE/mon-compte.html";
+          window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
       });
 
     } catch (error) {
