@@ -48,39 +48,44 @@
         </p>
       </div>
 
-   <div class="formulaire-page">
+      <div class="formulaire-page">
 
-    <form id="formulaire-mdp-compte" class="formulaire-inscription" method="post" action="#" novalidate>
+        <form
+          id="formulaire-mdp-compte"
+          class="formulaire-inscription"
+          novalidate
+          onsubmit="return false;"
+        >
 
-    <div class="formulaire-champ">
-      <label for="mdp-membre"> 
-        Mot de passe
-      </label>
+          <div class="formulaire-champ">
+            <label for="mdp-membre">
+              Mot de passe
+            </label>
 
-      <p class="formulaire-note">
-        (10 caractères minimum)
-      </p>
+            <p class="formulaire-note">
+              10 caractères minimum.
+            </p>
 
-      <input
-        type="password"
-        id="mdp-membre"
-        autocomplete="new-password"
-        required
-      />
-    </div>
+            <input
+              type="password"
+              id="mdp-membre"
+              autocomplete="new-password"
+              required
+            />
+          </div>
 
-    <div class="formulaire-actions">
-      <button
-        type="submit"
-        id="bouton-valider-formulaire"
-      >
-        Valider
-      </button>
-    </div>
+          <div class="formulaire-actions">
+            <button
+              type="button"
+              id="bouton-valider-formulaire"
+            >
+              Valider
+            </button>
+          </div>
 
-   </form>
+        </form>
 
-   </div>
+      </div>
 
     </section>
 

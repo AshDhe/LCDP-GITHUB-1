@@ -1,4 +1,10 @@
-document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initialiserPageMdpMembre);
+} else {
+  initialiserPageMdpMembre();
+}
+
+function initialiserPageMdpMembre() {
   const formulaire = document.getElementById("formulaire-mdp-compte");
   const champMotDePasse = document.getElementById("mdp-membre");
   const boutonValider = document.getElementById("bouton-valider-formulaire");
@@ -35,9 +41,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  formulaire.addEventListener("submit", async (event) => {
-    event.preventDefault();
+  boutonValider.addEventListener("click", traiterValidationMotDePasse);
 
+  formulaire.addEventListener("submit", (event) => {
+    event.preventDefault();
+    traiterValidationMotDePasse();
+  });
+
+  async function traiterValidationMotDePasse() {
     const passwordmembre = champMotDePasse.value.trim();
 
     if (!passwordmembre) {
@@ -111,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
       boutonValider.disabled = false;
       boutonValider.textContent = "Valider";
     }
-  });
+  }
 
   async function afficherInformation(titre, message, type = "information", redirectUrl = null) {
     if (typeof window.afficherLightboxInformation === "function") {
@@ -128,4 +139,4 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = window.SITE_BASE + redirectUrl;
     }
   }
-});
+}
