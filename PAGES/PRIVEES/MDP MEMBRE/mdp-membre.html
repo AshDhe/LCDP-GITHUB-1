@@ -1,1 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Mot de passe du compte - La Clé du Parc</title>
+
+  <script>
+    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
+    );
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/formulaires.css">'
+    );
+  </script>
+</head>
+
+<body>
+
+  <div id="lightbox-information-container"></div>
+
+  <main class="site-page">
+
+    <section class="landing-text hero-text">
+
+      <h1 class="site-title">
+        Mot de passe du compte
+      </h1>
+
+      <h2 class="site-subtitle">
+        Définissez ou redéfinissez votre mot de passe de compte membre.
+      </h2>
+
+      <form id="formulaire-mdp-compte" class="formulaire-standard" novalidate>
+
+        <div class="champ-formulaire">
+          <label for="mdp-membre">
+            Mot de passe
+          </label>
+
+          <input
+            type="password"
+            id="mdp-membre"
+            name="mdp-membre"
+            autocomplete="new-password"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          id="bouton-valider-formulaire"
+          class="bouton-principal"
+        >
+          Valider
+        </button>
+
+      </form>
+
+    </section>
+
+  </main>
+
+  <script>
+    function chargerScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+    }
+
+    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
+      .then(() => chargerScript(window.SITE_BASE + "/PAGES/PRIVEES/MDP%20MEMBRE/mdp-membre.js"));
+  </script>
+
+</body>
+</html>
