@@ -11,15 +11,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const URL_WORKER_MDPTOKENZ =
     "https://worker-mdpokenz.hugues-pavret.workers.dev/";
 
+  const URL_CONNEXION_MEMBRE =
+    "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
+
   if (!formulaire || !champMotDePasse || !boutonValider) {
-    afficherMessage("Erreur technique : formulaire incomplet.");
+    afficherInformation(
+      "Erreur technique",
+      "Le formulaire est incomplet. Veuillez réessayer plus tard.",
+      "erreur"
+    );
     return;
   }
 
   if (!token) {
     champMotDePasse.disabled = true;
     boutonValider.disabled = true;
-    afficherMessage("Le lien utilisé n’est pas valide ou a expiré.");
+
+    afficherInformation(
+      "Lien invalide",
+      "Le lien utilisé n’est pas valide ou a expiré.",
+      "erreur"
+    );
     return;
   }
 
@@ -29,12 +41,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const passwordmembre = champMotDePasse.value.trim();
 
     if (!passwordmembre) {
-      afficherMessage("Veuillez saisir un mot de passe.");
+      afficherInformation(
+        "Mot de passe manquant",
+        "Veuillez saisir un mot de passe.",
+        "erreur"
+      );
       return;
     }
 
     if (passwordmembre.length < 10) {
-      afficherMessage("Le mot de passe doit contenir au moins 10 caractères.");
+      afficherInformation(
+        "Mot de passe trop court",
+        "Le mot de passe doit contenir au moins 10 caractères.",
+        "erreur"
+      );
       return;
     }
 
@@ -63,8 +83,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json().catch(() => null);
 
       if (!response.ok || !data || data.success !== true) {
-        afficherMessage(
-          data?.message || "La demande n’a pas pu être enregistrée."
+        afficherInformation(
+          "Demande non enregistrée",
+          data?.message || "La demande n’a pas pu être enregistrée.",
+          "erreur"
         );
 
         boutonValider.disabled = false;
@@ -72,29 +94,38 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      afficherMessage("Votre demande est enregistrée", () => {
-        window.location.href =
-          window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
-      });
+      afficherInformation(
+        "Demande enregistrée",
+        "Votre mot de passe a bien été enregistré. Vous pouvez maintenant vous connecter à votre compte membre.",
+        "validation",
+        URL_CONNEXION_MEMBRE
+      );
 
     } catch (error) {
-      afficherMessage("Une erreur est survenue. Veuillez réessayer.");
+      afficherInformation(
+        "Erreur",
+        "Une erreur est survenue. Veuillez réessayer.",
+        "erreur"
+      );
 
       boutonValider.disabled = false;
       boutonValider.textContent = "Valider";
     }
   });
 
-  function afficherMessage(message, callback) {
+  async function afficherInformation(titre, message, type = "information", redirectUrl = null) {
     if (typeof window.afficherLightboxInformation === "function") {
-      window.afficherLightboxInformation(message, callback);
+      await window.afficherLightboxInformation(titre, message, {
+        type,
+        redirectUrl
+      });
       return;
     }
 
     alert(message);
 
-    if (typeof callback === "function") {
-      callback();
+    if (redirectUrl) {
+      window.location.href = window.SITE_BASE + redirectUrl;
     }
   }
 });
