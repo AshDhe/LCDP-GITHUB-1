@@ -36,67 +36,67 @@
         Créer ou modifier votre mot de passe.
       </h2>
 
+      <div class="section-recontact">
         <p class="formulaire-note">
-           Vous pouvez si besoin définir votre mot de passe plus tard depuis la page de connexion membre, en cliquant sur le lien « Mot de passe oublié ».
-           <br />
-           <a
+          Vous pouvez si besoin définir votre mot de passe plus tard en cliquant sur le lien « Mot de passe oublié » depuis la page de connexion membre.
+          <br />
+          <a
             id="lien-connexion-membre"
             href="#"
-           >
+          >
             Aller à la page de connexion membre.
-           </a>
+          </a>
         </p>
+      </div>
 
-   <form id="formulaire-mdp-compte" class="formulaire-inscription" novalidate>
+      <form id="formulaire-mdp-compte" class="formulaire-inscription" novalidate>
 
-    <div class="formulaire-champ">
-      <label for="mdp-membre">
-      Mot de passe
-      </label>
+        <div class="formulaire-champ">
+          <label for="mdp-membre">
+            Mot de passe
+          </label>
 
-    <input
-      type="password"
-      id="mdp-membre"
-      name="mdp-membre"
-      autocomplete="new-password"
-      required
-    />
-   </div>
+          <input
+            type="password"
+            id="mdp-membre"
+            name="mdp-membre"
+            autocomplete="new-password"
+            required
+          />
+        </div>
 
-   <div class="formulaire-actions">
-    <button
-      type="submit"
-      id="bouton-valider-formulaire"
-    >
-      Valider
-    </button>
-   </div>
+        <div class="formulaire-actions">
+          <button
+            type="submit"
+            id="bouton-valider-formulaire"
+          >
+            Valider
+          </button>
+        </div>
 
-  </form>
+      </form>
 
     </section>
 
   </main>
 
   <script>
+    document.getElementById("lien-connexion-membre").href =
+      window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
 
-  document.getElementById("lien-connexion-membre").href =
-    window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
+    function chargerScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+    }
 
-  function chargerScript(src) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.body.appendChild(script);
-    });
-  }
-
-  chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
-    .then(() => chargerScript(window.SITE_BASE + "/PAGES/PRIVEES/MDP%20MEMBRE/mdp-membre.js"));
-
-    </script>
+    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
+      .then(() => chargerScript(window.SITE_BASE + "/PAGES/PRIVEES/MDP%20MEMBRE/mdp-membre.js"));
+  </script>
 
 </body>
 </html>
