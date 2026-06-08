@@ -1,4 +1,4 @@
-const WORKER_URL = "https://lcdp-github-1.hugues-pavret.workers.dev/";
+const WORKER_URL = "https://worker-inscription.hugues-pavret.workers.dev/";
 const REDIRECT_URL = "/index.html?source=formulaire-inscription-membre";
 
 document.addEventListener("DOMContentLoaded", () => {
