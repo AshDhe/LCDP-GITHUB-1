@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     boutonValider.textContent = "Validation en cours...";
 
     const payload = {
-      action: "set-password",
+      action: "write-mdp",
       token,
       passwordmembre
     };
