@@ -16,7 +16,7 @@ function initialiserPageMdpMembre() {
   const mode = params.get("mode");
 
   const URL_WORKER_MDPTOKENZ =
-    "https://worker-mdpokenz.hugues-pavret.workers.dev/";
+    "https://worker-mdptokenz.hugues-pavret.workers.dev/";
 
   const URL_CONNEXION_MEMBRE =
     "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
