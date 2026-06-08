@@ -21,6 +21,8 @@ function initialiserPageMdpMembre() {
   const URL_CONNEXION_MEMBRE =
     "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
 
+  let envoiEnCours = false;
+
   if (!formulaire || !champMotDePasse || !boutonValider) {
     afficherInformation(
       "Erreur technique",
@@ -30,13 +32,7 @@ function initialiserPageMdpMembre() {
     return;
   }
 
-if (afficherMotDePasse) {
-  afficherMotDePasse.addEventListener("change", () => {
-    champMotDePasse.type = afficherMotDePasse.checked ? "text" : "password";
-  });
-}
-
-  if (!token) {
+  if (!token || !mode) {
     champMotDePasse.disabled = true;
     boutonValider.disabled = true;
 
@@ -48,6 +44,12 @@ if (afficherMotDePasse) {
     return;
   }
 
+  if (afficherMotDePasse) {
+    afficherMotDePasse.addEventListener("change", () => {
+      champMotDePasse.type = afficherMotDePasse.checked ? "text" : "password";
+    });
+  }
+
   boutonValider.addEventListener("click", traiterValidationMotDePasse);
 
   formulaire.addEventListener("submit", (event) => {
@@ -56,6 +58,8 @@ if (afficherMotDePasse) {
   });
 
   async function traiterValidationMotDePasse() {
+    if (envoiEnCours) return;
+
     const passwordmembre = champMotDePasse.value.trim();
 
     if (!passwordmembre) {
@@ -76,18 +80,16 @@ if (afficherMotDePasse) {
       return;
     }
 
+    envoiEnCours = true;
     boutonValider.disabled = true;
     boutonValider.textContent = "Validation en cours...";
 
     const payload = {
       action: "write-mdp",
       token,
+      mode,
       passwordmembre
     };
-
-    if (mode) {
-      payload.mode = mode;
-    }
 
     try {
       const response = await fetch(URL_WORKER_MDPTOKENZ, {
@@ -100,21 +102,20 @@ if (afficherMotDePasse) {
 
       const data = await response.json().catch(() => null);
 
-
       if (!response.ok || !data || data.success !== true) {
-  console.error("Erreur complète worker MDP :", data);
+        console.error("Erreur worker MDP :", data);
 
-  afficherInformation(
-    "Demande non enregistrée",
-    data?.detail || data?.message || "La demande n’a pas pu être enregistrée.",
-    "erreur"
-  );
+        afficherInformation(
+          "Demande non enregistrée",
+          data?.message || "La demande n’a pas pu être enregistrée.",
+          "erreur"
+        );
 
-  boutonValider.disabled = false;
-  boutonValider.textContent = "Valider";
-  return;
-}
-
+        envoiEnCours = false;
+        boutonValider.disabled = false;
+        boutonValider.textContent = "Valider";
+        return;
+      }
 
       afficherInformation(
         "Demande enregistrée",
@@ -124,12 +125,15 @@ if (afficherMotDePasse) {
       );
 
     } catch (error) {
+      console.error("Erreur appel worker MDP :", error);
+
       afficherInformation(
         "Erreur",
         "Une erreur est survenue. Veuillez réessayer.",
         "erreur"
       );
 
+      envoiEnCours = false;
       boutonValider.disabled = false;
       boutonValider.textContent = "Valider";
     }
