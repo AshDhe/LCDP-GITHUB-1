@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       await afficherValidation(
         "Vos informations sont transmises, merci",
-        "Un e-mail de validation de votre adresse mail vous a été envoyé. Vous devez valider votre adresse mail pour devenir membre invité."
+        "Un e-mail a été envoyé à votre adresse mail pour sa validation. Votre adresse mail doit être validée pour devenir membre invité."
       );
 
     } catch (error) {
