@@ -100,20 +100,21 @@ if (afficherMotDePasse) {
 
       const data = await response.json().catch(() => null);
 
+
       if (!response.ok || !data || data.success !== true) {
-        
-          console.error("Réponse erreur worker MDP :", data);
+  console.error("Erreur complète worker MDP :", data);
 
-          afficherInformation(
-          "Demande non enregistrée",
-          data?.message || "La demande n’a pas pu être enregistrée.",
-          "erreur"
-        );
+  afficherInformation(
+    "Demande non enregistrée",
+    data?.detail || data?.message || "La demande n’a pas pu être enregistrée.",
+    "erreur"
+  );
 
-        boutonValider.disabled = false;
-        boutonValider.textContent = "Valider";
-        return;
-      }
+  boutonValider.disabled = false;
+  boutonValider.textContent = "Valider";
+  return;
+}
+
 
       afficherInformation(
         "Demande enregistrée",
