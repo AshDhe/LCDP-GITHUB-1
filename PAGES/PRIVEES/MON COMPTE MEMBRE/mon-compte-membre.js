@@ -33,27 +33,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function redirigerVersConnexion() {
-    window.location.href = PAGE_CONNEXION_MEMBRE + "?source=mon-compte-membre&session=inactive";
-  }
-
-  function initialiserLiensCompte() {
-    document.getElementById("lien-informations-compte").href =
-      window.SITE_BASE + "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/INFORMATIONS%20COMPTE/informations-compte-membre.html";
-
-    document.getElementById("lien-invites").href =
-      window.SITE_BASE + "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/MES%20INVITES/mes-invites-membre.html";
-
-    document.getElementById("lien-abonnement").href =
-      window.SITE_BASE + "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/MON%20ABONNEMENT/mon-abonnement-membre.html";
-
-    document.getElementById("lien-activite").href =
-      window.SITE_BASE + "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/MON%20ACTIVITE/mon-activite-membre.html";
-
-    document.getElementById("lien-points-activite").href =
-      window.SITE_BASE + "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/MES%20POINTS/mes-points-activite-membre.html";
-
-    document.getElementById("lien-support-lcdp").href =
-      window.SITE_BASE + "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/SUPPORT/support-lcdp-membre.html";
+    window.location.href =
+      PAGE_CONNEXION_MEMBRE + "?source=mon-compte-membre&session=inactive";
   }
 
   function afficherCompteActif(membre) {
@@ -64,6 +45,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!membre) return;
 
-  initialiserLiensCompte();
   afficherCompteActif(membre);
 });
