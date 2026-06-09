@@ -109,22 +109,32 @@
 
   </main>
 
-  <script>
-    document.getElementById("lien-mot-de-passe-oublie").href =
-      window.SITE_BASE + "/PAGES/PUBLIQUES/MDP%20PERDU/mdp-perdu.html";
+ <script>
 
-    function chargerScript(src) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.body.appendChild(script);
-      });
-    }
+  document.getElementById("lien-mot-de-passe-oublie").href =
+    window.SITE_BASE + "/PAGES/PUBLIQUES/MDP%20PERDU/mdp-perdu.html";
 
-    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
-      .then(() => chargerScript(window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.js"));
+  function chargerScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error("Erreur chargement : " + src));
+      document.body.appendChild(script);
+    });
+  }
+
+  chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
+    .catch((erreur) => {
+      console.warn(erreur.message);
+    });
+
+  chargerScript(window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.js")
+    .catch((erreur) => {
+      console.error(erreur.message);
+      alert("Le fichier de connexion ne s’est pas chargé.");
+    });
+
   </script>
 
 </body>
