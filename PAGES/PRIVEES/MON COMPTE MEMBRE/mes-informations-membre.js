@@ -1,68 +1,21 @@
-async function initialiserMesInformationsMembre() {
-  const WORKER_URL =
-    "https://worker-mes-informations-membre.hugues-pavret.workers.dev";
+console.log("JS mes-informations chargé");
 
-  const PAGE_CONNEXION_MEMBRE =
-    window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
-
-  const ENDPOINT_MES_INFORMATIONS =
-    WORKER_URL + "/api/membre/mes-informations";
-
-  try {
-    const reponse = await fetch(ENDPOINT_MES_INFORMATIONS, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Accept": "application/json"
-      }
-    });
-
-    const resultat = await reponse.json();
-
-    if (!reponse.ok || !resultat.ok || !resultat.informations) {
-      redirigerVersConnexion();
-      return;
-    }
-
-    afficherInformationsMembre(resultat.informations);
-
-  } catch (erreur) {
-    console.error("Erreur informations membre :", erreur);
-    redirigerVersConnexion();
+fetch("https://worker-mes-informations-membre.hugues-pavret.workers.dev/api/membre/mes-informations", {
+  method: "GET",
+  credentials: "include",
+  headers: {
+    "Accept": "application/json"
   }
-
-  function redirigerVersConnexion() {
-    window.location.href =
-      PAGE_CONNEXION_MEMBRE + "?source=mes-informations-membre&session=inactive";
-  }
-
-  function afficherInformationsMembre(informations) {
-    remplirTexte("valeur-nom-membre", informations.nom);
-    remplirTexte("valeur-prenom-membre", informations.prenom);
-    remplirTexte("valeur-email-membre", informations.email);
-    remplirTexte("valeur-date-creation-membre", formaterDate(informations.membreDepuis));
-    remplirTexte("valeur-statut-membre", informations.statut);
-    remplirTexte("valeur-parrain-membre", informations.parrain);
-    remplirTexte("valeur-departement-membre", informations.departement);
-    remplirTexte("valeur-reglement-club", formaterDate(informations.reglementClub));
-    remplirTexte("valeur-reglement-application", formaterDate(informations.reglementApplication));
-  }
-
-  function remplirTexte(id, valeur) {
-    const element = document.getElementById(id);
-    if (!element) return;
-    element.textContent = valeur || "Non renseigné";
-  }
-
-  function formaterDate(valeur) {
-    if (!valeur) return "Non renseigné";
-
-    const date = new Date(valeur);
-
-    if (Number.isNaN(date.getTime())) return valeur;
-
-    return date.toLocaleDateString("fr-FR");
-  }
-}
-
-initialiserMesInformationsMembre();
+})
+  .then((reponse) => {
+    console.log("Statut Worker :", reponse.status);
+    return reponse.json();
+  })
+  .then((data) => {
+    console.log("Réponse Worker :", data);
+    document.getElementById("valeur-nom-membre").textContent =
+      JSON.stringify(data);
+  })
+  .catch((erreur) => {
+    console.error("Erreur fetch Worker :", erreur);
+  });
