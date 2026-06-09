@@ -57,10 +57,9 @@
   "Si un compte membre correspond à cette adresse e-mail, un lien vient d’être envoyé."
 );
 
-champEmail.value = "";
-boutonValider.disabled = false;
-boutonValider.textContent = "Envoyer";
-
+setTimeout(() => {
+  window.location.href = window.SITE_BASE + "/index.html";
+}, 2500);
       } catch (error) {
         afficherMessage("Une erreur est survenue. Veuillez réessayer.");
 
