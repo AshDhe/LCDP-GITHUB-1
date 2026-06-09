@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => {
+async function initialiserMesInformationsMembre() {
   const WORKER_URL = "https://worker-mes-informations-membre.workers.dev";
 
   const PAGE_CONNEXION_MEMBRE =
@@ -7,28 +7,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   const ENDPOINT_MES_INFORMATIONS =
     WORKER_URL + "/api/membre/mes-informations";
 
-  async function chargerInformationsMembre() {
-    try {
-      const reponse = await fetch(ENDPOINT_MES_INFORMATIONS, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Accept": "application/json"
-        }
-      });
-
-      const resultat = await reponse.json();
-
-      if (!reponse.ok || !resultat.ok || !resultat.informations) {
-        redirigerVersConnexion();
-        return;
+  try {
+    const reponse = await fetch(ENDPOINT_MES_INFORMATIONS, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Accept": "application/json"
       }
+    });
 
-      afficherInformationsMembre(resultat.informations);
+    const resultat = await reponse.json();
 
-    } catch (erreur) {
+    if (!reponse.ok || !resultat.ok || !resultat.informations) {
       redirigerVersConnexion();
+      return;
     }
+
+    afficherInformationsMembre(resultat.informations);
+
+  } catch (erreur) {
+    console.error("Erreur chargement informations membre :", erreur);
+    redirigerVersConnexion();
   }
 
   function redirigerVersConnexion() {
@@ -50,21 +49,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function remplirTexte(id, valeur) {
     const element = document.getElementById(id);
-
     if (!element) return;
-
     element.textContent = valeur || "Non renseigné";
   }
 
   function formaterDate(valeur) {
     if (!valeur) return "Non renseigné";
-
     const date = new Date(valeur);
-
     if (Number.isNaN(date.getTime())) return valeur;
-
     return date.toLocaleDateString("fr-FR");
   }
+}
 
-  chargerInformationsMembre();
-});
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initialiserMesInformationsMembre);
+} else {
+  initialiserMesInformationsMembre();
+}
