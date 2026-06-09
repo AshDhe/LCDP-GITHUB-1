@@ -1,7 +1,7 @@
 const WORKER_CONNEXION_MEMBRE_URL = "https://worker-connexion-membre.hugues-pavret.workers.dev/";
 
 const URL_MON_COMPTE_MEMBRE =
-  window.SITE_BASE + "/PAGES/PRIVEES/MON%20/COMPTE%20/MEMBRE/mon-compte-membre.html";
+  window.SITE_BASE + "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/mon-compte-membre.html";
 
 function initialiserConnexionMembre() {
   const formulaire = document.getElementById("formulaire-connexion-membre");
