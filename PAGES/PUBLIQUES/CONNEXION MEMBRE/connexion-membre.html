@@ -36,17 +36,6 @@
         Accéder à mon compte membre.
       </h2>
 
-      <div class="section-recontact">
-        <p class="formulaire-note">
-          <a
-            id="lien-mot-de-passe-oublie"
-            href=""/PAGES/PUBLIQUES/MDP%20PERDU/mdp-perdu-membre.html""
-          >
-            Mot de passe oublié ?
-          </a>
-        </p>
-      </div>
-
       <div class="formulaire-page">
 
         <form
@@ -72,7 +61,14 @@
 
           <div class="formulaire-champ">
             <label for="mdpmembre">
-              Mot de passe du compte
+              Mot de passe du compte -
+              <a
+                id="lien-mot-de-passe-oublie"
+                href="#"
+                onclick="event.stopPropagation();"
+              >
+                Mot de passe perdu ou oublié ?
+              </a>
             </label>
 
             <input
@@ -107,10 +103,9 @@
 
     </section>
 
-    </main>
+  </main>
 
   <script>
-
     const champMdpConnexion = document.getElementById("mdpmembre");
     const checkboxAfficherMdpConnexion = document.getElementById("afficher-mdp-membre");
 
@@ -126,13 +121,11 @@
 
       mettreAJourAffichageMdpConnexion();
     }
-  
   </script>
 
   <script>
-
     document.getElementById("lien-mot-de-passe-oublie").href =
-      window.SITE_BASE + "/PAGES/PUBLIQUES/MDP%20PERDU/mdp-perdu.html";
+      window.SITE_BASE + "/PAGES/PUBLIQUES/MDP%20PERDU/mdp-perdu-membre.html";
 
     function chargerScript(src) {
       return new Promise((resolve, reject) => {
@@ -154,11 +147,7 @@
         console.error(erreur.message);
         alert("Le fichier de connexion ne s’est pas chargé.");
       });
-  
   </script>
-
-</body>
-</html>
 
 </body>
 </html>
