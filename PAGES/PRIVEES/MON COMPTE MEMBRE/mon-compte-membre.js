@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const WORKER_URL = "https://TON-WORKER.workers.dev";
+  const WORKER_URL = "https://worker-moncompte-membre.workers.dev";
 
   const PAGE_CONNEXION_MEMBRE =
     window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
