@@ -26,7 +26,7 @@ async function initialiserMesInformationsMembre() {
     afficherInformationsMembre(resultat.informations);
 
   } catch (erreur) {
-    console.error("Erreur chargement informations membre :", erreur);
+    console.error("Erreur informations membre :", erreur);
     redirigerVersConnexion();
   }
 
@@ -55,14 +55,13 @@ async function initialiserMesInformationsMembre() {
 
   function formaterDate(valeur) {
     if (!valeur) return "Non renseigné";
+
     const date = new Date(valeur);
+
     if (Number.isNaN(date.getTime())) return valeur;
+
     return date.toLocaleDateString("fr-FR");
   }
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initialiserMesInformationsMembre);
-} else {
-  initialiserMesInformationsMembre();
-}
+initialiserMesInformationsMembre();
