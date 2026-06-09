@@ -42,7 +42,6 @@
           id="formulaire-mdp-perdu-membre"
           class="formulaire-inscription"
           novalidate
-          onsubmit="return false;"
         >
 
           <div class="formulaire-champ">
@@ -61,7 +60,7 @@
 
           <div class="formulaire-actions">
             <button
-              type="button"
+              type="submit"
               id="bouton-valider-formulaire"
             >
               Envoyer
@@ -88,14 +87,10 @@
     }
 
     chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
-      .catch((erreur) => {
-        console.warn(erreur.message);
-      });
-
-    chargerScript(window.SITE_BASE + "/PAGES/PUBLIQUES/MDP%20PERDU/mdp-perdu-membre.js")
+      .then(() => chargerScript(window.SITE_BASE + "/PAGES/PUBLIQUES/MDP%20PERDU/mdp-perdu-membre.js"))
       .catch((erreur) => {
         console.error(erreur.message);
-        alert("Le fichier de mot de passe perdu ne s’est pas chargé.");
+        alert("Un fichier nécessaire ne s’est pas chargé.");
       });
   </script>
 

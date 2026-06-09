@@ -11,14 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  boutonValider.addEventListener("click", envoyerDemandeMdpPerdu);
-
-  formulaire.addEventListener("submit", (event) => {
+  formulaire.addEventListener("submit", async (event) => {
     event.preventDefault();
-    envoyerDemandeMdpPerdu();
-  });
 
-  async function envoyerDemandeMdpPerdu() {
     const emailmembre = champEmail.value.trim().toLowerCase();
 
     if (!emailmembre) {
@@ -58,12 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       afficherMessage(
-        "Si un compte membre correspond à cette adresse e-mail, un lien vient d’être envoyé."
+        "Si un compte membre correspond à cette adresse e-mail, un lien vient d’être envoyé.",
+        () => {
+          window.location.href = window.SITE_BASE + "/index.html";
+        }
       );
-
-      champEmail.value = "";
-      boutonValider.disabled = false;
-      boutonValider.textContent = "Envoyer";
 
     } catch (error) {
       afficherMessage("Une erreur est survenue. Veuillez réessayer.");
@@ -71,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
       boutonValider.disabled = false;
       boutonValider.textContent = "Envoyer";
     }
-  }
+  });
 
   function emailValide(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
