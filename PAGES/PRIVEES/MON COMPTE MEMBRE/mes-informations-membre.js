@@ -1,15 +1,15 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const WORKER_URL = "https://worker-moncompte-membre.workers.dev";
+  const WORKER_URL = "https://worker-mes-informations-membre.workers.dev";
 
   const PAGE_CONNEXION_MEMBRE =
     window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
 
-  const ENDPOINT_SESSION_MEMBRE =
-    WORKER_URL + "/api/membre/session/verifier";
+  const ENDPOINT_MES_INFORMATIONS =
+    WORKER_URL + "/api/membre/mes-informations";
 
   async function chargerInformationsMembre() {
     try {
-      const reponse = await fetch(ENDPOINT_SESSION_MEMBRE, {
+      const reponse = await fetch(ENDPOINT_MES_INFORMATIONS, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -19,12 +19,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const resultat = await reponse.json();
 
-      if (!reponse.ok || !resultat.ok || !resultat.membre) {
+      if (!reponse.ok || !resultat.ok || !resultat.informations) {
         redirigerVersConnexion();
         return;
       }
 
-      afficherInformationsMembre(resultat.membre);
+      afficherInformationsMembre(resultat.informations);
 
     } catch (erreur) {
       redirigerVersConnexion();
@@ -36,17 +36,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       PAGE_CONNEXION_MEMBRE + "?source=mes-informations-membre&session=inactive";
   }
 
-  function afficherInformationsMembre(membre) {
-    remplirTexte("valeur-nom-membre", membre.nom);
-    remplirTexte("valeur-prenom-membre", membre.prenom);
-    remplirTexte("valeur-email-membre", membre.email);
-    remplirTexte("valeur-departement-membre", membre.departement);
-
-    remplirTexte("valeur-date-creation-membre", membre.membreDepuis || "Non renseigné");
-    remplirTexte("valeur-statut-membre", membre.statut || "Invité");
-    remplirTexte("valeur-parrain-membre", membre.parrain || "Non renseigné");
-    remplirTexte("valeur-reglement-club", membre.reglementClub || "Non renseigné");
-    remplirTexte("valeur-reglement-application", membre.reglementApplication || "Non renseigné");
+  function afficherInformationsMembre(informations) {
+    remplirTexte("valeur-nom-membre", informations.nom);
+    remplirTexte("valeur-prenom-membre", informations.prenom);
+    remplirTexte("valeur-email-membre", informations.email);
+    remplirTexte("valeur-date-creation-membre", formaterDate(informations.membreDepuis));
+    remplirTexte("valeur-statut-membre", informations.statut);
+    remplirTexte("valeur-parrain-membre", informations.parrain);
+    remplirTexte("valeur-departement-membre", informations.departement);
+    remplirTexte("valeur-reglement-club", formaterDate(informations.reglementClub));
+    remplirTexte("valeur-reglement-application", formaterDate(informations.reglementApplication));
   }
 
   function remplirTexte(id, valeur) {
@@ -55,6 +54,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!element) return;
 
     element.textContent = valeur || "Non renseigné";
+  }
+
+  function formaterDate(valeur) {
+    if (!valeur) return "Non renseigné";
+
+    const date = new Date(valeur);
+
+    if (Number.isNaN(date.getTime())) return valeur;
+
+    return date.toLocaleDateString("fr-FR");
   }
 
   chargerInformationsMembre();
