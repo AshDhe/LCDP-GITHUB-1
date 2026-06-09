@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => {
+async function initialiserMesInformationsMembre() {
   const WORKER_URL =
     "https://worker-mes-informations-membre.hugues-pavret.workers.dev";
 
@@ -8,29 +8,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   const ENDPOINT_MES_INFORMATIONS =
     WORKER_URL + "/api/membre/mes-informations";
 
-  async function chargerInformationsMembre() {
-    try {
-      const reponse = await fetch(ENDPOINT_MES_INFORMATIONS, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Accept": "application/json"
-        }
-      });
-
-      const resultat = await reponse.json();
-
-      if (!reponse.ok || !resultat.ok || !resultat.informations) {
-        redirigerVersConnexion();
-        return;
+  try {
+    const reponse = await fetch(ENDPOINT_MES_INFORMATIONS, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Accept": "application/json"
       }
+    });
 
-      afficherInformationsMembre(resultat.informations);
+    const resultat = await reponse.json();
 
-    } catch (erreur) {
-      console.error("Erreur informations membre :", erreur);
+    if (!reponse.ok || !resultat.ok || !resultat.informations) {
       redirigerVersConnexion();
+      return;
     }
+
+    afficherInformationsMembre(resultat.informations);
+
+  } catch (erreur) {
+    console.error("Erreur informations membre :", erreur);
+    redirigerVersConnexion();
   }
 
   function redirigerVersConnexion() {
@@ -52,9 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function remplirTexte(id, valeur) {
     const element = document.getElementById(id);
-
     if (!element) return;
-
     element.textContent = valeur || "Non renseigné";
   }
 
@@ -67,6 +63,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     return date.toLocaleDateString("fr-FR");
   }
+}
 
-  chargerInformationsMembre();
-});
+initialiserMesInformationsMembre();
