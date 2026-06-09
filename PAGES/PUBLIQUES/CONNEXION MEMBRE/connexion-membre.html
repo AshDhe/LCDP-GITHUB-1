@@ -107,35 +107,58 @@
 
     </section>
 
-  </main>
+    </main>
 
- <script>
+  <script>
 
-  document.getElementById("lien-mot-de-passe-oublie").href =
-    window.SITE_BASE + "/PAGES/PUBLIQUES/MDP%20PERDU/mdp-perdu.html";
+    const champMdpConnexion = document.getElementById("mdpmembre");
+    const checkboxAfficherMdpConnexion = document.getElementById("afficher-mdp-membre");
 
-  function chargerScript(src) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = () => reject(new Error("Erreur chargement : " + src));
-      document.body.appendChild(script);
-    });
-  }
+    if (champMdpConnexion && checkboxAfficherMdpConnexion) {
+      function mettreAJourAffichageMdpConnexion() {
+        champMdpConnexion.type = checkboxAfficherMdpConnexion.checked ? "text" : "password";
+      }
 
-  chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
-    .catch((erreur) => {
-      console.warn(erreur.message);
-    });
+      checkboxAfficherMdpConnexion.addEventListener("change", mettreAJourAffichageMdpConnexion);
+      checkboxAfficherMdpConnexion.addEventListener("click", () => {
+        setTimeout(mettreAJourAffichageMdpConnexion, 0);
+      });
 
-  chargerScript(window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.js")
-    .catch((erreur) => {
-      console.error(erreur.message);
-      alert("Le fichier de connexion ne s’est pas chargé.");
-    });
-
+      mettreAJourAffichageMdpConnexion();
+    }
+  
   </script>
+
+  <script>
+
+    document.getElementById("lien-mot-de-passe-oublie").href =
+      window.SITE_BASE + "/PAGES/PUBLIQUES/MDP%20PERDU/mdp-perdu.html";
+
+    function chargerScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error("Erreur chargement : " + src));
+        document.body.appendChild(script);
+      });
+    }
+
+    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
+      .catch((erreur) => {
+        console.warn(erreur.message);
+      });
+
+    chargerScript(window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.js")
+      .catch((erreur) => {
+        console.error(erreur.message);
+        alert("Le fichier de connexion ne s’est pas chargé.");
+      });
+  
+  </script>
+
+</body>
+</html>
 
 </body>
 </html>

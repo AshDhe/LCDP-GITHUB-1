@@ -3,22 +3,15 @@ const WORKER_CONNEXION_MEMBRE_URL = "https://worker-connexion-membre.hugues-pavr
 const URL_MON_COMPTE_MEMBRE =
   window.SITE_BASE + "/PAGES/PRIVEES/MON%20/COMPTE%20/MEMBRE/mon-compte-membre.html";
 
-document.addEventListener("DOMContentLoaded", () => {
+function initialiserConnexionMembre() {
   const formulaire = document.getElementById("formulaire-connexion-membre");
   const champEmail = document.getElementById("emailmembre");
   const champMdp = document.getElementById("mdpmembre");
-  const checkboxAfficherMdp = document.getElementById("afficher-mdp-membre");
   const bouton = document.getElementById("bouton-valider-formulaire");
 
   if (!formulaire || !champEmail || !champMdp || !bouton) {
     afficherMessage("Une erreur est survenue au chargement de la page.");
     return;
-  }
-
-  if (checkboxAfficherMdp) {
-    checkboxAfficherMdp.addEventListener("change", () => {
-      champMdp.type = checkboxAfficherMdp.checked ? "text" : "password";
-    });
   }
 
   bouton.addEventListener("click", connecterMembre);
@@ -31,9 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   async function connecterMembre() {
-    if (bouton.disabled) {
-      return;
-    }
+    if (bouton.disabled) return;
 
     const emailmembre = champEmail.value.trim().toLowerCase();
     const mdpmembre = champMdp.value;
@@ -82,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       bouton.textContent = "Connexion";
     }
   }
-});
+}
 
 function afficherMessage(message) {
   if (typeof window.afficherLightboxInformation === "function") {
@@ -96,4 +87,10 @@ function afficherMessage(message) {
   }
 
   alert(message);
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initialiserConnexionMembre);
+} else {
+  initialiserConnexionMembre();
 }
