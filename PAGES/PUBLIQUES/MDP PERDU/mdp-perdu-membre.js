@@ -54,12 +54,12 @@
         }
 
         afficherMessage(
-          "Si un compte membre correspond à cette adresse e-mail, un lien vient d’être envoyé."
-        );
+  "Si un compte membre correspond à cette adresse e-mail, un lien vient d’être envoyé."
+);
 
-        setTimeout(() => {
-          window.location.href = window.SITE_BASE + "/index.html";
-        }, 2200);
+champEmail.value = "";
+boutonValider.disabled = false;
+boutonValider.textContent = "Envoyer";
 
       } catch (error) {
         afficherMessage("Une erreur est survenue. Veuillez réessayer.");
