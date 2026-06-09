@@ -1,4 +1,5 @@
-const WORKER_CONNEXION_MEMBRE_URL = "https://api.lacleduparc.fr";
+const WORKER_CONNEXION_MEMBRE_URL =
+  "https://connexion-membre-api.lacleduparc.fr";
 
 const URL_MON_COMPTE_MEMBRE =
   window.SITE_BASE + "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/mon-compte-membre.html";
