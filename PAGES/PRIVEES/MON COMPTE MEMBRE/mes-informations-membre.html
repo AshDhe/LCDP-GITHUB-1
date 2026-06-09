@@ -23,6 +23,7 @@
 <body>
 
   <div id="burger-menu-container"></div>
+  <div id="boite-dialogue-container"></div>
   <div id="lightbox-information-container"></div>
 
   <main class="site-page">
@@ -66,7 +67,11 @@
           <tr>
             <td>E-mail</td>
             <td id="valeur-email-membre">Chargement...</td>
-            <td><button class="micro-action" type="button" id="modifier-email-membre">Modifier</button></td>
+            <td>
+              <button class="micro-action" type="button" id="modifier-email-membre">
+                Modifier
+              </button>
+            </td>
           </tr>
 
           <tr>
@@ -84,13 +89,21 @@
           <tr>
             <td>Parrain</td>
             <td id="valeur-parrain-membre">Chargement...</td>
-            <td><button class="micro-action" type="button" id="modifier-parrain-membre">Modifier</button></td>
+            <td>
+              <button class="micro-action" type="button" id="modifier-parrain-membre">
+                Modifier
+              </button>
+            </td>
           </tr>
 
           <tr>
             <td>Département</td>
             <td id="valeur-departement-membre">Chargement...</td>
-            <td><button class="micro-action" type="button" id="modifier-departement-membre">Modifier</button></td>
+            <td>
+              <button class="micro-action" type="button" id="modifier-departement-membre">
+                Modifier
+              </button>
+            </td>
           </tr>
 
           <tr>
@@ -136,7 +149,8 @@
       });
     }
 
-    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js")
+    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/boite-dialogue.js")
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js"))
       .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/burger-menu.js"))
       .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js"))
       .then(() => chargerScript(window.SITE_BASE + "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/mes-informations-membre.js"));
