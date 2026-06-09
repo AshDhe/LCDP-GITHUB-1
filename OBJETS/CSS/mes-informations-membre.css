@@ -1,4 +1,8 @@
 .table {
+  border: 5px solid red !important;
+}
+
+.table {
   width: min(100%, 920px);
   margin: 0 auto;
   border-collapse: collapse;
