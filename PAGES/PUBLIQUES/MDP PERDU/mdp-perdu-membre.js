@@ -53,13 +53,13 @@
           return;
         }
 
-        afficherMessage(
+       afficherMessage(
   "Si un compte membre correspond à cette adresse e-mail, un lien vient d’être envoyé."
 );
 
-setTimeout(() => {
-  window.location.href = window.SITE_BASE + "/index.html";
-}, 2500);
+redirigerAccueilAuClicLightbox();
+
+
       } catch (error) {
         afficherMessage("Une erreur est survenue. Veuillez réessayer.");
 
@@ -68,6 +68,24 @@ setTimeout(() => {
       }
     });
   }
+
+
+function redirigerAccueilAuClicLightbox() {
+  setTimeout(() => {
+    const boutonOk = document.querySelector(
+      ".lightbox-information .button, .lightbox-box .button"
+    );
+
+    if (!boutonOk) {
+      return;
+    }
+
+    boutonOk.addEventListener("click", () => {
+      window.location.href = window.SITE_BASE + "/index.html";
+    }, { once: true });
+  }, 0);
+}
+
 
   function emailValide(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
