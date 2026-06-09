@@ -1,5 +1,6 @@
-async function initialiserMesInformationsMembre() {
-  const WORKER_URL = "https://worker-mes-informations-membre.workers.dev";
+document.addEventListener("DOMContentLoaded", async () => {
+  const WORKER_URL =
+    "https://worker-mes-informations-membre.hugues-pavret.workers.dev";
 
   const PAGE_CONNEXION_MEMBRE =
     window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
@@ -7,27 +8,29 @@ async function initialiserMesInformationsMembre() {
   const ENDPOINT_MES_INFORMATIONS =
     WORKER_URL + "/api/membre/mes-informations";
 
-  try {
-    const reponse = await fetch(ENDPOINT_MES_INFORMATIONS, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Accept": "application/json"
+  async function chargerInformationsMembre() {
+    try {
+      const reponse = await fetch(ENDPOINT_MES_INFORMATIONS, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Accept": "application/json"
+        }
+      });
+
+      const resultat = await reponse.json();
+
+      if (!reponse.ok || !resultat.ok || !resultat.informations) {
+        redirigerVersConnexion();
+        return;
       }
-    });
 
-    const resultat = await reponse.json();
+      afficherInformationsMembre(resultat.informations);
 
-    if (!reponse.ok || !resultat.ok || !resultat.informations) {
+    } catch (erreur) {
+      console.error("Erreur informations membre :", erreur);
       redirigerVersConnexion();
-      return;
     }
-
-    afficherInformationsMembre(resultat.informations);
-
-  } catch (erreur) {
-    console.error("Erreur informations membre :", erreur);
-    redirigerVersConnexion();
   }
 
   function redirigerVersConnexion() {
@@ -49,7 +52,9 @@ async function initialiserMesInformationsMembre() {
 
   function remplirTexte(id, valeur) {
     const element = document.getElementById(id);
+
     if (!element) return;
+
     element.textContent = valeur || "Non renseigné";
   }
 
@@ -62,6 +67,6 @@ async function initialiserMesInformationsMembre() {
 
     return date.toLocaleDateString("fr-FR");
   }
-}
 
-initialiserMesInformationsMembre();
+  chargerInformationsMembre();
+});
