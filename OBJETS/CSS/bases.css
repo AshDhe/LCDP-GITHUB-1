@@ -206,6 +206,26 @@ p {
   outline-offset: 3px;
 }
 
+.micro-action {
+  min-height: 34px;
+  padding: 7px 13px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.micro-action:hover {
+  border-color: var(--color-primary);
+  background: var(--color-surface-soft);
+}
+
+
+
 
 /* BURGER MENU */
 
@@ -330,6 +350,7 @@ p {
   outline: 3px solid rgba(35, 68, 56, 0.22);
   outline-offset: 3px;
 }
+
 
 
 /* CARROUSEL */
@@ -493,6 +514,7 @@ p {
 .exit-menu-bas h2 a {
   width: 100%;
 }
+
 
 /* LIGHTBOX */
 
@@ -754,6 +776,10 @@ p {
 }
 
 
+
+
+
+
 /* RESPONSIVE */
 
 @media (max-width: 600px) {
@@ -981,5 +1007,13 @@ p {
 
   .site-footer {
     padding: var(--space-5) 0;
+  }
+
+
+/* BOUTONS MICRO - ACTIONS */
+
+ .micro-action {
+    padding: 6px 10px;
+    font-size: 13px;
   }
 }
