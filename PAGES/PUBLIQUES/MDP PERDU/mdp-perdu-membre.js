@@ -54,11 +54,12 @@
         }
 
         afficherMessage(
-          "Si un compte membre correspond à cette adresse e-mail, un lien vient d’être envoyé.",
-          () => {
-            window.location.href = window.SITE_BASE + "/index.html";
-          }
+          "Si un compte membre correspond à cette adresse e-mail, un lien vient d’être envoyé."
         );
+
+        setTimeout(() => {
+          window.location.href = window.SITE_BASE + "/index.html";
+        }, 2200);
 
       } catch (error) {
         afficherMessage("Une erreur est survenue. Veuillez réessayer.");
@@ -73,17 +74,13 @@
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
-  function afficherMessage(message, callback) {
+  function afficherMessage(message) {
     if (typeof window.afficherLightboxInformation === "function") {
-      window.afficherLightboxInformation(message, callback);
+      window.afficherLightboxInformation(message);
       return;
     }
 
     alert(message);
-
-    if (typeof callback === "function") {
-      callback();
-    }
   }
 
   if (document.readyState === "loading") {
