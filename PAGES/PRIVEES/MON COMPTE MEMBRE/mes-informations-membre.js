@@ -1,6 +1,6 @@
 async function initialiserMesInformationsMembre() {
   const ENDPOINT_MES_INFORMATIONS =
-    "https://api.lacleduparc.fr/api/membre/mes-informations";
+    "https://informations-membre-api.lacleduparc.fr";
 
   const PAGE_CONNEXION_MEMBRE =
     window.SITE_BASE + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
