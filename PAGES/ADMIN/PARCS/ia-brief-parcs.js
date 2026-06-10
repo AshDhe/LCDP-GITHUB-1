@@ -1,4 +1,5 @@
 const ENDPOINT_LISTE_PARCS = "https://autocomplete-parc-api.lacleduparc.fr";
+const ENDPOINT_IA_SHIFT_HPARCS = "https://ia-shift-hparcs-1-api.lacleduparc.fr";
 
 const inputNomParc = document.getElementById("nom-parc");
 const inputDptmtParc = document.getElementById("dptmt-parc");
