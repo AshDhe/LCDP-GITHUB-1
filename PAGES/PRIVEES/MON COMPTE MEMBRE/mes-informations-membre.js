@@ -7,11 +7,11 @@ const ENDPOINT_MAJ_EMAIL_MEMBRE =
 const ENDPOINT_MAJ_PARRAIN_MEMBRE =
   "https://maj-parrain-membre-api.lacleduparc.fr";
 
+const ENDPOINT_MAJ_DEPARTEMENT_MEMBRE =
+  "https://maj-dptmt-membre-api.lacleduparc.fr";
+
 const PAGE_CONNEXION_MEMBRE =
   (window.SITE_BASE || "") + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
-
-const PAGE_MON_COMPTE_MEMBRE_RELATIVE =
-  "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/mon-compte-membre.html";
 
 let emailMembreActuel = "";
 
@@ -49,6 +49,7 @@ async function initialiserMesInformationsMembre() {
 
     initialiserModificationEmailMembre();
     initialiserModificationParrainMembre();
+    initialiserModificationDepartementMembre();
 
   } catch (erreur) {
     window.location.href =
@@ -222,19 +223,108 @@ async function envoyerModificationParrain(emailparrain) {
       await window.afficherLightboxInformation(
         "Changement enregistré",
         "Votre changement de parrain est enregistré.",
-        {
-          type: "validation",
-        }
+        { type: "validation" }
       );
     } else {
       alert("Votre changement de parrain est enregistré.");
-      window.location.href =
-        (window.SITE_BASE || "") + PAGE_MON_COMPTE_MEMBRE_RELATIVE;
     }
 
   } catch (erreur) {
     console.error("Erreur modification parrain membre :", erreur);
-    afficherMessageErreur("Erreur technique : " + erreur.message);
+    afficherMessageErreur("Erreur technique. Merci de réessayer.");
+  }
+}
+
+function initialiserModificationDepartementMembre() {
+  const bouton =
+    document.getElementById("modifier-departement-membre") ||
+    document.querySelector("[data-action='modifier-departement-membre']");
+
+  if (!bouton) return;
+
+  if (bouton.dataset.initialise === "true") return;
+  bouton.dataset.initialise = "true";
+
+  bouton.addEventListener("click", ouvrirBoiteDialogueDepartementMembre);
+}
+
+async function ouvrirBoiteDialogueDepartementMembre() {
+  if (typeof window.afficherBoiteDialogue !== "function") {
+    console.error("La fonction afficherBoiteDialogue est introuvable.");
+    return;
+  }
+
+  const valeurActuelle =
+    document.getElementById("valeur-departement-membre")?.textContent || "";
+
+  const resultat = await window.afficherBoiteDialogue({
+    titre: "Modifier mon département",
+    texteAnnuler: "Annuler",
+    texteValider: "Valider",
+    champs: [
+      {
+        id: "nouveau-departement-membre",
+        name: "dptmtmembre",
+        label: "Nouveau département",
+        type: "text",
+        value: valeurActuelle === "Non renseigné" ? "" : valeurActuelle,
+        required: true
+      }
+    ]
+  });
+
+  if (!resultat) return;
+
+  const dptmtmembre = String(resultat.dptmtmembre || "").trim();
+
+  if (!dptmtmembre) {
+    afficherMessageErreur("Le département est obligatoire.");
+    return;
+  }
+
+  await envoyerModificationDepartement(dptmtmembre);
+}
+
+async function envoyerModificationDepartement(dptmtmembre) {
+  try {
+    const reponse = await fetch(ENDPOINT_MAJ_DEPARTEMENT_MEMBRE, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        dptmtmembre
+      })
+    });
+
+    const resultat = await reponse.json().catch(() => null);
+
+    if (!reponse.ok || !resultat || resultat.ok !== true) {
+      afficherMessageErreur(
+        resultat && resultat.message
+          ? resultat.message
+          : "Impossible d’enregistrer le changement de département."
+      );
+      return;
+    }
+
+    remplirTexte("valeur-departement-membre", dptmtmembre);
+
+    if (typeof window.afficherLightboxInformation === "function") {
+      await window.afficherLightboxInformation(
+        "Changement enregistré",
+        "Votre changement de département est enregistré.",
+        { type: "validation" }
+      );
+    } else {
+      alert("Votre changement de département est enregistré.");
+    }
+
+  } catch (erreur) {
+    console.error("Erreur modification département membre :", erreur);
+    afficherMessageErreur("Erreur technique. Merci de réessayer.");
   }
 }
 
