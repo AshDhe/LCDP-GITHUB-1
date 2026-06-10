@@ -254,9 +254,6 @@ async function ouvrirBoiteDialogueDepartementMembre() {
     return;
   }
 
-  const valeurActuelle =
-    document.getElementById("valeur-departement-membre")?.textContent || "";
-
   const resultat = await window.afficherBoiteDialogue({
     titre: "Modifier mon département",
     texteAnnuler: "Annuler",
@@ -267,7 +264,7 @@ async function ouvrirBoiteDialogueDepartementMembre() {
         name: "dptmtmembre",
         label: "Nouveau département",
         type: "text",
-        value: valeurActuelle === "Non renseigné" ? "" : valeurActuelle,
+        value: "",
         required: true
       }
     ]
