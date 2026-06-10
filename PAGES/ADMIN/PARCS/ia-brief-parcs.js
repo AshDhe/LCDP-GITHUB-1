@@ -2,7 +2,7 @@ const ENDPOINT_LISTE_PARCS = "https://autocomplete-parc-api.lacleduparc.fr";
 
 const inputNomParc = document.getElementById("nom-parc");
 const inputDptmtParc = document.getElementById("dptmt-parc");
-const datalistParcs = document.getElementById("liste-parcs");
+const suggestionsParcs = document.getElementById("suggestions-parcs");
 
 const formSelectionParc = document.getElementById("form-selection-parc");
 const messageSelectionParc = document.getElementById("message-selection-parc");
@@ -23,52 +23,64 @@ document.addEventListener("DOMContentLoaded", chargerParcs);
 async function chargerParcs() {
   try {
     const response = await fetch(ENDPOINT_LISTE_PARCS);
-
     const result = await response.json();
 
     if (!response.ok || !result.success) {
       messageSelectionParc.textContent = "Impossible de charger la liste des parcs.";
-      console.error(result);
       return;
     }
 
     parcsDisponibles = result.parcs || [];
 
-    datalistParcs.innerHTML = "";
-
-    parcsDisponibles.forEach((parc) => {
-      const option = document.createElement("option");
-      option.value = parc.nom;
-      option.label = `${parc.nom} - ${parc.dptmt}`;
-      datalistParcs.appendChild(option);
-    });
-
   } catch (error) {
     messageSelectionParc.textContent = "Erreur de connexion au serveur des parcs.";
-    console.error(error);
   }
 }
+
+inputNomParc.addEventListener("input", () => {
+  const saisie = inputNomParc.value.trim().toUpperCase();
+
+  suggestionsParcs.innerHTML = "";
+  parcActif = null;
+  sectionBriefIa.hidden = true;
+
+  if (saisie.length < 1) {
+    return;
+  }
+
+  const resultats = parcsDisponibles.filter((parc) =>
+    String(parc.nom).toUpperCase().includes(saisie)
+  );
+
+  resultats.slice(0, 8).forEach((parc) => {
+    const item = document.createElement("div");
+    item.textContent = `${parc.nom} - ${parc.dptmt}`;
+    item.style.cursor = "pointer";
+
+    item.addEventListener("click", () => {
+      inputNomParc.value = parc.nom;
+      inputDptmtParc.value = parc.dptmt;
+      parcActif = parc;
+      suggestionsParcs.innerHTML = "";
+      messageSelectionParc.textContent = "";
+    });
+
+    suggestionsParcs.appendChild(item);
+  });
+});
 
 formSelectionParc.addEventListener("submit", (event) => {
   event.preventDefault();
 
   messageSelectionParc.textContent = "";
-  parcActif = null;
 
   const nomSaisi = inputNomParc.value.trim().toUpperCase();
   const dptmtSaisi = inputDptmtParc.value.trim();
 
-  if (!nomSaisi || !dptmtSaisi) {
-    messageSelectionParc.textContent = "Nom du parc et département obligatoires.";
-    return;
-  }
-
-  const parcTrouve = parcsDisponibles.find((parc) => {
-    return (
-      String(parc.nom).trim().toUpperCase() === nomSaisi &&
-      String(parc.dptmt).trim() === dptmtSaisi
-    );
-  });
+  const parcTrouve = parcsDisponibles.find((parc) =>
+    String(parc.nom).trim().toUpperCase() === nomSaisi &&
+    String(parc.dptmt).trim() === dptmtSaisi
+  );
 
   if (!parcTrouve) {
     messageSelectionParc.textContent = "Aucun parc trouvé avec ce nom et ce département.";
@@ -86,7 +98,7 @@ formSelectionParc.addEventListener("submit", (event) => {
   sectionBriefIa.hidden = false;
 });
 
-formBriefIa.addEventListener("submit", async (event) => {
+formBriefIa.addEventListener("submit", (event) => {
   event.preventDefault();
 
   messageBriefIa.textContent = "";
@@ -104,8 +116,6 @@ formBriefIa.addEventListener("submit", async (event) => {
     return;
   }
 
-  messageBriefIa.textContent = "Brief prêt à être envoyé à l’IA.";
-
   const payloadProvisoire = {
     idparc: parcActif.idparc,
     nom: parcActif.nom,
@@ -113,5 +123,6 @@ formBriefIa.addEventListener("submit", async (event) => {
     textebrief: texte
   };
 
+  messageBriefIa.textContent = "Brief prêt à être envoyé à l’IA.";
   resultatJsonBrief.textContent = JSON.stringify(payloadProvisoire, null, 2);
 });
