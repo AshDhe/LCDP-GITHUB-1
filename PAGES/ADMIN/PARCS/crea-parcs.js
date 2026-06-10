@@ -4,6 +4,7 @@ const URL_RETOUR_ADMIN = "https://ashdhe.github.io/LCDP-GITHUB-1/PAGES/ADMIN/adm
 const textarea = document.getElementById("json-parcs");
 const bouton = document.getElementById("btn-creer-parcs");
 const message = document.getElementById("message-resultat");
+const details = document.getElementById("details-resultat");
 
 let creationTerminee = false;
 
@@ -14,6 +15,7 @@ bouton.addEventListener("click", async () => {
   }
 
   message.textContent = "";
+  details.textContent = "";
 
   let parcs;
 
@@ -45,7 +47,7 @@ bouton.addEventListener("click", async () => {
 
     if (!response.ok || !result.success) {
       message.textContent = "Erreur lors de la création des parcs.";
-      console.error(result);
+      details.textContent = JSON.stringify(result, null, 2);
       bouton.textContent = "Créer les parcs";
       return;
     }
@@ -55,14 +57,14 @@ bouton.addEventListener("click", async () => {
       `${result.skipped} doublon(s) ignoré(s), ` +
       `${result.errors} erreur(s).`;
 
+    details.textContent = JSON.stringify(result.results, null, 2);
+
     creationTerminee = true;
     bouton.textContent = "OK";
 
-    console.log(result);
-
   } catch (error) {
     message.textContent = "Erreur de connexion au worker.";
-    console.error(error);
+    details.textContent = error.message;
     bouton.textContent = "Créer les parcs";
   } finally {
     bouton.disabled = false;
