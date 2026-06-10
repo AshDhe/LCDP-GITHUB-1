@@ -90,6 +90,7 @@ formSelectionParc.addEventListener("submit", (event) => {
   if (!parcTrouve) {
     messageSelectionParc.textContent = "Aucun parc trouvé avec ce nom et ce département.";
     sectionBriefIa.hidden = true;
+    sectionValidationJson.hidden = true;
     return;
   }
 
@@ -100,10 +101,17 @@ formSelectionParc.addEventListener("submit", (event) => {
     `${parcActif.nom} - département ${parcActif.dptmt} - ${parcActif.localite || ""}`;
 
   sectionBriefIa.hidden = false;
+  sectionValidationJson.hidden = true;
 });
 
-formBriefIa.addEventListener("submit", (event) => {
+formBriefIa.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  messageBriefIa.textContent = "";
+  messageValidationJson.textContent = "";
+  resultatJsonBrief.textContent = "";
+  resumeJsonBrief.innerHTML = "";
+  sectionValidationJson.hidden = true;
 
   if (!parcActif) {
     messageBriefIa.textContent = "Aucun parc sélectionné.";
@@ -117,33 +125,139 @@ formBriefIa.addEventListener("submit", (event) => {
     return;
   }
 
-  jsonBriefActuel = {
+  const payload = {
     idparc: parcActif.idparc,
     nom: parcActif.nom,
     dptmt: parcActif.dptmt,
-    textebrief: texte,
-    jsonbrief: {
-      type: "hparcs",
-      source: "brief_admin",
-      regles: [],
-      exceptions: []
-    }
+    textebrief: texte
   };
 
-  afficherValidationJson(jsonBriefActuel);
+  const boutonSubmit = formBriefIa.querySelector("button[type='submit']");
+  boutonSubmit.disabled = true;
+  boutonSubmit.textContent = "Analyse IA en cours...";
 
-  messageBriefIa.textContent = "JSON généré. Merci de le vérifier.";
-  sectionValidationJson.hidden = false;
+  try {
+    const response = await fetch(ENDPOINT_IA_SHIFT_HPARCS, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      messageBriefIa.textContent = "Erreur pendant l’analyse IA.";
+      resultatJsonBrief.textContent = JSON.stringify(result, null, 2);
+      sectionValidationJson.hidden = false;
+      return;
+    }
+
+    jsonBriefActuel = {
+      idparc: result.idparc,
+      nom: result.nom,
+      dptmt: result.dptmt,
+      textebrief: result.textebrief,
+      jsonbrief: result.jsonbrief
+    };
+
+    afficherValidationJson(jsonBriefActuel);
+
+    messageBriefIa.textContent = "Analyse IA terminée. Merci de vérifier le résultat.";
+    sectionValidationJson.hidden = false;
+
+  } catch (error) {
+    messageBriefIa.textContent = "Erreur de connexion au worker IA.";
+    resultatJsonBrief.textContent = error.message;
+    sectionValidationJson.hidden = false;
+  } finally {
+    boutonSubmit.disabled = false;
+    boutonSubmit.textContent = "Lancer le brief IA";
+  }
 });
 
 function afficherValidationJson(data) {
-  resumeJsonBrief.innerHTML = `
-    <p>Parc : ${data.nom}</p>
-    <p>Département : ${data.dptmt}</p>
-    <p>Type de brief : horaires du parc</p>
-    <p>Statut : prêt à validation</p>
-  `;
+  const json = data.jsonbrief || {};
+  const regles = Array.isArray(json.regles) ? json.regles : [];
+  const exceptions = Array.isArray(json.exceptions) ? json.exceptions : [];
+  const resumeLisible = Array.isArray(json.resume_lisible) ? json.resume_lisible : [];
+  const alertes = Array.isArray(json.alertes) ? json.alertes : [];
 
+  let html = "";
+
+  html += `<p>Parc : ${data.nom}</p>`;
+  html += `<p>Département : ${data.dptmt}</p>`;
+
+  if (resumeLisible.length > 0) {
+    html += `<h4>Résumé général</h4><ul>`;
+    resumeLisible.forEach((phrase) => {
+      html += `<li>${escapeHtml(phrase)}</li>`;
+    });
+    html += `</ul>`;
+  }
+
+  if (regles.length > 0) {
+    html += `<h4>Règles horaires détectées</h4>`;
+
+    regles.forEach((regle, index) => {
+      const periode = regle.periode || {};
+      const jours = Array.isArray(regle.jours) ? regle.jours.join(", ") : "";
+      const plages = Array.isArray(regle.plages) ? regle.plages : [];
+
+      html += `<div>`;
+      html += `<p>Règle ${index + 1}</p>`;
+      html += `<p>Période : ${periode.debut || "?"} → ${periode.fin || "?"}</p>`;
+      html += `<p>Jours : ${escapeHtml(jours)}</p>`;
+
+      if (plages.length > 0) {
+        html += `<ul>`;
+        plages.forEach((plage) => {
+          html += `<li>${plage.debut || "?"} → ${plage.fin || "?"}</li>`;
+        });
+        html += `</ul>`;
+      }
+
+      if (regle.resume) {
+        html += `<p>${escapeHtml(regle.resume)}</p>`;
+      }
+
+      html += `</div>`;
+    });
+  }
+
+  if (exceptions.length > 0) {
+    html += `<h4>Exceptions détectées</h4><ul>`;
+
+    exceptions.forEach((exception) => {
+      html += `<li>`;
+      html += `${exception.date || "date ?"} : ${exception.type || "type ?"}`;
+
+      if (exception.resume) {
+        html += ` - ${escapeHtml(exception.resume)}`;
+      }
+
+      html += `</li>`;
+    });
+
+    html += `</ul>`;
+  }
+
+  if (alertes.length > 0) {
+    html += `<h4>Alertes</h4><ul>`;
+
+    alertes.forEach((alerte) => {
+      html += `<li>${escapeHtml(alerte)}</li>`;
+    });
+
+    html += `</ul>`;
+  }
+
+  if (!regles.length && !exceptions.length && !resumeLisible.length) {
+    html += `<p>Aucune règle lisible détectée dans le JSON.</p>`;
+  }
+
+  resumeJsonBrief.innerHTML = html;
   resultatJsonBrief.textContent = JSON.stringify(data, null, 2);
 }
 
@@ -159,5 +273,14 @@ btnValiderJson.addEventListener("click", () => {
   }
 
   messageValidationJson.textContent =
-    "Validation prête. Prochaine étape : envoi au worker d’enregistrement iabriefparcs.";
+    "JSON validé côté page. Prochaine étape : enregistrement dans iabriefparcs.";
 });
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
