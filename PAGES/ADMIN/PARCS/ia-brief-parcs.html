@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA Brief Parcs</title>
+</head>
+
+<body>
+
+  <main>
+    <h1>IA Brief Parcs</h1>
+
+    <section id="section-selection-parc">
+      <h2>1. Sélection du parc</h2>
+
+      <form id="form-selection-parc">
+
+        <div>
+          <label for="nom-parc">Nom du parc</label>
+          <input
+            type="text"
+            id="nom-parc"
+            name="nom-parc"
+            list="liste-parcs"
+            autocomplete="off"
+            required
+          >
+
+          <datalist id="liste-parcs"></datalist>
+        </div>
+
+        <div>
+          <label for="dptmt-parc">Département</label>
+          <input
+            type="text"
+            id="dptmt-parc"
+            name="dptmt-parc"
+            required
+          >
+        </div>
+
+        <button type="submit">Valider le parc</button>
+
+      </form>
+
+      <p id="message-selection-parc"></p>
+    </section>
+
+    <section id="section-brief-ia" hidden>
+      <h2>2. Brief IA du parc</h2>
+
+      <div>
+        <p>Parc sélectionné :</p>
+        <p id="parc-selectionne"></p>
+      </div>
+
+      <form id="form-brief-ia">
+
+        <div>
+          <label for="texte-brief">Brief administrateur</label>
+          <textarea
+            id="texte-brief"
+            name="texte-brief"
+            rows="16"
+            cols="100"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit">Lancer le brief IA</button>
+
+      </form>
+
+      <p id="message-brief-ia"></p>
+
+      <pre id="resultat-json-brief"></pre>
+    </section>
+
+  </main>
+
+  <script src="ia-brief-parcs.js"></script>
+
+</body>
+</html>
