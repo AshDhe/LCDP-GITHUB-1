@@ -7,18 +7,21 @@
 
   <title>Mon planning membre - La Clé du Parc</title>
 
-  <script>
-    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+<script>
+  window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
 
-    document.write(
-      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
-    );
+  document.write(
+    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
+  );
 
-    document.write(
-      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mon-planning-membre.css">'
-    );
-  </script>
-</head>
+  document.write(
+    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mes-informations-membre.css">'
+  );
+
+  document.write(
+    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mon-planning-membre.css">'
+  );
+</script></head>
 
 <body>
 
@@ -47,6 +50,12 @@
         <thead>
           <tr>
             <th>
+              <button class="button" type="button" id="bouton-nouvelle-date-planning">
+                Nouvelle date
+              </button>
+            </th>
+
+            <th>
               <span id="titre-planning-membre">À venir</span>
             </th>
 
@@ -56,11 +65,6 @@
               </a>
             </th>
 
-            <th>
-              <button class="button" type="button" id="bouton-nouvelle-date-planning">
-                Nouvelle date
-              </button>
-            </th>
           </tr>
         </thead>
 
