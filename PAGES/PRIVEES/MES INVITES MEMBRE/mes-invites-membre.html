@@ -7,22 +7,21 @@
 
   <title>Mes invités membres - La Clé du Parc</title>
 
-<script>
-  window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+  <script>
+    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
 
-  document.write(
-    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
-  );
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
+    );
 
-  document.write(
-    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mes-informations-membre.css">'
-  );
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mes-informations-membre.css">'
+    );
 
-  document.write(
-    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mon-planning-membre.css">'
-  );
-</script>
-
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mes-invites-membre.css">'
+    );
+  </script>
 </head>
 
 <body>
@@ -36,37 +35,44 @@
     <section class="landing-text hero-text">
 
       <h1 class="site-title">
-        Mes invités membres
+        Mes invités
       </h1>
 
       <h2 class="site-subtitle">
-        Retrouvez les membres qui vous ont indiqué comme parrain.
+        Retrouvez les membres invités que vous parrainez.
       </h2>
 
     </section>
 
-    <section class="section-recontact" aria-label="Liste des invités membres">
+    <section class="section-recontact" aria-label="Liste des invités membre">
 
-      <div id="message-mes-invites-membres" class="message-invites" aria-live="polite">
-  Chargement...
-</div>
+      <table class="table table-invites-membre" id="table-invites-membre" aria-label="Mes invités membre">
 
-      <div id="resume-mes-invites-membres" class="resume-invites" hidden></div>
+        <thead>
+          <tr>
+            <th colspan="3" id="titre-table-invites-membre">
+              Mes invités
+            </th>
 
-      <div id="table-wrapper-mes-invites-membres" class="table-wrapper" hidden>
-        <table class="table table-invites-membres" aria-label="Liste des invités membres">
-          <thead>
-            <tr>
-              <th>Membre</th>
-              <th>Département</th>
-              <th>Email validé</th>
-              <th>Date de parrainage</th>
-            </tr>
-          </thead>
+            <th>
+              <button class="button" type="button" id="bouton-inviter-membre">
+                Inviter
+              </button>
+            </th>
+          </tr>
+        </thead>
 
-          <tbody id="liste-mes-invites-membres"></tbody>
-        </table>
-      </div>
+        <tbody id="liste-mes-invites-membre">
+
+          <tr>
+            <td colspan="4" id="message-mes-invites-membre">
+              Chargement de vos invités...
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
 
     </section>
 
@@ -101,7 +107,7 @@
       .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js"))
       .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/burger-menu.js"))
       .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js"))
-      .then(() => chargerScript(window.SITE_BASE + "/PAGES/PRIVEES/MES%20INVITES%20MEMBRES/mes-invites-membres.js"));
+      .then(() => chargerScript(window.SITE_BASE + "/PAGES/PRIVEES/MES%20INVITES%20MEMBRE/mes-invites-membre.js"));
   </script>
 
 </body>

@@ -1,18 +1,24 @@
-const ENDPOINT_MES_INVITES_MEMBRES =
-  "https://mes-invites-membres-api.lacleduparc.fr";
+const ENDPOINT_MES_INVITES_MEMBRE =
+  "https://mes-invites-membre-api.lacleduparc.fr";
 
-const messageInvites = document.getElementById("message-mes-invites-membres");
-const resumeInvites = document.getElementById("resume-mes-invites-membres");
-const tableWrapperInvites = document.getElementById("table-wrapper-mes-invites-membres");
-const listeInvites = document.getElementById("liste-mes-invites-membres");
+const listeInvites = document.getElementById("liste-mes-invites-membre");
+const boutonInviter = document.getElementById("bouton-inviter-membre");
 
-document.addEventListener("DOMContentLoaded", chargerMesInvitesMembres);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", chargerMesInvitesMembre);
+} else {
+  chargerMesInvitesMembre();
+}
 
-async function chargerMesInvitesMembres() {
-  afficherChargement();
+if (boutonInviter) {
+  boutonInviter.addEventListener("click", inviterMembresSelectionnes);
+}
+
+async function chargerMesInvitesMembre() {
+  afficherMessage("Chargement de vos invités...");
 
   try {
-    const reponse = await fetch(ENDPOINT_MES_INVITES_MEMBRES, {
+    const reponse = await fetch(ENDPOINT_MES_INVITES_MEMBRE, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -23,9 +29,7 @@ async function chargerMesInvitesMembres() {
     const resultat = await reponse.json().catch(() => null);
 
     if (!reponse.ok || !resultat || resultat.success !== true) {
-      afficherErreur(
-        resultat?.message || "Impossible de charger vos invités membres."
-      );
+      afficherMessage(resultat?.message || "Impossible de charger vos invités.");
       return;
     }
 
@@ -33,136 +37,84 @@ async function chargerMesInvitesMembres() {
 
     afficherInvites(invites);
   } catch (erreur) {
-    afficherErreur("Erreur de connexion. Merci de réessayer.");
+    afficherMessage("Erreur de connexion. Merci de réessayer.");
   }
 }
 
-function afficherChargement() {
-  messageInvites.hidden = false;
-  messageInvites.className = "message-invites";
-  messageInvites.textContent = "Chargement...";
-
-  resumeInvites.hidden = true;
-  resumeInvites.textContent = "";
-
-  tableWrapperInvites.hidden = true;
+function afficherMessage(message) {
   listeInvites.innerHTML = "";
-}
 
-function afficherErreur(message) {
-  messageInvites.hidden = false;
-  messageInvites.className = "message-invites message-invites-erreur";
-  messageInvites.textContent = message;
+  const ligne = document.createElement("tr");
+  const cellule = document.createElement("td");
 
-  resumeInvites.hidden = true;
-  resumeInvites.textContent = "";
+  cellule.colSpan = 4;
+  cellule.id = "message-mes-invites-membre";
+  cellule.textContent = message;
 
-  tableWrapperInvites.hidden = true;
-  listeInvites.innerHTML = "";
+  ligne.appendChild(cellule);
+  listeInvites.appendChild(ligne);
 }
 
 function afficherInvites(invites) {
   listeInvites.innerHTML = "";
 
   if (invites.length === 0) {
-    messageInvites.hidden = false;
-    messageInvites.className = "message-invites";
-    messageInvites.textContent =
-      "Aucun membre ne vous a encore indiqué comme parrain.";
-
-    resumeInvites.hidden = true;
-    resumeInvites.textContent = "";
-
-    tableWrapperInvites.hidden = true;
+    afficherMessage("Aucun membre ne vous a encore indiqué comme parrain.");
     return;
   }
-
-  messageInvites.hidden = true;
-
-  resumeInvites.hidden = false;
-  resumeInvites.textContent =
-    invites.length === 1
-      ? "1 membre vous a indiqué comme parrain."
-      : `${invites.length} membres vous ont indiqué comme parrain.`;
-
-  tableWrapperInvites.hidden = false;
 
   invites.forEach((invite) => {
     const ligne = document.createElement("tr");
 
-    const celluleMembre = document.createElement("td");
-    celluleMembre.dataset.label = "Membre";
+    const celluleEmail = document.createElement("td");
+    celluleEmail.textContent = invite.emailmembre || "Email non renseigné";
 
-    const nom = document.createElement("span");
-    nom.className = "invite-nom";
-    nom.textContent = construireNomComplet(invite);
+    const celluleNom = document.createElement("td");
+    celluleNom.textContent = invite.nommembre || "";
 
-    const email = document.createElement("span");
-    email.className = "invite-email";
-    email.textContent = invite.emailmembre || "Email non renseigné";
+    const cellulePrenom = document.createElement("td");
+    cellulePrenom.textContent = invite.prenommembre || "";
 
-    celluleMembre.appendChild(nom);
-    celluleMembre.appendChild(email);
+    const celluleCheckbox = document.createElement("td");
 
-    const celluleDepartement = creerCellule(
-      "Département",
-      invite.dptmtmembre || "Non renseigné"
-    );
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "checkbox-inviter";
+    checkbox.value = invite.emailmembre || "";
+    checkbox.dataset.idmembre = invite.idmembre || "";
 
-    const celluleValidation = document.createElement("td");
-    celluleValidation.dataset.label = "Email validé";
+    celluleCheckbox.appendChild(checkbox);
 
-    const badge = document.createElement("span");
-    badge.className = invite.emailvalid
-      ? "badge-invite badge-invite-valide"
-      : "badge-invite badge-invite-non-valide";
-    badge.textContent = invite.emailvalid ? "Oui" : "Non";
-
-    celluleValidation.appendChild(badge);
-
-    const celluleDate = creerCellule(
-      "Date de parrainage",
-      formaterDate(invite.dateparrainage)
-    );
-
-    ligne.appendChild(celluleMembre);
-    ligne.appendChild(celluleDepartement);
-    ligne.appendChild(celluleValidation);
-    ligne.appendChild(celluleDate);
+    ligne.appendChild(celluleEmail);
+    ligne.appendChild(celluleNom);
+    ligne.appendChild(cellulePrenom);
+    ligne.appendChild(celluleCheckbox);
 
     listeInvites.appendChild(ligne);
   });
 }
 
-function creerCellule(label, valeur) {
-  const cellule = document.createElement("td");
-  cellule.dataset.label = label;
-  cellule.textContent = valeur;
-  return cellule;
-}
+function inviterMembresSelectionnes() {
+  const selection = Array.from(
+    document.querySelectorAll(".checkbox-inviter:checked")
+  ).map((checkbox) => ({
+    idmembre: checkbox.dataset.idmembre,
+    emailmembre: checkbox.value
+  }));
 
-function construireNomComplet(invite) {
-  const prenom = invite.prenommembre || "";
-  const nom = invite.nommembre || "";
-  const nomComplet = `${prenom} ${nom}`.trim();
-
-  return nomComplet || "Membre";
-}
-
-function formaterDate(dateISO) {
-  if (!dateISO) {
-    return "Non renseignée";
+  if (selection.length === 0) {
+    afficherInformationSimple("Aucun membre sélectionné.");
+    return;
   }
 
-  const date = new Date(dateISO);
+  console.log("Membres à inviter :", selection);
+}
 
-  if (Number.isNaN(date.getTime())) {
-    return "Non renseignée";
+function afficherInformationSimple(message) {
+  if (typeof afficherLightboxInformation === "function") {
+    afficherLightboxInformation(message);
+    return;
   }
 
-  return date.toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric"
-  });
+  alert(message);
 }
