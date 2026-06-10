@@ -298,7 +298,10 @@ btnValiderJson.addEventListener("click", () => {
 function formatDateFr(dateStr) {
   if (!dateStr) return "?";
 
-  const [jour, mois] = dateStr.split("/");
+  const [jourRaw, moisRaw] = String(dateStr).split("/");
+
+  const jour = parseInt(jourRaw, 10);
+  const mois = String(moisRaw).padStart(2, "0");
 
   const moisFr = {
     "01": "janvier",
@@ -315,7 +318,7 @@ function formatDateFr(dateStr) {
     "12": "décembre"
   };
 
-  return `${parseInt(jour, 10)} ${moisFr[mois] || mois}`;
+  return `${jour} ${moisFr[mois] || "?"}`;
 }
 
 function escapeHtml(value) {
