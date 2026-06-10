@@ -1,1 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Mes invités membres - La Clé du Parc</title>
+
+<script>
+  window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+
+  document.write(
+    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
+  );
+
+  document.write(
+    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mes-informations-membre.css">'
+  );
+
+  document.write(
+    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mon-planning-membre.css">'
+  );
+</script>
+
+</head>
+
+<body>
+
+  <div id="burger-menu-container"></div>
+  <div id="boite-dialogue-container"></div>
+  <div id="lightbox-information-container"></div>
+
+  <main class="site-page">
+
+    <section class="landing-text hero-text">
+
+      <h1 class="site-title">
+        Mes invités membres
+      </h1>
+
+      <h2 class="site-subtitle">
+        Retrouvez les membres qui vous ont indiqué comme parrain.
+      </h2>
+
+    </section>
+
+    <section class="section-recontact" aria-label="Liste des invités membres">
+
+      <div id="message-mes-invites-membres" class="message-invites" aria-live="polite">
+  Chargement...
+</div>
+
+      <div id="resume-mes-invites-membres" class="resume-invites" hidden></div>
+
+      <div id="table-wrapper-mes-invites-membres" class="table-wrapper" hidden>
+        <table class="table table-invites-membres" aria-label="Liste des invités membres">
+          <thead>
+            <tr>
+              <th>Membre</th>
+              <th>Département</th>
+              <th>Email validé</th>
+              <th>Date de parrainage</th>
+            </tr>
+          </thead>
+
+          <tbody id="liste-mes-invites-membres"></tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <section class="exit-menu-bas" aria-label="Retour au compte membre">
+      <h2>
+        <a href="/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/mon-compte-membre.html">
+          Retour à mon compte membre
+        </a>
+      </h2>
+    </section>
+
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script>
+    document.querySelectorAll("a[href^='/']").forEach((lien) => {
+      lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
+    });
+
+    function chargerScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+    }
+
+    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/boite-dialogue.js")
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js"))
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/burger-menu.js"))
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js"))
+      .then(() => chargerScript(window.SITE_BASE + "/PAGES/PRIVEES/MES%20INVITES%20MEMBRES/mes-invites-membres.js"));
+  </script>
+
+</body>
+</html>
