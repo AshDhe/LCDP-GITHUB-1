@@ -49,22 +49,31 @@
   </section>
 
   <section id="section-validation-json" hidden>
-    <h2>3. Validation du JSON</h2>
+    <h2>3. Validation du brief</h2>
 
-    <h3>Résumé lisible</h3>
     <div id="resume-json-brief"></div>
 
-    <h3>JSON technique</h3>
     <details>
-  <summary>Afficher le JSON technique</summary>
-  <pre id="resultat-json-brief"></pre>
+      <summary>Afficher le JSON technique</summary>
+      <pre id="resultat-json-brief"></pre>
     </details>
 
     <button id="btn-corriger-brief">Corriger le brief</button>
-    <button id="btn-valider-json">Valider le JSON</button>
+    <button id="btn-valider-json">Valider le brief</button>
 
     <p id="message-validation-json"></p>
   </section>
+
+  <dialog id="dialog-validation-brief">
+    <p>Le brief a été enregistré.</p>
+    <p>La mise à jour du planning du parc va maintenant être lancée.</p>
+    <button type="button" id="btn-dialog-lancer-maj">OK</button>
+  </dialog>
+
+  <dialog id="dialog-fin-traitement">
+    <p>Le planning du parc a été mis à jour.</p>
+    <button type="button" id="btn-retour-admin">Retour admin</button>
+  </dialog>
 
 </main>
 

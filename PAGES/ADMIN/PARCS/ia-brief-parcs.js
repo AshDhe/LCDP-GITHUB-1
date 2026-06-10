@@ -1,5 +1,7 @@
 const ENDPOINT_LISTE_PARCS = "https://autocomplete-parc-api.lacleduparc.fr";
-const ENDPOINT_IA_SHIFT_HPARCS = "https://ia-shift-hparcs-1-api.lacleduparc.fr";
+const ENDPOINT_IA_SHIFT_HPARCS_1 = "https://ia-shift-hparcs-1-api.lacleduparc.fr";
+const ENDPOINT_IA_SHIFT_HPARCS_2 = "https://ia-shift-hparcs-2-api.lacleduparc.fr";
+const URL_RETOUR_ADMIN = "https://ashdhe.github.io/LCDP-GITHUB-1/PAGES/ADMIN/admin-pannel-core.html";
 
 const inputNomParc = document.getElementById("nom-parc");
 const inputDptmtParc = document.getElementById("dptmt-parc");
@@ -22,9 +24,14 @@ const btnCorrigerBrief = document.getElementById("btn-corriger-brief");
 const btnValiderJson = document.getElementById("btn-valider-json");
 const messageValidationJson = document.getElementById("message-validation-json");
 
+const dialogValidationBrief = document.getElementById("dialog-validation-brief");
+const btnDialogLancerMaj = document.getElementById("btn-dialog-lancer-maj");
+const dialogFinTraitement = document.getElementById("dialog-fin-traitement");
+const btnRetourAdmin = document.getElementById("btn-retour-admin");
+
 let parcsDisponibles = [];
 let parcActif = null;
-let jsonBriefActuel = null;
+let briefEnregistre = null;
 
 document.addEventListener("DOMContentLoaded", chargerParcs);
 
@@ -39,7 +46,6 @@ async function chargerParcs() {
     }
 
     parcsDisponibles = result.parcs || [];
-
   } catch (error) {
     messageSelectionParc.textContent = "Erreur de connexion au serveur des parcs.";
   }
@@ -112,6 +118,7 @@ formBriefIa.addEventListener("submit", async (event) => {
   resultatJsonBrief.textContent = "";
   resumeJsonBrief.innerHTML = "";
   sectionValidationJson.hidden = true;
+  briefEnregistre = null;
 
   if (!parcActif) {
     messageBriefIa.textContent = "Aucun parc sélectionné.";
@@ -137,7 +144,7 @@ formBriefIa.addEventListener("submit", async (event) => {
   boutonSubmit.textContent = "Analyse IA en cours...";
 
   try {
-    const response = await fetch(ENDPOINT_IA_SHIFT_HPARCS, {
+    const response = await fetch(ENDPOINT_IA_SHIFT_HPARCS_1, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -154,19 +161,20 @@ formBriefIa.addEventListener("submit", async (event) => {
       return;
     }
 
-    jsonBriefActuel = {
+    briefEnregistre = {
+      idbrief: result.idbrief,
       idparc: result.idparc,
       nom: result.nom,
       dptmt: result.dptmt,
       textebrief: result.textebrief,
+      increment: result.increment,
       jsonbrief: result.jsonbrief
     };
 
-    afficherValidationJson(jsonBriefActuel);
+    afficherValidationJson(briefEnregistre);
 
     messageBriefIa.textContent = "Analyse IA terminée. Merci de vérifier le résultat.";
     sectionValidationJson.hidden = false;
-
   } catch (error) {
     messageBriefIa.textContent = "Erreur de connexion au worker IA.";
     resultatJsonBrief.textContent = error.message;
@@ -179,72 +187,20 @@ formBriefIa.addEventListener("submit", async (event) => {
 
 function afficherValidationJson(data) {
   const json = data.jsonbrief || {};
-  const regles = Array.isArray(json.regles) ? json.regles : [];
-  const exceptions = Array.isArray(json.exceptions) ? json.exceptions : [];
   const resumeLisible = Array.isArray(json.resume_lisible) ? json.resume_lisible : [];
-  const alertes = Array.isArray(json.alertes) ? json.alertes : [];
 
   let html = "";
 
-  html += `<p>Parc : ${data.nom}</p>`;
-  html += `<p>Département : ${data.dptmt}</p>`;
+  html += `<h3>Interprétation du brief</h3>`;
+  html += `<p>Parc : ${escapeHtml(data.nom)}</p>`;
+  html += `<p>Département : ${escapeHtml(data.dptmt)}</p>`;
 
   if (resumeLisible.length > 0) {
-    html += `<h4>Résumé général</h4><ul>`;
     resumeLisible.forEach((phrase) => {
-      html += `<li>${escapeHtml(phrase)}</li>`;
+      html += `<p>${escapeHtml(phrase)}</p>`;
     });
-    html += `</ul>`;
-  }
-
-  if (regles.length > 0) {
-  html += "<h3>Interprétation du brief</h3>";
-
-    (json.resume_lisible || []).forEach(ligne => {
-    html += `<p>${escapeHtml(ligne)}</p>`;
-  });
-
-  }
-
-  if (exceptions.length > 0) {
-    html += `<h3>Fermetures exceptionnelles</h3><ul>`;
-
-    exceptions.forEach((exception) => {
-      html += `<li>`;
-      let libelle = exception.type || "";
-
-if (libelle === "fermeture_journee") {
-  libelle = "fermé toute la journée";
-}
-
-if (libelle === "fermeture_partielle") {
-  libelle = "fermeture partielle";
-}
-
-html += `${formatDateFr(exception.date)} : ${libelle}`;
-
-      if (exception.resume) {
-        html += ` - ${escapeHtml(exception.resume)}`;
-      }
-
-      html += `</li>`;
-    });
-
-    html += `</ul>`;
-  }
-
-  if (alertes.length > 0) {
-    html += `<h4>Alertes</h4><ul>`;
-
-    alertes.forEach((alerte) => {
-      html += `<li>${escapeHtml(alerte)}</li>`;
-    });
-
-    html += `</ul>`;
-  }
-
-  if (!regles.length && !exceptions.length && !resumeLisible.length) {
-    html += `<p>Aucune règle lisible détectée dans le JSON.</p>`;
+  } else {
+    html += `<p>Aucun résumé lisible n’a été généré.</p>`;
   }
 
   resumeJsonBrief.innerHTML = html;
@@ -257,40 +213,56 @@ btnCorrigerBrief.addEventListener("click", () => {
 });
 
 btnValiderJson.addEventListener("click", () => {
-  if (!jsonBriefActuel) {
-    messageValidationJson.textContent = "Aucun JSON à valider.";
+  if (!briefEnregistre || !briefEnregistre.idbrief) {
+    messageValidationJson.textContent = "Aucun brief enregistré à valider.";
     return;
   }
 
-  messageValidationJson.textContent =
-    "JSON validé côté page. Prochaine étape : enregistrement dans iabriefparcs.";
+  dialogValidationBrief.showModal();
 });
 
-function formatDateFr(dateStr) {
-  if (!dateStr) return "?";
+btnDialogLancerMaj.addEventListener("click", async () => {
+  dialogValidationBrief.close();
 
-  const [jourRaw, moisRaw] = String(dateStr).split("/");
+  messageValidationJson.textContent = "Mise à jour du planning en cours...";
+  btnValiderJson.disabled = true;
+  btnCorrigerBrief.disabled = true;
 
-  const jour = parseInt(jourRaw, 10);
-  const mois = String(moisRaw).padStart(2, "0");
+  try {
+    const response = await fetch(ENDPOINT_IA_SHIFT_HPARCS_2, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        idbrief: briefEnregistre.idbrief,
+        idparc: briefEnregistre.idparc
+      })
+    });
 
-  const moisFr = {
-    "01": "janvier",
-    "02": "février",
-    "03": "mars",
-    "04": "avril",
-    "05": "mai",
-    "06": "juin",
-    "07": "juillet",
-    "08": "août",
-    "09": "septembre",
-    "10": "octobre",
-    "11": "novembre",
-    "12": "décembre"
-  };
+    const result = await response.json();
 
-  return `${jour} ${moisFr[mois] || "?"}`;
-}
+    if (!response.ok || !result.success) {
+      messageValidationJson.textContent = "Erreur pendant la mise à jour du planning.";
+      resultatJsonBrief.textContent = JSON.stringify(result, null, 2);
+      btnValiderJson.disabled = false;
+      btnCorrigerBrief.disabled = false;
+      return;
+    }
+
+    messageValidationJson.textContent = "Planning mis à jour.";
+    dialogFinTraitement.showModal();
+  } catch (error) {
+    messageValidationJson.textContent = "Erreur de connexion au worker de mise à jour.";
+    resultatJsonBrief.textContent = error.message;
+    btnValiderJson.disabled = false;
+    btnCorrigerBrief.disabled = false;
+  }
+});
+
+btnRetourAdmin.addEventListener("click", () => {
+  window.location.href = URL_RETOUR_ADMIN;
+});
 
 function escapeHtml(value) {
   return String(value)
