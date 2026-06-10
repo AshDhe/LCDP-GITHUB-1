@@ -224,7 +224,6 @@ async function envoyerModificationParrain(emailparrain) {
         "Votre changement de parrain est enregistré.",
         {
           type: "validation",
-          redirectUrl: PAGE_MON_COMPTE_MEMBRE_RELATIVE
         }
       );
     } else {
