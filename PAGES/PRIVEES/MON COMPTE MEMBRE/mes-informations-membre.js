@@ -235,7 +235,7 @@ async function envoyerModificationParrain(emailparrain) {
 
   } catch (erreur) {
     console.error("Erreur modification parrain membre :", erreur);
-    afficherMessageErreur("Erreur technique. Merci de réessayer.");
+    afficherMessageErreur("Erreur technique : " + erreur.message);
   }
 }
 
