@@ -198,41 +198,12 @@ function afficherValidationJson(data) {
   }
 
   if (regles.length > 0) {
-    html += `<h3>Interprétation du brief</h3>`;
+  html += "<h3>Interprétation du brief</h3>";
 
-    regles.forEach((regle) => {
-  const periode = regle.periode || {};
-  const jours = Array.isArray(regle.jours)
-    ? regle.jours.join(", ")
-    : "";
-
-  const plages = Array.isArray(regle.plages)
-    ? regle.plages
-    : [];
-
-  html += `<div class="brief-regle">`;
-
-  html += `<p><strong>Période :</strong> ${formatDateFr(periode.debut)} → ${formatDateFr(periode.fin)}</p>`;
-
-  html += `<p><strong>Jours concernés :</strong> ${escapeHtml(jours)}</p>`;
-
-  if (plages.length > 0) {
-    html += `<p><strong>Horaires :</strong> `;
-
-    html += plages
-      .map(plage => `${plage.debut} - ${plage.fin}`)
-      .join(" / ");
-
-    html += `</p>`;
-  }
-
-  if (regle.resume) {
-    html += `<p>${escapeHtml(regle.resume)}</p>`;
-  }
-
-  html += `<hr>`;
-  html += `</div>`;
+    (json.resume_lisible || []).forEach(ligne => {
+    html += `<p>${escapeHtml(ligne)}</p>`;
   });
+
   }
 
   if (exceptions.length > 0) {
