@@ -1,0 +1,154 @@
+.table {
+  width: min(100%, 920px);
+  margin: 0 auto;
+  border-collapse: collapse;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.table th,
+.table td {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table th {
+  background: var(--color-surface-soft);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table thead th:nth-child(1) {
+  width: 45%;
+}
+
+.table thead th:nth-child(2) {
+  width: 25%;
+}
+
+.table thead th:nth-child(3) {
+  width: 30%;
+  text-align: right;
+}
+
+#titre-planning-membre {
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+#planning-membre-passes {
+  font-size: 18px;
+  line-height: var(--line-normal);
+  font-weight: 400;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+#bouton-nouvelle-date-planning {
+  min-height: 52px;
+  padding: 13px 22px;
+  font-size: 18px;
+}
+
+.carte-planning-membre p {
+  margin: 0 0 10px;
+  max-width: none;
+  color: var(--color-text);
+}
+
+.carte-planning-membre p:last-of-type {
+  margin-bottom: 16px;
+}
+
+.date-planning-membre,
+.heure-planning-membre,
+.parc-planning-membre,
+.departement-planning-membre {
+  display: inline-block;
+}
+
+.date-planning-membre {
+  margin-right: 18px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.heure-planning-membre {
+  font-size: 18px;
+  color: var(--color-text-muted);
+}
+
+.parc-planning-membre {
+  margin-right: 6px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.departement-planning-membre {
+  font-size: 18px;
+  color: var(--color-text-muted);
+}
+
+.carte-planning-membre .micro-action {
+  margin-right: 8px;
+}
+
+@media (max-width: 600px) {
+  .table {
+    width: 100%;
+  }
+
+  .table th,
+  .table td {
+    padding: 14px 12px;
+  }
+
+  .table thead th {
+    display: block;
+    width: 100% !important;
+    text-align: left !important;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .table thead th:last-child {
+    border-bottom: none;
+  }
+
+  #titre-planning-membre {
+    font-size: 30px;
+  }
+
+  #bouton-nouvelle-date-planning {
+    width: 100%;
+    min-height: 50px;
+    font-size: 17px;
+  }
+
+  .date-planning-membre,
+  .heure-planning-membre,
+  .parc-planning-membre,
+  .departement-planning-membre {
+    display: block;
+    margin-right: 0;
+  }
+
+  .heure-planning-membre,
+  .departement-planning-membre {
+    margin-top: 2px;
+  }
+
+  .carte-planning-membre .micro-action {
+    margin-top: 6px;
+    margin-right: 6px;
+  }
+}
