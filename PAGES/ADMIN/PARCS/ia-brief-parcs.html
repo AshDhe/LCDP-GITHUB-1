@@ -40,9 +40,17 @@
 
     <form id="form-brief-ia">
       <label for="texte-brief">Brief administrateur</label>
-      <textarea id="texte-brief" rows="16" cols="100" required></textarea>
 
-      <button type="submit">Lancer le brief IA</button>
+<div>
+  <button type="button" id="btn-demarrer-dictee">Dicter le brief</button>
+  <button type="button" id="btn-arreter-dictee" disabled>Arrêter la dictée</button>
+</div>
+
+<p id="message-dictee"></p>
+
+<textarea id="texte-brief" rows="16" cols="100" required></textarea>
+
+<button type="submit">Lancer le brief IA</button>
     </form>
 
     <p id="message-brief-ia"></p>

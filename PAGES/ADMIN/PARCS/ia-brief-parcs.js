@@ -16,6 +16,9 @@ const parcSelectionne = document.getElementById("parc-selectionne");
 const formBriefIa = document.getElementById("form-brief-ia");
 const texteBrief = document.getElementById("texte-brief");
 const messageBriefIa = document.getElementById("message-brief-ia");
+const btnDemarrerDictee = document.getElementById("btn-demarrer-dictee");
+const btnArreterDictee = document.getElementById("btn-arreter-dictee");
+const messageDictee = document.getElementById("message-dictee");
 
 const sectionValidationJson = document.getElementById("section-validation-json");
 const resumeJsonBrief = document.getElementById("resume-json-brief");
@@ -32,6 +35,87 @@ const btnRetourAdmin = document.getElementById("btn-retour-admin");
 let parcsDisponibles = [];
 let parcActif = null;
 let briefEnregistre = null;
+
+let recognition = null;
+let dicteeActive = false;
+
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (!SpeechRecognition) {
+  btnDemarrerDictee.disabled = true;
+  btnArreterDictee.disabled = true;
+  messageDictee.textContent =
+    "La dictée vocale n’est pas disponible sur ce navigateur.";
+} else {
+  recognition = new SpeechRecognition();
+  recognition.lang = "fr-FR";
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.addEventListener("result", (event) => {
+    let texteFinal = "";
+    let texteIntermediaire = "";
+
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript;
+
+      if (event.results[i].isFinal) {
+        texteFinal += transcript + " ";
+      } else {
+        texteIntermediaire += transcript;
+      }
+    }
+
+    if (texteFinal) {
+      texteBrief.value = `${texteBrief.value.trim()} ${texteFinal.trim()}`.trim();
+    }
+
+    if (texteIntermediaire) {
+      messageDictee.textContent = `Dictée en cours : ${texteIntermediaire}`;
+    }
+  });
+
+  recognition.addEventListener("start", () => {
+    dicteeActive = true;
+    btnDemarrerDictee.disabled = true;
+    btnArreterDictee.disabled = false;
+    messageDictee.textContent = "Dictée en cours...";
+  });
+
+  recognition.addEventListener("end", () => {
+    dicteeActive = false;
+    btnDemarrerDictee.disabled = false;
+    btnArreterDictee.disabled = true;
+
+    if (messageDictee.textContent.startsWith("Dictée en cours")) {
+      messageDictee.textContent = "Dictée arrêtée.";
+    }
+  });
+
+  recognition.addEventListener("error", (event) => {
+    messageDictee.textContent = `Erreur dictée : ${event.error}`;
+    btnDemarrerDictee.disabled = false;
+    btnArreterDictee.disabled = true;
+    dicteeActive = false;
+  });
+}
+
+btnDemarrerDictee.addEventListener("click", () => {
+  if (!recognition || dicteeActive) return;
+
+  try {
+    recognition.start();
+  } catch (error) {
+    messageDictee.textContent = "Impossible de démarrer la dictée.";
+  }
+});
+
+btnArreterDictee.addEventListener("click", () => {
+  if (!recognition || !dicteeActive) return;
+  recognition.stop();
+});
+
 
 document.addEventListener("DOMContentLoaded", chargerParcs);
 
