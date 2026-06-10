@@ -35,51 +35,50 @@
       </h1>
 
       <h2 class="site-subtitle">
-        Retrouvez vos demandes et rendez-vous dans les parcs.
+        Retrouvez ici votre planning La Clé du Parc.
       </h2>
 
     </section>
 
     <section class="section-recontact" aria-label="Planning du membre">
 
-      <div class="planning-actions-haut">
-
-        <button class="micro-action" type="button" id="bouton-nouvelle-demande-planning">
-          Nouvelle demande
+        <button class="button" type="button" id="bouton-nouvelle-date-planning">
+        Nouvelle date
         </button>
 
-      </div>
+      <h2>
+  <span id="titre-planning-membre">À venir</span>
+  <a href="#" id="planning-membre-passe" data-affichage="passes">
+    Passés
+  </a>
+</h2>
 
-      <div class="planning-filtres">
+<table class="table" aria-label="Planning-membre">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Heure</th>
+      <th>Parc</th>
+      <th>Dptmt</th>
+    </tr>
+  </thead>
 
-        <label for="filtre-rendezvous-membre">
-          Afficher
-        </label>
+  <tbody id="liste-planning-membre">
+    <tr>
+      <td colspan="3">Chargement de votre planning...</td>
+    </tr>
+  </tbody>
+</table>
 
-        <select id="filtre-rendezvous-membre" name="filtre-rendezvous-membre">
-          <option value="avenir" selected>
-            Rendez-vous à venir
-          </option>
-          <option value="passes-3-mois">
-            Rendez-vous passés des 3 derniers mois
-          </option>
-        </select>
-
-      </div>
-
-      <div id="message-planning-membre" class="message-page" aria-live="polite">
-        Chargement de votre planning...
-      </div>
-
-      <section class="liste-rendezvous-membre" id="liste-rendezvous-membre" aria-label="Liste des rendez-vous membre">
+      <section class="liste-planning-membre" id="liste-planning-membre" aria-label="Liste planning membre">
 
         <!--
           Les rendez-vous seront injectés ici par mon-planning-membre.js.
 
           Structure prévue pour chaque rendez-vous :
 
-          <article class="carte-rendezvous-membre">
-            <div class="rendezvous-entete">
+          <article class="carte-planning-membre">
+            <div class="carte-planning-entete">
               <h3>Nom du parc</h3>
               <span class="rendezvous-statut">Confirmé</span>
             </div>
