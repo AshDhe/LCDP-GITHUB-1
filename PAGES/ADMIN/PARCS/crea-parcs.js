@@ -50,10 +50,10 @@ bouton.addEventListener("click", async () => {
       return;
     }
 
-    const succes = result.results.filter(r => r.success).length;
-    const erreurs = result.results.filter(r => !r.success).length;
-
-    message.textContent = `Création terminée : ${succes} parc(s) créé(s), ${erreurs} erreur(s).`;
+    message.textContent =
+      `Création terminée : ${result.created} parc(s) créé(s), ` +
+      `${result.skipped} doublon(s) ignoré(s), ` +
+      `${result.errors} erreur(s).`;
 
     creationTerminee = true;
     bouton.textContent = "OK";
