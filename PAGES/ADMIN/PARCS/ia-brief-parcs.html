@@ -8,54 +8,64 @@
 
 <body>
 
-  <main>
-    <h1>IA Brief Parcs</h1>
+<main>
+  <h1>IA Brief Parcs</h1>
 
-    <section id="section-selection-parc">
-      <h2>1. Sélection du parc</h2>
+  <section id="section-selection-parc">
+    <h2>1. Sélection du parc</h2>
 
-      <form id="form-selection-parc">
+    <form id="form-selection-parc">
+      <div>
+        <label for="nom-parc">Nom du parc</label>
+        <input type="text" id="nom-parc" autocomplete="off" required>
+        <div id="suggestions-parcs"></div>
+      </div>
 
-        <div>
-          <label for="nom-parc">Nom du parc</label>
-          <input type="text" id="nom-parc" name="nom-parc" autocomplete="off" required>
-          <div id="suggestions-parcs"></div>
-        </div>
+      <div>
+        <label for="dptmt-parc">Département</label>
+        <input type="text" id="dptmt-parc" required>
+      </div>
 
-        <div>
-          <label for="dptmt-parc">Département</label>
-          <input type="text" id="dptmt-parc" name="dptmt-parc" required>
-        </div>
+      <button type="submit">Valider le parc</button>
+    </form>
 
-        <button type="submit">Valider le parc</button>
+    <p id="message-selection-parc"></p>
+  </section>
 
-      </form>
+  <section id="section-brief-ia" hidden>
+    <h2>2. Brief IA du parc</h2>
 
-      <p id="message-selection-parc"></p>
-    </section>
+    <p>Parc sélectionné :</p>
+    <p id="parc-selectionne"></p>
 
-    <section id="section-brief-ia" hidden>
-      <h2>2. Brief IA du parc</h2>
+    <form id="form-brief-ia">
+      <label for="texte-brief">Brief administrateur</label>
+      <textarea id="texte-brief" rows="16" cols="100" required></textarea>
 
-      <p>Parc sélectionné :</p>
-      <p id="parc-selectionne"></p>
+      <button type="submit">Lancer le brief IA</button>
+    </form>
 
-      <form id="form-brief-ia">
+    <p id="message-brief-ia"></p>
+  </section>
 
-        <label for="texte-brief">Brief administrateur</label>
-        <textarea id="texte-brief" name="texte-brief" rows="16" cols="100" required></textarea>
+  <section id="section-validation-json" hidden>
+    <h2>3. Validation du JSON</h2>
 
-        <button type="submit">Lancer le brief IA</button>
+    <h3>Résumé lisible</h3>
+    <div id="resume-json-brief"></div>
 
-      </form>
+    <h3>JSON technique</h3>
+    <pre id="resultat-json-brief"></pre>
 
-      <p id="message-brief-ia"></p>
-      <pre id="resultat-json-brief"></pre>
-    </section>
+    <button id="btn-corriger-brief">Corriger le brief</button>
+    <button id="btn-valider-json">Valider le JSON</button>
 
-  </main>
+    <p id="message-validation-json"></p>
+  </section>
 
-  <script src="ia-brief-parcs.js"></script>
+</main>
+
+<script src="ia-brief-parcs.js"></script>
 
 </body>
 </html>

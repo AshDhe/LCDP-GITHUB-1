@@ -13,10 +13,17 @@ const parcSelectionne = document.getElementById("parc-selectionne");
 const formBriefIa = document.getElementById("form-brief-ia");
 const texteBrief = document.getElementById("texte-brief");
 const messageBriefIa = document.getElementById("message-brief-ia");
+
+const sectionValidationJson = document.getElementById("section-validation-json");
+const resumeJsonBrief = document.getElementById("resume-json-brief");
 const resultatJsonBrief = document.getElementById("resultat-json-brief");
+const btnCorrigerBrief = document.getElementById("btn-corriger-brief");
+const btnValiderJson = document.getElementById("btn-valider-json");
+const messageValidationJson = document.getElementById("message-validation-json");
 
 let parcsDisponibles = [];
 let parcActif = null;
+let jsonBriefActuel = null;
 
 document.addEventListener("DOMContentLoaded", chargerParcs);
 
@@ -43,10 +50,9 @@ inputNomParc.addEventListener("input", () => {
   suggestionsParcs.innerHTML = "";
   parcActif = null;
   sectionBriefIa.hidden = true;
+  sectionValidationJson.hidden = true;
 
-  if (saisie.length < 1) {
-    return;
-  }
+  if (!saisie) return;
 
   const resultats = parcsDisponibles.filter((parc) =>
     String(parc.nom).toUpperCase().includes(saisie)
@@ -72,8 +78,6 @@ inputNomParc.addEventListener("input", () => {
 formSelectionParc.addEventListener("submit", (event) => {
   event.preventDefault();
 
-  messageSelectionParc.textContent = "";
-
   const nomSaisi = inputNomParc.value.trim().toUpperCase();
   const dptmtSaisi = inputDptmtParc.value.trim();
 
@@ -89,7 +93,6 @@ formSelectionParc.addEventListener("submit", (event) => {
   }
 
   parcActif = parcTrouve;
-
   messageSelectionParc.textContent = "Parc validé.";
 
   parcSelectionne.textContent =
@@ -100,9 +103,6 @@ formSelectionParc.addEventListener("submit", (event) => {
 
 formBriefIa.addEventListener("submit", (event) => {
   event.preventDefault();
-
-  messageBriefIa.textContent = "";
-  resultatJsonBrief.textContent = "";
 
   if (!parcActif) {
     messageBriefIa.textContent = "Aucun parc sélectionné.";
@@ -116,13 +116,47 @@ formBriefIa.addEventListener("submit", (event) => {
     return;
   }
 
-  const payloadProvisoire = {
+  jsonBriefActuel = {
     idparc: parcActif.idparc,
     nom: parcActif.nom,
     dptmt: parcActif.dptmt,
-    textebrief: texte
+    textebrief: texte,
+    jsonbrief: {
+      type: "hparcs",
+      source: "brief_admin",
+      regles: [],
+      exceptions: []
+    }
   };
 
-  messageBriefIa.textContent = "Brief prêt à être envoyé à l’IA.";
-  resultatJsonBrief.textContent = JSON.stringify(payloadProvisoire, null, 2);
+  afficherValidationJson(jsonBriefActuel);
+
+  messageBriefIa.textContent = "JSON généré. Merci de le vérifier.";
+  sectionValidationJson.hidden = false;
+});
+
+function afficherValidationJson(data) {
+  resumeJsonBrief.innerHTML = `
+    <p>Parc : ${data.nom}</p>
+    <p>Département : ${data.dptmt}</p>
+    <p>Type de brief : horaires du parc</p>
+    <p>Statut : prêt à validation</p>
+  `;
+
+  resultatJsonBrief.textContent = JSON.stringify(data, null, 2);
+}
+
+btnCorrigerBrief.addEventListener("click", () => {
+  sectionValidationJson.hidden = true;
+  messageBriefIa.textContent = "Corrige le brief puis relance l’IA.";
+});
+
+btnValiderJson.addEventListener("click", () => {
+  if (!jsonBriefActuel) {
+    messageValidationJson.textContent = "Aucun JSON à valider.";
+    return;
+  }
+
+  messageValidationJson.textContent =
+    "Validation prête. Prochaine étape : envoi au worker d’enregistrement iabriefparcs.";
 });
