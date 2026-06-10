@@ -42,63 +42,73 @@
 
     <section class="section-recontact" aria-label="Planning du membre">
 
-        <button class="button" type="button" id="bouton-nouvelle-date-planning">
-        Nouvelle date
-        </button>
+      <table class="table" aria-label="Planning membre">
 
-      <h2>
-  <span id="titre-planning-membre">À venir</span>
-  <a href="#" id="planning-membre-passe" data-affichage="passes">
-    Passés
-  </a>
-</h2>
+        <thead>
+          <tr>
+            <th>
+              <span id="titre-planning-membre">À venir</span>
+            </th>
 
-<table class="table" aria-label="Planning-membre">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Heure</th>
-      <th>Parc</th>
-      <th>Dptmt</th>
-    </tr>
-  </thead>
+            <th>
+              <a href="#" id="planning-membre-passes" data-affichage="passes">
+                Passés
+              </a>
+            </th>
 
-  <tbody id="liste-planning-membre">
-    <tr>
-      <td colspan="3">Chargement de votre planning...</td>
-    </tr>
-  </tbody>
-</table>
-
-      <section class="liste-planning-membre" id="liste-planning-membre" aria-label="Liste planning membre">
-
-        <!--
-          Les rendez-vous seront injectés ici par mon-planning-membre.js.
-
-          Structure prévue pour chaque rendez-vous :
-
-          <article class="carte-planning-membre">
-            <div class="carte-planning-entete">
-              <h3>Nom du parc</h3>
-              <span class="rendezvous-statut">Confirmé</span>
-            </div>
-
-            <div class="rendezvous-details">
-              <p>Date : samedi 15 juin 2026</p>
-              <p>Horaire : 14h00 - 17h00</p>
-              <p>Type : accès membre</p>
-              <p>Participants : 1 membre, 2 invités</p>
-            </div>
-
-            <div class="rendezvous-actions">
-              <button class="micro-action" type="button">
-                Voir le détail
+            <th>
+              <button class="button" type="button" id="bouton-nouvelle-date-planning">
+                Nouvelle date
               </button>
-            </div>
-          </article>
-        -->
+            </th>
+          </tr>
+        </thead>
 
-      </section>
+        <tbody id="liste-planning-membre">
+
+          <tr>
+            <td colspan="3">
+              Chargement de votre planning...
+            </td>
+          </tr>
+
+          <!--
+            Les cartes planning membre seront injectées ici par mon-planning-membre.js.
+
+            Structure prévue pour une carte :
+
+            <tr>
+              <td colspan="3">
+
+                <article class="carte-planning-membre">
+
+                  <p>
+                    <span class="date-planning-membre">Samedi 15 juin 2026</span>
+                    <span class="heure-planning-membre">14h00 - 17h00</span>
+                  </p>
+
+                  <p>
+                    <span class="parc-planning-membre">Parc de Ménars</span>
+                    <span class="departement-planning-membre">(41)</span>
+                  </p>
+
+                  <button class="micro-action" type="button">
+                    Voir l’adresse
+                  </button>
+
+                  <button class="micro-action" type="button">
+                    Annuler
+                  </button>
+
+                </article>
+
+              </td>
+            </tr>
+          -->
+
+        </tbody>
+
+      </table>
 
     </section>
 
