@@ -198,40 +198,59 @@ function afficherValidationJson(data) {
   }
 
   if (regles.length > 0) {
-    html += `<h4>Règles horaires détectées</h4>`;
+    html += `<h3>Interprétation du brief</h3>`;
 
-    regles.forEach((regle, index) => {
-      const periode = regle.periode || {};
-      const jours = Array.isArray(regle.jours) ? regle.jours.join(", ") : "";
-      const plages = Array.isArray(regle.plages) ? regle.plages : [];
+    regles.forEach((regle) => {
+  const periode = regle.periode || {};
+  const jours = Array.isArray(regle.jours)
+    ? regle.jours.join(", ")
+    : "";
 
-      html += `<div>`;
-      html += `<p>Règle ${index + 1}</p>`;
-      html += `<p>Période : ${periode.debut || "?"} → ${periode.fin || "?"}</p>`;
-      html += `<p>Jours : ${escapeHtml(jours)}</p>`;
+  const plages = Array.isArray(regle.plages)
+    ? regle.plages
+    : [];
 
-      if (plages.length > 0) {
-        html += `<ul>`;
-        plages.forEach((plage) => {
-          html += `<li>${plage.debut || "?"} → ${plage.fin || "?"}</li>`;
-        });
-        html += `</ul>`;
-      }
+  html += `<div class="brief-regle">`;
 
-      if (regle.resume) {
-        html += `<p>${escapeHtml(regle.resume)}</p>`;
-      }
+  html += `<p><strong>Période :</strong> ${formatDateFr(periode.debut)} → ${formatDateFr(periode.fin)}</p>`;
 
-      html += `</div>`;
-    });
+  html += `<p><strong>Jours concernés :</strong> ${escapeHtml(jours)}</p>`;
+
+  if (plages.length > 0) {
+    html += `<p><strong>Horaires :</strong> `;
+
+    html += plages
+      .map(plage => `${plage.debut} - ${plage.fin}`)
+      .join(" / ");
+
+    html += `</p>`;
+  }
+
+  if (regle.resume) {
+    html += `<p>${escapeHtml(regle.resume)}</p>`;
+  }
+
+  html += `<hr>`;
+  html += `</div>`;
+  });
   }
 
   if (exceptions.length > 0) {
-    html += `<h4>Exceptions détectées</h4><ul>`;
+    html += `<h3>Fermetures exceptionnelles</h3><ul>`;
 
     exceptions.forEach((exception) => {
       html += `<li>`;
-      html += `${exception.date || "date ?"} : ${exception.type || "type ?"}`;
+      let libelle = exception.type || "";
+
+if (libelle === "fermeture_journee") {
+  libelle = "fermé toute la journée";
+}
+
+if (libelle === "fermeture_partielle") {
+  libelle = "fermeture partielle";
+}
+
+html += `${formatDateFr(exception.date)} : ${libelle}`;
 
       if (exception.resume) {
         html += ` - ${escapeHtml(exception.resume)}`;
@@ -275,6 +294,29 @@ btnValiderJson.addEventListener("click", () => {
   messageValidationJson.textContent =
     "JSON validé côté page. Prochaine étape : enregistrement dans iabriefparcs.";
 });
+
+function formatDateFr(dateStr) {
+  if (!dateStr) return "?";
+
+  const [jour, mois] = dateStr.split("/");
+
+  const moisFr = {
+    "01": "janvier",
+    "02": "février",
+    "03": "mars",
+    "04": "avril",
+    "05": "mai",
+    "06": "juin",
+    "07": "juillet",
+    "08": "août",
+    "09": "septembre",
+    "10": "octobre",
+    "11": "novembre",
+    "12": "décembre"
+  };
+
+  return `${parseInt(jour, 10)} ${moisFr[mois] || mois}`;
+}
 
 function escapeHtml(value) {
   return String(value)
