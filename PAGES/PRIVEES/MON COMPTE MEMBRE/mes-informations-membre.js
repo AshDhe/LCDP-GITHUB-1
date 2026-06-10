@@ -4,8 +4,14 @@ const ENDPOINT_MES_INFORMATIONS =
 const ENDPOINT_MAJ_EMAIL_MEMBRE =
   "https://maj-email-membre-api.lacleduparc.fr";
 
+const ENDPOINT_MAJ_PARRAIN_MEMBRE =
+  "https://maj-parrain-membre-api.lacleduparc.fr";
+
 const PAGE_CONNEXION_MEMBRE =
   (window.SITE_BASE || "") + "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html";
+
+const PAGE_MON_COMPTE_MEMBRE_RELATIVE =
+  "/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/mon-compte-membre.html";
 
 let emailMembreActuel = "";
 
@@ -42,6 +48,7 @@ async function initialiserMesInformationsMembre() {
     remplirTexte("valeur-reglement-application", formaterDate(infos.reglementApplication));
 
     initialiserModificationEmailMembre();
+    initialiserModificationParrainMembre();
 
   } catch (erreur) {
     window.location.href =
@@ -138,6 +145,96 @@ async function envoyerDemandeModificationEmail(nouveauMail) {
 
   } catch (erreur) {
     console.error("Erreur modification email membre :", erreur);
+    afficherMessageErreur("Erreur technique. Merci de réessayer.");
+  }
+}
+
+function initialiserModificationParrainMembre() {
+  const bouton =
+    document.getElementById("modifier-parrain-membre") ||
+    document.querySelector("[data-action='modifier-parrain-membre']");
+
+  if (!bouton) return;
+
+  if (bouton.dataset.initialise === "true") return;
+  bouton.dataset.initialise = "true";
+
+  bouton.addEventListener("click", ouvrirBoiteDialogueParrainMembre);
+}
+
+async function ouvrirBoiteDialogueParrainMembre() {
+  if (typeof window.afficherBoiteDialogue !== "function") {
+    console.error("La fonction afficherBoiteDialogue est introuvable.");
+    return;
+  }
+
+  const resultat = await window.afficherBoiteDialogue({
+    titre: "Modifier mon parrain",
+    texteAnnuler: "Annuler",
+    texteValider: "Valider",
+    champs: [
+      {
+        id: "nouvel-email-parrain",
+        name: "emailparrain",
+        label: "Email du parrain",
+        type: "email",
+        autocomplete: "email",
+        required: false
+      }
+    ]
+  });
+
+  if (!resultat) return;
+
+  const emailparrain = nettoyerEmail(resultat.emailparrain);
+
+  await envoyerModificationParrain(emailparrain);
+}
+
+async function envoyerModificationParrain(emailparrain) {
+  try {
+    const reponse = await fetch(ENDPOINT_MAJ_PARRAIN_MEMBRE, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        emailparrain
+      })
+    });
+
+    const resultat = await reponse.json().catch(() => null);
+
+    if (!reponse.ok || !resultat || resultat.ok !== true) {
+      afficherMessageErreur(
+        resultat && resultat.message
+          ? resultat.message
+          : "Impossible d’enregistrer le changement de parrain."
+      );
+      return;
+    }
+
+    remplirTexte("valeur-parrain-membre", emailparrain || null);
+
+    if (typeof window.afficherLightboxInformation === "function") {
+      await window.afficherLightboxInformation(
+        "Changement enregistré",
+        "Votre changement de parrain est enregistré.",
+        {
+          type: "validation",
+          redirectUrl: PAGE_MON_COMPTE_MEMBRE_RELATIVE
+        }
+      );
+    } else {
+      alert("Votre changement de parrain est enregistré.");
+      window.location.href =
+        (window.SITE_BASE || "") + PAGE_MON_COMPTE_MEMBRE_RELATIVE;
+    }
+
+  } catch (erreur) {
+    console.error("Erreur modification parrain membre :", erreur);
     afficherMessageErreur("Erreur technique. Merci de réessayer.");
   }
 }
