@@ -1,14 +1,16 @@
+/* PAGE NOUVELLE DATE MEMBRE */
+
 .section-actions-nouvelle-date {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-3);
   padding: var(--space-3) 0 var(--space-5);
 }
 
-.section-fermeture-formulaire {
-  padding: var(--space-3) 0 0;
-  text-align: right;
+#bouton-demander-ia {
+  display: inline-flex;
+  margin: 0;
 }
 
 #lien-fermer-nouvelle-date,
@@ -16,39 +18,34 @@
 #lien-fermer-nouvelle-date:visited,
 #lien-fermer-nouvelle-date:hover,
 #lien-fermer-nouvelle-date:active {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
   text-decoration: none !important;
-  text-decoration-line: none !important;
   color: var(--color-text);
 }
 
-#bouton-demander-ia {
-  display: inline-flex;
-  margin: 0 auto;
-}
-
 #table-nouvelle-date-membre {
+  width: 100%;
+  max-width: 100%;
   table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
 }
 
 #table-nouvelle-date-membre thead th {
-  width: 50% !important;
+  width: 50%;
   text-align: center !important;
   vertical-align: middle;
   text-decoration: none !important;
 }
 
-#table-nouvelle-date-membre thead th:nth-child(1),
-#table-nouvelle-date-membre thead th:nth-child(2) {
-  width: 50% !important;
+#table-nouvelle-date-membre th,
+#table-nouvelle-date-membre td {
+  text-align: center;
+  vertical-align: middle;
 }
 
 #table-nouvelle-date-membre td {
-  text-align: left;
-  vertical-align: middle;
+  padding: 22px 18px;
 }
 
 #titre-departement-membre {
@@ -62,8 +59,30 @@
 }
 
 #bouton-modifier-departement {
-  white-space: nowrap;
+  max-width: 280px;
+  white-space: normal;
+  margin-left: auto;
+  margin-right: auto;
 }
+
+#liste-parcs-membre td {
+  text-align: center !important;
+}
+
+#liste-parcs-membre td > * {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.carte-parc-membre {
+  width: min(100%, 520px);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+
+/* LIGHTBOX FICHE PARC */
 
 .lightbox-fiche-parc-nouvelle-date-overlay {
   position: fixed;
@@ -102,29 +121,16 @@
   background: var(--color-surface);
 }
 
-@media (max-width: 600px) {
+
+/* RESPONSIVE MOBILE */
+
+@media (max-width: 700px) {
   .section-actions-nouvelle-date {
-    display: grid;
-    grid-template-columns: 1fr auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     gap: var(--space-2);
-    align-items: center;
     padding: var(--space-3) 0 var(--space-4);
-  }
-
-  .section-fermeture-formulaire {
-    text-align: right;
-  }
-
-  #lien-fermer-nouvelle-date,
-  #lien-fermer-nouvelle-date:link,
-  #lien-fermer-nouvelle-date:visited,
-  #lien-fermer-nouvelle-date:hover,
-  #lien-fermer-nouvelle-date:active {
-    position: static;
-    transform: none;
-    white-space: nowrap;
-    text-decoration: none !important;
-    color: var(--color-text);
   }
 
   #bouton-demander-ia {
@@ -132,12 +138,22 @@
     min-height: 56px;
     padding: 14px 18px;
     font-size: 17px;
-    margin: 0;
+  }
+
+  #lien-fermer-nouvelle-date {
+    width: 100%;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   #table-nouvelle-date-membre {
+    display: block;
     width: 100%;
-    table-layout: fixed;
+    max-width: 100%;
+    margin: 0 auto;
+    table-layout: auto;
   }
 
   #table-nouvelle-date-membre thead,
@@ -147,32 +163,55 @@
   #table-nouvelle-date-membre td {
     display: block;
     width: 100% !important;
+    max-width: 100%;
   }
 
-  #table-nouvelle-date-membre thead th {
-    text-align: center !important;
+  #table-nouvelle-date-membre thead tr {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  #table-nouvelle-date-membre th {
+    padding: 16px 18px;
+    border-left: none !important;
     border-right: none !important;
+    text-align: center !important;
   }
 
-  #table-nouvelle-date-membre thead th:first-child {
-    border-bottom: 1px solid var(--color-border);
+  #table-nouvelle-date-membre td {
+    padding: 22px 18px;
+    border-left: none !important;
+    border-right: none !important;
+    text-align: center !important;
   }
 
   #titre-departement-membre {
-    font-size: 24px;
+    font-size: 30px;
     line-height: 1.15;
   }
 
   #bouton-modifier-departement {
-    max-width: 100%;
+    width: 100%;
+    max-width: 280px;
     white-space: normal;
   }
 
-  #table-nouvelle-date-membre tbody td {
-    padding: 14px 10px;
-    border-right: none !important;
-    text-align: left;
-    vertical-align: middle;
+  #liste-parcs-membre td {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  #table-nouvelle-date-membre td > * {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .carte-parc-membre {
+    width: min(100%, 320px);
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
   }
 
   .lightbox-fiche-parc-nouvelle-date-overlay {
@@ -189,5 +228,4 @@
     top: var(--space-2);
     right: var(--space-2);
   }
-
 }
