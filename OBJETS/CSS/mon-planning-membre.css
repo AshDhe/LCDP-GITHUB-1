@@ -149,44 +149,43 @@
   }
 }
 
-/* RESPONSIVE - TABLEAU PLANNING MEMBRE */
+/* RESPONSIVE - CENTRAGE DES CARTES PLANNING MEMBRE */
 
 @media (max-width: 700px) {
-  .planning-tableau {
+  #table-planning-membre {
     width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    border-radius: var(--radius-large);
-    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .planning-tableau table,
-  .planning-tableau thead,
-  .planning-tableau tbody,
-  .planning-tableau tr,
-  .planning-tableau th,
-  .planning-tableau td {
-    display: block;
-    width: 100%;
+  #table-planning-membre th,
+  #table-planning-membre td {
+    text-align: center;
+    vertical-align: middle;
   }
 
-  .planning-tableau tr {
-    border: none;
+  #table-planning-membre th > *,
+  #table-planning-membre td > * {
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .planning-tableau th,
-  .planning-tableau td {
-    border-left: none;
-    border-right: none;
+  #table-planning-membre .carte-planning-membre {
+    width: min(100%, 320px);
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
   }
 
-  .planning-tableau th {
-    padding: 18px;
+  #table-planning-membre img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .planning-tableau th a,
-  .planning-tableau th button {
-    width: 100%;
+  #table-planning-membre a,
+  #table-planning-membre button {
+    margin-left: auto;
+    margin-right: auto;
   }
 }
