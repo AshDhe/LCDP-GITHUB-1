@@ -32,53 +32,82 @@ function gererSessionExpiree(reponse, sourcePage) {
 
   chargerParcsAutourDeMoi();
 
-  if (boutonDemanderIA) {
-    boutonDemanderIA.addEventListener("click", () => {
-      alert("La demande à l’IA sera raccordée ensuite.");
-    });
-  }
-
-  if (boutonModifierDepartement) {
-    boutonModifierDepartement.addEventListener("click", async () => {
-      const nouveauDepartement = prompt(
-        "Indiquez le département souhaité :",
-        departementAffiche || departementMembre || ""
-      );
-
-      if (!nouveauDepartement) return;
-
-      departementAffiche = nouveauDepartement.trim();
-      modeAutourDeMoi = false;
-
-      await chargerParcsDepartement(departementAffiche);
-    });
-  }
-
-  async function chargerParcsAutourDeMoi() {
-    try {
-      afficherChargement("Connexion aux parcs");
-
-      const reponse = await fetch(ENDPOINT_NOUVELLE_DATE_MEMBRE + "/autour-de-moi", {
-        method: "GET",
-        credentials: "include"
-      });
-
-if (gererSessionExpiree(reponse, "nouvelle-date-membre")) {
-  return;
+if (boutonModifierDepartement) {
+  boutonModifierDepartement.addEventListener("click", ouvrirDialogueDepartement);
 }
 
-      departementMembre = data.departement;
-      departementAffiche = data.departement;
-      modeAutourDeMoi = true;
-      parcsCharges = data.parcs || [];
-
-      afficherTitreDepartement();
-      afficherParcs(parcsCharges);
-
-    } catch (erreur) {
-      afficherErreur(erreur.message);
-    }
+async function ouvrirDialogueDepartement() {
+  if (typeof window.afficherBoiteDialogue !== "function") {
+    afficherErreur("La boîte de dialogue est indisponible.");
+    return;
   }
+
+  const resultat = await window.afficherBoiteDialogue({
+    titre: "Changer de département",
+    texteAnnuler: "Annuler",
+    texteValider: "Valider",
+    champs: [
+      {
+        id: "nouveau-departement-recherche",
+        name: "dptmt",
+        label: "Département souhaité",
+        type: "text",
+        value: departementAffiche || departementMembre || "",
+        required: true
+      }
+    ]
+  });
+
+  if (!resultat) return;
+
+  const nouveauDepartement = String(resultat.dptmt || "").trim();
+
+  if (!nouveauDepartement) {
+    afficherErreur("Le département est obligatoire.");
+    return;
+  }
+
+  departementAffiche = nouveauDepartement;
+  modeAutourDeMoi = false;
+
+  await chargerParcsDepartement(departementAffiche);
+}
+
+async function chargerParcsAutourDeMoi() {
+  try {
+    afficherChargement();
+
+    const reponse = await fetch(ENDPOINT_NOUVELLE_DATE_MEMBRE + "/autour-de-moi", {
+      method: "GET",
+      credentials: "include"
+    });
+
+    if (gererSessionExpiree(reponse, "nouvelle-date-membre")) {
+      return;
+    }
+
+    const data = await reponse.json().catch(() => null);
+
+    if (!reponse.ok || !data || data.success !== true) {
+      throw new Error(
+        data && data.message
+          ? data.message
+          : "Impossible de charger les parcs autour de vous."
+      );
+    }
+
+    departementMembre = data.departement;
+    departementAffiche = data.departement;
+    modeAutourDeMoi = true;
+    parcsCharges = data.parcs || [];
+
+    afficherTitreDepartement();
+    afficherParcs(parcsCharges);
+
+  } catch (erreur) {
+    afficherErreur(erreur.message);
+  }
+}
 
 async function chargerParcsDepartement(departement) {
   try {
@@ -170,29 +199,31 @@ async function chargerParcsDepartement(departement) {
     listeParcs.innerHTML = parcs.map(creerCarteParc).join("");
   }
 
-  function creerCarteParc(parc) {
-    const idParc = parc.idparc || parc.id;
-    const nomParc = echapperHtml(parc.nom);
-    const departement = echapperHtml(parc.dptmt || parc.departement || "");
-    const imageUrl = construireUrlImageParc(parc.imageparc);
+function creerCarteParc(parc) {
+  const idParc = parc.idparc || parc.id;
+  const nomParc = echapperHtml(parc.nom);
+  const departement = echapperHtml(parc.dptmt || parc.departement || "");
+  const imageUrl = construireUrlImageParc(parc.imageparc);
 
-    return `
-      <tr>
-        <td colspan="2">
+  return `
+    <tr>
+      <td colspan="2">
 
-          <article class="carte-parc-membre">
+        <article class="carte-parc-membre">
 
-            <img
-              class="carte-parc-membre-image"
-              src="${imageUrl}"
-              alt="Image du parc ${nomParc}"
-            >
+          <img
+            class="carte-parc-membre-image"
+            src="${imageUrl}"
+            alt="Image du parc ${nomParc}"
+          >
 
-            <div class="carte-parc-membre-contenu">
+          <div class="carte-parc-membre-contenu">
 
-              <h3>
-                ${nomParc} (${departement})
-              </h3>
+            <h3>
+              ${nomParc} (${departement})
+            </h3>
+
+            <div class="carte-parc-membre-actions">
 
               <a href="#" class="lien-fiche-parc" data-action="ouvrir-fiche-parc" data-id="${idParc}">
                 Le parc
@@ -204,12 +235,14 @@ async function chargerParcsDepartement(departement) {
 
             </div>
 
-          </article>
+          </div>
 
-        </td>
-      </tr>
-    `;
-  }
+        </article>
+
+      </td>
+    </tr>
+  `;
+}
 
   function construireUrlImageParc(imageparc) {
     const SITE_BASE = window.SITE_BASE || "";

@@ -26,6 +26,7 @@
       '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/carte-parc-membre.css">'
     );
   </script>
+
 </head>
 
 <body>
@@ -37,17 +38,13 @@
 
 <section class="section-actions-nouvelle-date" aria-label="Actions nouvelle date">
 
-<div class="carte-parc-membre-actions">
-
-  <a href="#" class="lien-fiche-parc" data-action="ouvrir-fiche-parc" data-id="${idParc}">
-    Le parc
-  </a>
-
-  <button class="micro-action" type="button" data-action="nouvelle-date-parc" data-id="${idParc}">
-    Nouvelle date
+  <button class="button" type="button" id="bouton-demander-ia">
+    Passer directement par l'IA
   </button>
 
-</div>
+  <a class="micro-action" id="lien-fermer-nouvelle-date" href="/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/mon-planning-membre.html">
+    Fermer
+  </a>
 
 </section>
 
