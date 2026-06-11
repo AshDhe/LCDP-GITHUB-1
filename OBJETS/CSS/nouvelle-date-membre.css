@@ -47,7 +47,8 @@
 }
 
 #table-nouvelle-date-membre td {
-  text-align: center;
+  text-align: left;
+  vertical-align: middle;
 }
 
 #titre-departement-membre {
@@ -64,56 +65,37 @@
   white-space: nowrap;
 }
 
-.carte-parc-membre {
-  text-align: left;
-}
-
-.carte-parc-membre h3 {
-  margin-bottom: var(--space-2);
-}
-
-.carte-parc-membre p {
-  max-width: none;
-  margin-bottom: var(--space-2);
-}
-
-.carte-parc-membre .micro-action {
-  margin-top: var(--space-2);
-}
-
 @media (max-width: 600px) {
-
   .section-actions-nouvelle-date {
-    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2);
+    align-items: center;
     padding: var(--space-3) 0 var(--space-4);
-    text-align: center;
   }
 
   .section-fermeture-formulaire {
     text-align: right;
   }
 
-  #lien-fermer-nouvelle-date {
-    position: absolute;
-    top: 0;
-    right: 0;
+  #lien-fermer-nouvelle-date,
+  #lien-fermer-nouvelle-date:link,
+  #lien-fermer-nouvelle-date:visited,
+  #lien-fermer-nouvelle-date:hover,
+  #lien-fermer-nouvelle-date:active {
+    position: static;
+    transform: none;
+    white-space: nowrap;
     text-decoration: none !important;
+    color: var(--color-text);
   }
 
   #bouton-demander-ia {
-    width: min(100%, 340px);
+    width: 100%;
     min-height: 56px;
-    padding: 14px 20px;
+    padding: 14px 18px;
     font-size: 17px;
-  }
-
-  #table-nouvelle-date-membre thead th {
-    width: 50% !important;
-    text-align: center !important;
-  }
-
-  #titre-departement-membre {
-    font-size: 24px;
+    margin: 0;
   }
 
   #table-nouvelle-date-membre {
@@ -152,5 +134,7 @@
   #table-nouvelle-date-membre tbody td {
     padding: 14px 10px;
     border-right: none !important;
+    text-align: left;
+    vertical-align: middle;
   }
 }
