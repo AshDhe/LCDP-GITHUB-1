@@ -1,15 +1,14 @@
 .carte-parc-membre {
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: var(--space-4);
-  align-items: stretch;
+  grid-template-columns: 170px 1fr;
+  gap: var(--space-3);
+  align-items: center;
   text-align: left;
 }
 
 .carte-parc-membre-image {
-  width: 100%;
-  height: 100%;
-  min-height: 180px;
+  width: 170px;
+  height: 115px;
   border-radius: var(--radius-medium);
   object-fit: cover;
   object-position: center center;
@@ -25,13 +24,18 @@
 }
 
 .carte-parc-membre h3 {
-  margin-bottom: var(--space-2);
+  margin: 0 0 var(--space-2);
   font-size: 24px;
   line-height: 1.2;
 }
 
+.carte-parc-membre-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .lien-fiche-parc {
-  margin-bottom: var(--space-3);
   font-size: 18px;
   color: var(--color-text);
   text-decoration: underline;
@@ -81,8 +85,14 @@
   }
 
   .carte-parc-membre-image {
+    width: 100%;
+    height: auto;
     aspect-ratio: 16 / 10;
-    min-height: auto;
+  }
+
+  .carte-parc-membre-actions {
+    flex-wrap: wrap;
+    gap: var(--space-2);
   }
 
   .lightbox-parc-box {
