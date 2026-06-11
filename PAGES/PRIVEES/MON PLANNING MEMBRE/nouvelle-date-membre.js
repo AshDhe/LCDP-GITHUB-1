@@ -63,15 +63,8 @@ function gererSessionExpiree(reponse, sourcePage) {
         credentials: "include"
       });
 
-const data = await reponse.json();
-
-if (reponse.status === 401) {
-  redirigerConnexionMembre();
+if (gererSessionExpiree(reponse, "nouvelle-date-membre")) {
   return;
-}
-
-if (!reponse.ok || !data.success) {
-  throw new Error(data.message || "Impossible de charger les parcs autour de vous.");
 }
 
       departementMembre = data.departement;
