@@ -3,30 +3,35 @@
   text-align: right;
 }
 
+#bouton-demander-ia {
+  display: flex;
+  width: fit-content;
+  margin: 0 auto var(--space-5);
+}
+
 #table-nouvelle-date-membre {
   table-layout: fixed;
 }
 
-#table-nouvelle-date-membre th,
+#table-nouvelle-date-membre thead th {
+  width: 50% !important;
+  text-align: center !important;
+  vertical-align: middle;
+  text-decoration: none !important;
+}
+
 #table-nouvelle-date-membre td {
   text-align: center;
 }
 
-#table-nouvelle-date-membre thead th {
-  text-decoration: none;
-}
-
 #titre-departement-membre {
-  display: inline-block;
-  margin-right: var(--space-2);
+  display: block;
+  width: 100%;
+  text-align: center;
   font-size: clamp(24px, 2.4vw, 34px);
   line-height: 1.1;
   font-weight: 700;
   color: var(--color-text);
-}
-
-#bouton-demander-ia {
-  margin: 0 auto;
 }
 
 .carte-parc-membre {
@@ -48,17 +53,20 @@
 
 @media (max-width: 600px) {
   .section-fermeture-formulaire {
-    text-align: center;
-  }
-
-  #titre-departement-membre {
-    display: block;
-    margin-right: 0;
-    margin-bottom: var(--space-2);
-    font-size: 28px;
+    text-align: right;
   }
 
   #bouton-demander-ia {
     width: 100%;
+  }
+
+  #table-nouvelle-date-membre thead th {
+    display: table-cell;
+    width: 50% !important;
+    text-align: center !important;
+  }
+
+  #titre-departement-membre {
+    font-size: 24px;
   }
 }
