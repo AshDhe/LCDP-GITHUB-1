@@ -431,6 +431,48 @@ function fermerLightboxPlanningParcNouvelleDate() {
   }
 }
 
+
+function afficherBoutonFermerPlanningParcNouvelleDate(visible) {
+  const boutonFermer = document.querySelector(
+    "#lightbox-planning-parc-nouvelle-date [data-action='fermer-planning-parc-nouvelle-date']"
+  );
+
+  if (boutonFermer) {
+    boutonFermer.style.visibility = visible ? "visible" : "hidden";
+  }
+}
+
+window.addEventListener("message", (event) => {
+  const data = event.data || {};
+
+  if (data.source !== "lcdp-planning-parc-nouvelle-date") {
+    return;
+  }
+
+  if (data.action === "masquer-fermer-planning") {
+    afficherBoutonFermerPlanningParcNouvelleDate(false);
+    return;
+  }
+
+  if (data.action === "afficher-fermer-planning") {
+    afficherBoutonFermerPlanningParcNouvelleDate(true);
+    return;
+  }
+
+  if (data.action === "ouvrir-horaire-parc-nouvelle-date" && data.url) {
+    const iframe = document.querySelector(
+      "#lightbox-planning-parc-nouvelle-date iframe"
+    );
+
+    if (iframe) {
+      iframe.src = data.url;
+    }
+
+    afficherBoutonFermerPlanningParcNouvelleDate(true);
+  }
+
+});
+
   function echapperHtml(valeur) {
     return String(valeur ?? "")
       .replaceAll("&", "&amp;")

@@ -194,6 +194,14 @@ function formaterDateIsoLocale(date) {
   
 
 function ouvrirConfirmationDate(dateIso) {
+window.parent.postMessage(
+  {
+    source: "lcdp-planning-parc-nouvelle-date",
+    action: "masquer-fermer-planning"
+  },
+  "*"
+);  
+
   fermerConfirmationDate();
 
   const lightbox = document.createElement("div");
@@ -235,6 +243,14 @@ function fermerConfirmationDate() {
   if (lightbox) {
     lightbox.remove();
   }
+
+  window.parent.postMessage(
+    {
+      source: "lcdp-planning-parc-nouvelle-date",
+      action: "afficher-fermer-planning"
+    },
+    "*"
+  );
 }
 
 function ouvrirPageHoraire(dateIso) {
@@ -245,6 +261,25 @@ function ouvrirPageHoraire(dateIso) {
     "&nom=" + encodeURIComponent(nomParc) +
     "&dptmt=" + encodeURIComponent(departement) +
     "&date=" + encodeURIComponent(dateIso);
+}
+
+function ouvrirPageHoraire(dateIso) {
+  const urlHoraire =
+    window.SITE_BASE +
+    "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/horaire-parc-nouvelle-date.html" +
+    "?idparc=" + encodeURIComponent(idParc) +
+    "&nom=" + encodeURIComponent(nomParc) +
+    "&dptmt=" + encodeURIComponent(departement) +
+    "&date=" + encodeURIComponent(dateIso);
+
+  window.parent.postMessage(
+    {
+      source: "lcdp-planning-parc-nouvelle-date",
+      action: "ouvrir-horaire-parc-nouvelle-date",
+      url: urlHoraire
+    },
+    "*"
+  );
 }
 
 function formaterDateFr(dateIso) {
