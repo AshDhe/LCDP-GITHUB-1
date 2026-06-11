@@ -1,0 +1,118 @@
+body {
+  padding-top: 0;
+  background: var(--color-surface);
+}
+
+.planning-parc-nouvelle-demande-page {
+  width: min(100% - 48px, 960px);
+  padding: var(--space-5) 0;
+}
+
+.planning-parc-entete {
+  padding-bottom: var(--space-4);
+}
+
+.planning-parc-entete h1 {
+  margin-bottom: var(--space-2);
+}
+
+.planning-parc-entete p {
+  margin-bottom: 0;
+  max-width: none;
+  color: var(--color-text-muted);
+}
+
+.planning-parc-calendrier {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.planning-parc-navigation {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.planning-parc-navigation h2 {
+  margin: 0;
+  text-align: center;
+  text-transform: capitalize;
+  font-size: clamp(24px, 2.6vw, 34px);
+}
+
+.planning-parc-jours-semaine {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.planning-parc-grille {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.jour-planning {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-main);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.jour-planning span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jour-planning-vide {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.jour-planning-passe {
+  background: var(--color-surface-soft);
+  color: var(--color-text-muted);
+  opacity: 0.45;
+  cursor: default;
+}
+
+.jour-planning-actif {
+  background: var(--color-surface);
+}
+
+.jour-planning-aujourdhui {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .planning-parc-nouvelle-demande-page {
+    width: 100%;
+    padding: var(--space-4) var(--container-padding);
+  }
+
+  .planning-parc-navigation {
+    gap: var(--space-2);
+  }
+
+  .planning-parc-jours-semaine,
+  .planning-parc-grille {
+    gap: 5px;
+  }
+
+  .jour-planning {
+    font-size: 15px;
+    border-radius: 8px;
+  }
+}
