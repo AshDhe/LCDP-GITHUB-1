@@ -386,6 +386,100 @@
     }
   }
 
+function construireUrlPlanningParcNouvelleDate(parc) {
+  const idParc = encodeURIComponent(parc.idparc || parc.id || "");
+  const nomParc = encodeURIComponent(parc.nom || "");
+  const departement = encodeURIComponent(parc.dptmt || parc.departement || "");
+
+  return (
+    SITE_BASE +
+    "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/planning-parc-nouvelle-date.html" +
+    "?idparc=" + idParc +
+    "&nom=" + nomParc +
+    "&dptmt=" + departement
+  );
+}
+
+function construireUrlHoraireParcNouvelleDate(parc, dateIso) {
+  const idParc = encodeURIComponent(parc.idparc || parc.id || "");
+  const nomParc = encodeURIComponent(parc.nom || "");
+  const departement = encodeURIComponent(parc.dptmt || parc.departement || "");
+
+  return (
+    SITE_BASE +
+    "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/horaire-parc-nouvelle-date.html" +
+    "?idparc=" + idParc +
+    "&nom=" + nomParc +
+    "&dptmt=" + departement +
+    "&date=" + encodeURIComponent(dateIso)
+  );
+}
+
+function formaterDateIsoLocale(date) {
+  const annee = date.getFullYear();
+  const mois = String(date.getMonth() + 1).padStart(2, "0");
+  const jour = String(date.getDate()).padStart(2, "0");
+
+  return annee + "-" + mois + "-" + jour;
+}
+
+function obtenirDateChoixRapide(choix) {
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+
+  if (choix === "demain") {
+    date.setDate(date.getDate() + 1);
+  }
+
+  return formaterDateIsoLocale(date);
+}
+
+function ouvrirLightboxHoraireParcNouvelleDate(parc, dateIso) {
+  fermerLightboxChoixDate();
+  fermerLightboxPlanningParcNouvelleDate();
+
+  const urlPlanning = construireUrlPlanningParcNouvelleDate(parc);
+  const urlHoraire = construireUrlHoraireParcNouvelleDate(parc, dateIso);
+
+  const lightbox = document.createElement("div");
+  lightbox.id = "lightbox-planning-parc-nouvelle-date";
+  lightbox.className = "lightbox-fiche-parc-nouvelle-date-overlay";
+
+  lightbox.innerHTML = `
+    <div class="lightbox-fiche-parc-nouvelle-date-box" role="dialog" aria-modal="true">
+
+      <button
+        class="micro-action lightbox-fiche-parc-nouvelle-date-fermer"
+        type="button"
+        data-action="fermer-planning-parc-nouvelle-date"
+      >
+        Fermer
+      </button>
+
+      <iframe
+        class="lightbox-fiche-parc-nouvelle-date-frame"
+        src="${urlHoraire}"
+        title="Horaire du parc"
+        data-url-planning="${urlPlanning}"
+        data-page-planning="horaire"
+      ></iframe>
+
+    </div>
+  `;
+
+  document.body.appendChild(lightbox);
+
+  const iframe = lightbox.querySelector("iframe");
+
+  if (iframe) {
+    iframe.addEventListener("load", () => {
+      mettreAJourEtatIframePlanning(iframe);
+    });
+  }
+
+  afficherBoutonFermerPlanningParcNouvelleDate(true);
+}
+
   function ouvrirLightboxPlanningParcNouvelleDate(parc) {
     fermerLightboxChoixDate();
 
@@ -596,30 +690,29 @@
     }
 
     if (boutonChoixDateRapide) {
-      const choix = boutonChoixDateRapide.dataset.choix;
-      const idParc = boutonChoixDateRapide.dataset.id;
+  const choix = boutonChoixDateRapide.dataset.choix;
+  const idParc = boutonChoixDateRapide.dataset.id;
 
-      const parc = parcsCharges.find((item) => {
-        return String(item.idparc || item.id) === String(idParc);
-      });
+  const parc = parcsCharges.find((item) => {
+    return String(item.idparc || item.id) === String(idParc);
+  });
 
-      if (!parc) {
-        afficherErreur("Parc introuvable.");
-        return;
-      }
+  if (!parc) {
+    afficherErreur("Parc introuvable.");
+    return;
+  }
 
-      if (choix === "autre-date") {
-        ouvrirLightboxPlanningParcNouvelleDate(parc);
-        return;
-      }
+  if (choix === "autre-date") {
+    ouvrirLightboxPlanningParcNouvelleDate(parc);
+    return;
+  }
 
-      console.log("Choix nouvelle date :", {
-        choix: choix,
-        idparc: idParc
-      });
+  if (choix === "aujourdhui" || choix === "demain") {
+    const dateIso = obtenirDateChoixRapide(choix);
+    ouvrirLightboxHoraireParcNouvelleDate(parc, dateIso);
+    return;
+  }
+}
 
-      alert("Choix sélectionné : " + choix + " pour le parc " + idParc);
-      return;
-    }
   });
 })();
