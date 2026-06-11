@@ -196,8 +196,24 @@ async function chargerParcsDepartement(departement) {
       return;
     }
 
-    listeParcs.innerHTML = parcs.map(creerCarteParc).join("");
+  let html = "";
+
+  for (let i = 0; i < parcs.length; i += 2) {
+    html += `
+      <tr>
+        <td>
+          ${creerCarteParc(parcs[i])}
+        </td>
+        <td>
+          ${parcs[i + 1] ? creerCarteParc(parcs[i + 1]) : ""}
+        </td>
+      </tr>
+    `;
   }
+
+  listeParcs.innerHTML = html;
+ }
+
 
 function creerCarteParc(parc) {
   const idParc = parc.idparc || parc.id;
@@ -206,43 +222,37 @@ function creerCarteParc(parc) {
   const imageUrl = construireUrlImageParc(parc.imageparc);
 
   return `
-    <tr>
-      <td colspan="2">
+    <article class="carte-parc-membre">
 
-        <article class="carte-parc-membre">
+      <img
+        class="carte-parc-membre-image"
+        src="${imageUrl}"
+        alt="Image du parc ${nomParc}"
+      >
 
-          <img
-            class="carte-parc-membre-image"
-            src="${imageUrl}"
-            alt="Image du parc ${nomParc}"
-          >
+      <div class="carte-parc-membre-contenu">
 
-          <div class="carte-parc-membre-contenu">
+        <h3>
+          ${nomParc} (${departement})
+        </h3>
 
-            <h3>
-              ${nomParc} (${departement})
-            </h3>
+        <div class="carte-parc-membre-actions">
 
-            <div class="carte-parc-membre-actions">
+          <a href="#" class="lien-fiche-parc" data-action="ouvrir-fiche-parc" data-id="${idParc}">
+            Le parc
+          </a>
 
-              <a href="#" class="lien-fiche-parc" data-action="ouvrir-fiche-parc" data-id="${idParc}">
-                Le parc
-              </a>
+          <button class="micro-action" type="button" data-action="nouvelle-date-parc" data-id="${idParc}">
+            Nouvelle date
+          </button>
 
-              <button class="micro-action" type="button" data-action="nouvelle-date-parc" data-id="${idParc}">
-                Nouvelle date
-              </button>
+        </div>
 
-            </div>
+      </div>
 
-          </div>
-
-        </article>
-
-      </td>
-    </tr>
+    </article>
   `;
-}
+ }
 
   function construireUrlImageParc(imageparc) {
     const SITE_BASE = window.SITE_BASE || "";
@@ -307,30 +317,37 @@ function creerCarteParc(parc) {
       .replaceAll("'", "&#039;");
   }
 
-  document.addEventListener("click", (event) => {
-    const lienFicheParc = event.target.closest("[data-action='ouvrir-fiche-parc']");
-    const boutonNouvelleDate = event.target.closest("[data-action='nouvelle-date-parc']");
-    const boutonFermerFiche = event.target.closest("[data-action='fermer-fiche-parc']");
+document.addEventListener("click", (event) => {
+  const lienFicheParc = event.target.closest("[data-action='ouvrir-fiche-parc']");
+  const boutonNouvelleDate = event.target.closest("[data-action='nouvelle-date-parc']");
+  const boutonFermerFiche = event.target.closest("[data-action='fermer-fiche-parc']");
 
-    if (lienFicheParc) {
-      event.preventDefault();
+  if (lienFicheParc) {
+    event.preventDefault();
 
-      const idParc = lienFicheParc.dataset.id;
-      const parc = parcsCharges.find((item) => String(item.idparc || item.id) === String(idParc));
+    const idParc = lienFicheParc.dataset.id;
 
-      if (!parc) return;
+    const parc = parcsCharges.find((item) => {
+      return String(item.idparc || item.id) === String(idParc);
+    });
 
-      ouvrirLightboxParc(parc);
+    if (!parc) {
+      afficherErreur("Fiche parc introuvable.");
       return;
     }
 
-    if (boutonNouvelleDate) {
-      alert("La réservation de cette nouvelle date sera raccordée ensuite.");
-      return;
-    }
+    ouvrirLightboxParc(parc);
+    return;
+  }
 
-    if (boutonFermerFiche) {
-      fermerLightboxParc();
-    }
-  });
+  if (boutonNouvelleDate) {
+    alert("La réservation de cette nouvelle date sera raccordée ensuite.");
+    return;
+  }
+
+  if (boutonFermerFiche) {
+    fermerLightboxParc();
+  }
+ });
+
 })();
