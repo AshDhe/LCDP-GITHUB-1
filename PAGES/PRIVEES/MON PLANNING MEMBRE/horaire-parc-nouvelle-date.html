@@ -80,6 +80,24 @@
 
     afficherHoraires();
 
+    function envoyerMessageParent(action) {
+      window.parent.postMessage(
+        {
+          source: "lcdp-planning-parc-nouvelle-date",
+          action: action
+        },
+        "*"
+      );
+    }
+
+    function masquerBoutonFermerParent() {
+      envoyerMessageParent("masquer-fermer-planning");
+    }
+
+    function afficherBoutonFermerParent() {
+      envoyerMessageParent("afficher-fermer-planning");
+    }
+
     function genererHeuresDisponibles() {
       const heures = [];
 
@@ -121,8 +139,17 @@
       }).join("");
     }
 
+    function supprimerConfirmationHeure() {
+      const lightbox = document.getElementById("dialog-confirmation-heure");
+
+      if (lightbox) {
+        lightbox.remove();
+      }
+    }
+
     function ouvrirConfirmationHeure(heure) {
-      fermerConfirmationHeure();
+      masquerBoutonFermerParent();
+      supprimerConfirmationHeure();
 
       const plagebookd = calculerPlageBookd(heure);
 
@@ -166,11 +193,8 @@
     }
 
     function fermerConfirmationHeure() {
-      const lightbox = document.getElementById("dialog-confirmation-heure");
-
-      if (lightbox) {
-        lightbox.remove();
-      }
+      supprimerConfirmationHeure();
+      afficherBoutonFermerParent();
     }
 
     function calculerPlageBookd(heure) {
