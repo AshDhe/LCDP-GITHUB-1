@@ -1,37 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
   const SITE_BASE = window.SITE_BASE || "";
+  const ENDPOINT_FLUXM =
+    "https://worker-fluxm-api.lacleduparc.fr";
 
   const listePlanning = document.getElementById("liste-planning-membre");
   const lienPasse = document.getElementById("planning-membre-passe");
   const boutonNouvelleDate = document.getElementById("bouton-nouvelle-date-planning");
 
-  const URL_NOUVELLE_DATE = SITE_BASE + "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/nouvelle-date-membre.html";
+  const URL_NOUVELLE_DATE =
+    SITE_BASE + "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/nouvelle-date-membre.html";
 
   let affichageActuel = "avenir";
-
-  const rendezVousDemo = [
-    {
-      id: "rdv-1",
-      date: "2026-06-18",
-      heureDebut: "14:00",
-      heureFin: "16:00",
-      parc: "Parc de Ménars",
-      departement: "41",
-      adresse: "Adresse du parc à renseigner"
-    },
-    {
-      id: "rdv-2",
-      date: "2026-05-22",
-      heureDebut: "10:00",
-      heureFin: "12:00",
-      parc: "Parc de Rochambeau",
-      departement: "41",
-      adresse: "Adresse du parc à renseigner"
-    }
-  ];
+  let reservations = [];
 
   if (boutonNouvelleDate) {
-    boutonNouvelleDate.addEventListener("click", () => {
+    boutonNouvelleDate.addEventListener("click", (event) => {
+      event.preventDefault();
       window.location.href = URL_NOUVELLE_DATE;
     });
   }
@@ -49,37 +33,107 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  chargerReservations();
+
+  async function chargerReservations() {
+    try {
+      afficherChargement();
+
+      const reponse = await fetch(ENDPOINT_FLUXM + "/mes-reservations", {
+        method: "GET",
+        credentials: "include"
+      });
+
+      if (reponse.status === 401) {
+        redirigerConnexionMembre("mon-planning-membre");
+        return;
+      }
+
+      const data = await reponse.json().catch(() => null);
+
+      if (!reponse.ok || !data || data.success !== true) {
+        throw new Error(
+          data && data.message
+            ? data.message
+            : "Impossible de charger votre planning."
+        );
+      }
+
+      reservations = data.reservations || [];
+      afficherPlanning();
+
+    } catch (erreur) {
+      afficherErreur(erreur.message);
+    }
+  }
+
+  function redirigerConnexionMembre(sourcePage) {
+    window.location.href =
+      SITE_BASE +
+      "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html?source=" +
+      encodeURIComponent(sourcePage);
+  }
+
+  function afficherChargement() {
+    if (!listePlanning) return;
+
+    listePlanning.innerHTML = `
+      <tr>
+        <td colspan="3">
+          Chargement de votre planning...
+        </td>
+      </tr>
+    `;
+  }
+
+  function afficherErreur(message) {
+    if (!listePlanning) return;
+
+    listePlanning.innerHTML = `
+      <tr>
+        <td colspan="3">
+          ${echapperHtml(message)}
+        </td>
+      </tr>
+    `;
+  }
+
   function afficherPlanning() {
     if (!listePlanning) return;
 
     const maintenant = new Date();
 
-    const rendezVousFiltres = rendezVousDemo.filter((rdv) => {
-      const dateRdv = new Date(rdv.date + "T" + rdv.heureFin);
+    const reservationsFiltrees = reservations.filter((reservation) => {
+      const dateReservation = new Date(reservation.datebookd);
 
       if (affichageActuel === "avenir") {
-        return dateRdv >= maintenant;
+        return dateReservation >= maintenant;
       }
 
-      return dateRdv < maintenant;
+      return dateReservation < maintenant;
     });
 
-    if (rendezVousFiltres.length === 0) {
+    if (reservationsFiltrees.length === 0) {
       listePlanning.innerHTML = `
         <tr>
           <td colspan="3">
-            Aucun rendez-vous ${affichageActuel === "avenir" ? "à venir" : "passé"}.
+            Aucune date ${affichageActuel === "avenir" ? "à venir" : "passée"}.
           </td>
         </tr>
       `;
       return;
     }
 
-    listePlanning.innerHTML = rendezVousFiltres.map(creerCartePlanning).join("");
+    listePlanning.innerHTML = reservationsFiltrees.map(creerCartePlanning).join("");
   }
 
-  function creerCartePlanning(rdv) {
-    const estPasse = new Date(rdv.date + "T" + rdv.heureFin) < new Date();
+  function creerCartePlanning(reservation) {
+    const dateReservation = new Date(reservation.datebookd);
+    const estPasse = dateReservation < new Date();
+
+    const parc = reservation.parc || {};
+    const nomParc = parc.nom || "Parc";
+    const departement = parc.dptmt || "";
 
     return `
       <tr>
@@ -87,16 +141,16 @@ document.addEventListener("DOMContentLoaded", () => {
           <article class="carte-planning-membre">
 
             <p>
-              <span class="date-planning-membre">${formaterDate(rdv.date)}</span>
-              <span class="heure-planning-membre">${rdv.heureDebut} - ${rdv.heureFin}</span>
+              <span class="date-planning-membre">${formaterDateReservation(reservation.datebookd)}</span>
+              <span class="heure-planning-membre">Arrivée à ${formaterHeureReservation(reservation.datebookd)}</span>
             </p>
 
             <p>
-              <span class="parc-planning-membre">${rdv.parc}</span>
-              <span class="departement-planning-membre">(${rdv.departement})</span>
+              <span class="parc-planning-membre">${echapperHtml(nomParc)}</span>
+              <span class="departement-planning-membre">${departement ? "(" + echapperHtml(departement) + ")" : ""}</span>
             </p>
 
-            <button class="micro-action" type="button" data-action="adresse" data-adresse="${rdv.adresse}">
+            <button class="micro-action" type="button" data-action="adresse">
               Voir l’adresse
             </button>
 
@@ -104,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
               estPasse
                 ? ""
                 : `
-                  <button class="micro-action" type="button" data-action="annuler" data-id="${rdv.id}">
+                  <button class="micro-action" type="button" data-action="annuler" data-id="${reservation.idflux}">
                     Annuler
                   </button>
                 `
@@ -116,8 +170,9 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  function formaterDate(dateIso) {
-    return new Date(dateIso + "T00:00:00").toLocaleDateString("fr-FR", {
+  function formaterDateReservation(dateIso) {
+    return new Date(dateIso).toLocaleDateString("fr-FR", {
+      timeZone: "Europe/Paris",
       weekday: "long",
       day: "numeric",
       month: "long",
@@ -125,19 +180,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function formaterHeureReservation(dateIso) {
+    return new Date(dateIso).toLocaleTimeString("fr-FR", {
+      timeZone: "Europe/Paris",
+      hour: "2-digit",
+      minute: "2-digit"
+    }).replace(":", "h");
+  }
+
+  function echapperHtml(valeur) {
+    return String(valeur ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
   document.addEventListener("click", (event) => {
     const boutonAdresse = event.target.closest("[data-action='adresse']");
     const boutonAnnuler = event.target.closest("[data-action='annuler']");
 
     if (boutonAdresse) {
-      alert(boutonAdresse.dataset.adresse || "Adresse non disponible.");
+      alert("L’adresse sera raccordée ensuite.");
       return;
     }
 
     if (boutonAnnuler) {
-      alert("L’annulation du rendez-vous sera raccordée ensuite.");
+      alert("L’annulation de la réservation sera raccordée ensuite.");
     }
   });
-
-  afficherPlanning();
 });

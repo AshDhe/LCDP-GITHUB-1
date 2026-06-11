@@ -45,6 +45,9 @@
   </main>
 
   <script>
+    const ENDPOINT_FLUXM =
+      "https://worker-fluxm-api.lacleduparc.fr";
+
     const params = new URLSearchParams(window.location.search);
 
     const idParc = params.get("idparc") || "";
@@ -197,6 +200,39 @@
       afficherBoutonFermerParent();
     }
 
+    function ouvrirConfirmationEnregistrement() {
+      supprimerConfirmationHeure();
+      masquerBoutonFermerParent();
+
+      const lightbox = document.createElement("div");
+      lightbox.id = "dialog-confirmation-enregistrement";
+      lightbox.className = "dialog-overlay";
+
+      lightbox.innerHTML = `
+        <div class="dialog-box" role="dialog" aria-modal="true">
+
+          <h2>
+            Nouvelle date enregistrée
+          </h2>
+
+          <p>
+            Votre nouvelle date a bien été enregistrée.
+          </p>
+
+          <div class="dialog-actions">
+
+            <button class="button" type="button" data-action="retour-mon-planning">
+              OK
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+      document.body.appendChild(lightbox);
+    }
+
     function calculerPlageBookd(heure) {
       const [heures, minutes] = heure.split(":").map(Number);
       const totalMinutes = heures * 60 + minutes;
@@ -213,7 +249,45 @@
     }
 
     function construireDateBookd(dateIso, heure) {
-      return dateIso + "T" + heure + ":00";
+      const dateLocale = new Date(dateIso + "T" + heure + ":00");
+
+      return dateLocale.toISOString();
+    }
+
+    async function enregistrerReservation(heure, plagebookd) {
+      const datebookd = construireDateBookd(dateChoisie, heure);
+
+      const reponse = await fetch(ENDPOINT_FLUXM + "/creer-reservation", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          idparc: idParc,
+          datebookd: datebookd,
+          plagebookd: plagebookd
+        })
+      });
+
+      const data = await reponse.json().catch(() => null);
+
+      if (reponse.status === 401) {
+        window.top.location.href =
+          window.SITE_BASE +
+          "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html?source=horaire-parc-nouvelle-date";
+        return;
+      }
+
+      if (!reponse.ok || !data || data.success !== true) {
+        throw new Error(
+          data && data.message
+            ? data.message
+            : "Impossible d'enregistrer la réservation."
+        );
+      }
+
+      return data.reservation;
     }
 
     function formaterDateFr(dateIso) {
@@ -233,10 +307,17 @@
       return heure.replace(":", "h");
     }
 
-    document.addEventListener("click", (event) => {
+    function allerMonPlanning() {
+      window.top.location.href =
+        window.SITE_BASE +
+        "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/mon-planning-membre.html";
+    }
+
+    document.addEventListener("click", async (event) => {
       const boutonHeure = event.target.closest("[data-action='choisir-heure-arrivee']");
       const boutonAnnuler = event.target.closest("[data-action='annuler-confirmation-heure']");
       const boutonValider = event.target.closest("[data-action='valider-confirmation-heure']");
+      const boutonRetourPlanning = event.target.closest("[data-action='retour-mon-planning']");
 
       if (boutonHeure) {
         ouvrirConfirmationHeure(boutonHeure.dataset.heure);
@@ -248,20 +329,27 @@
         return;
       }
 
+      if (boutonRetourPlanning) {
+        allerMonPlanning();
+        return;
+      }
+
       if (boutonValider) {
         const heure = boutonValider.dataset.heure;
         const plagebookd = boutonValider.dataset.plagebookd;
-        const datebookd = construireDateBookd(dateChoisie, heure);
 
-        console.log("Réservation à enregistrer ensuite :", {
-          idparc: idParc,
-          datebookd: datebookd,
-          plagebookd: plagebookd
-        });
+        boutonValider.disabled = true;
+        boutonValider.textContent = "Enregistrement...";
 
-        alert("Réservation à raccorder ensuite : " + formaterDateFr(dateChoisie) + " à " + formaterHeureAffichee(heure));
+        try {
+          await enregistrerReservation(heure, plagebookd);
+          ouvrirConfirmationEnregistrement();
+        } catch (erreur) {
+          boutonValider.disabled = false;
+          boutonValider.textContent = "Confirmer";
+          alert(erreur.message);
+        }
 
-        fermerConfirmationHeure();
         return;
       }
     });
