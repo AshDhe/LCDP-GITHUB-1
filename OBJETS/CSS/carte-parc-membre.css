@@ -1,14 +1,14 @@
 .carte-parc-membre {
   display: grid;
-  grid-template-columns: 170px 1fr;
+  grid-template-columns: 120px 1fr;
   gap: var(--space-3);
   align-items: center;
   text-align: left;
 }
 
 .carte-parc-membre-image {
-  width: 170px;
-  height: 115px;
+  width: 120px;
+  height: 82px;
   border-radius: var(--radius-medium);
   object-fit: cover;
   object-position: center center;
@@ -20,13 +20,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  min-width: 0;
 }
 
 .carte-parc-membre h3 {
   margin: 0 0 var(--space-2);
-  font-size: 24px;
-  line-height: 1.2;
+  font-size: 22px;
+  line-height: 1.15;
 }
 
 .carte-parc-membre-actions {
@@ -36,25 +36,44 @@
 }
 
 .lien-fiche-parc {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
   font-size: 18px;
+  line-height: 1.2;
   color: var(--color-text);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 
+.carte-parc-membre-actions .micro-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
 @media (max-width: 600px) {
   .carte-parc-membre {
-    grid-template-columns: 1fr;
+    grid-template-columns: 92px 1fr;
+    gap: var(--space-2);
   }
 
   .carte-parc-membre-image {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 10;
+    width: 92px;
+    height: 68px;
+  }
+
+  .carte-parc-membre h3 {
+    font-size: 18px;
   }
 
   .carte-parc-membre-actions {
-    flex-wrap: wrap;
     gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .lien-fiche-parc {
+    font-size: 16px;
   }
 }
