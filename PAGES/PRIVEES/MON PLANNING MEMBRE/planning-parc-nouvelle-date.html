@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Planning du parc - La Clé du Parc</title>
+
+  <script>
+    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
+    );
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/planning-parc-nouvelle-date.css">'
+    );
+  </script>
+</head>
+
+<body>
+
+  <main class="site-page planning-parc-nouvelle-date-page">
+
+    <section class="planning-parc-entete">
+
+      <h1 id="titre-planning-parc">
+        Planning du parc
+      </h1>
+
+      <p id="infos-planning-parc">
+      </p>
+
+    </section>
+
+    <section class="planning-parc-calendrier" aria-label="Planning d'ouverture du parc">
+
+      <div class="planning-parc-navigation">
+
+        <button class="micro-action" type="button" id="bouton-mois-precedent">
+          ←
+        </button>
+
+        <h2 id="titre-mois-planning">
+        </h2>
+
+        <button class="micro-action" type="button" id="bouton-mois-suivant">
+          →
+        </button>
+
+      </div>
+
+      <div class="planning-parc-jours-semaine" aria-hidden="true">
+        <span>Lun</span>
+        <span>Mar</span>
+        <span>Mer</span>
+        <span>Jeu</span>
+        <span>Ven</span>
+        <span>Sam</span>
+        <span>Dim</span>
+      </div>
+
+      <div class="planning-parc-grille" id="grille-planning-parc">
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    const nomParc = params.get("nom") || "";
+    const departement = params.get("dptmt") || "";
+    const idParc = params.get("idparc") || "";
+
+    const titrePlanning = document.getElementById("titre-planning-parc");
+    const infosPlanning = document.getElementById("infos-planning-parc");
+    const titreMois = document.getElementById("titre-mois-planning");
+    const grillePlanning = document.getElementById("grille-planning-parc");
+    const boutonMoisPrecedent = document.getElementById("bouton-mois-precedent");
+    const boutonMoisSuivant = document.getElementById("bouton-mois-suivant");
+
+    const aujourdHui = new Date();
+    aujourdHui.setHours(0, 0, 0, 0);
+
+    let moisAffiche = aujourdHui.getMonth();
+    let anneeAffichee = aujourdHui.getFullYear();
+
+    if (titrePlanning) {
+      titrePlanning.textContent = nomParc ? "Planning du parc de " + nomParc : "Planning du parc";
+    }
+
+    if (infosPlanning) {
+      infosPlanning.textContent = departement ? "Département " + departement : "";
+    }
+
+    if (boutonMoisPrecedent) {
+      boutonMoisPrecedent.addEventListener("click", () => {
+        moisAffiche -= 1;
+
+        if (moisAffiche < 0) {
+          moisAffiche = 11;
+          anneeAffichee -= 1;
+        }
+
+        afficherMois();
+      });
+    }
+
+    if (boutonMoisSuivant) {
+      boutonMoisSuivant.addEventListener("click", () => {
+        moisAffiche += 1;
+
+        if (moisAffiche > 11) {
+          moisAffiche = 0;
+          anneeAffichee += 1;
+        }
+
+        afficherMois();
+      });
+    }
+
+    function afficherMois() {
+      if (!titreMois || !grillePlanning) return;
+
+      const dateMois = new Date(anneeAffichee, moisAffiche, 1);
+
+      titreMois.textContent = dateMois.toLocaleDateString("fr-FR", {
+        month: "long",
+        year: "numeric"
+      });
+
+      const premierJourMois = new Date(anneeAffichee, moisAffiche, 1);
+      const dernierJourMois = new Date(anneeAffichee, moisAffiche + 1, 0);
+
+      const nombreJours = dernierJourMois.getDate();
+      const decalageDebut = (premierJourMois.getDay() + 6) % 7;
+
+      let html = "";
+
+      for (let i = 0; i < decalageDebut; i += 1) {
+        html += '<div class="jour-planning jour-planning-vide"></div>';
+      }
+
+      for (let jour = 1; jour <= nombreJours; jour += 1) {
+        const dateJour = new Date(anneeAffichee, moisAffiche, jour);
+        dateJour.setHours(0, 0, 0, 0);
+
+        const estPasse = dateJour < aujourdHui;
+        const estAujourdhui = dateJour.getTime() === aujourdHui.getTime();
+
+        let classes = "jour-planning";
+
+        if (estPasse) {
+          classes += " jour-planning-passe";
+        } else {
+          classes += " jour-planning-actif";
+        }
+
+        if (estAujourdhui) {
+          classes += " jour-planning-aujourdhui";
+        }
+
+        html += `
+          <button
+            class="${classes}"
+            type="button"
+            data-idparc="${idParc}"
+            data-date="${dateJour.toISOString().slice(0, 10)}"
+            ${estPasse ? "disabled" : ""}
+          >
+            <span>
+              ${jour}
+            </span>
+          </button>
+        `;
+      }
+
+      grillePlanning.innerHTML = html;
+    }
+
+    afficherMois();
+  </script>
+
+</body>
+</html>

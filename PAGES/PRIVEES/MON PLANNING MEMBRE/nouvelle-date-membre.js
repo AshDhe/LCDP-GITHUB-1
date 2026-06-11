@@ -386,7 +386,7 @@
     }
   }
 
-function ouvrirLightboxPlanningParcNouvelleDemande(parc) {
+function ouvrirLightboxPlanningParcNouvelleDate(parc) {
   fermerLightboxChoixDate();
 
   const idParc = encodeURIComponent(parc.idparc || parc.id || "");
@@ -395,19 +395,19 @@ function ouvrirLightboxPlanningParcNouvelleDemande(parc) {
 
   const urlPlanning =
     SITE_BASE +
-    "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/planning-parc-nouvelle-demande.html" +
+    "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/planning-parc-nouvelle-date.html" +
     "?idparc=" + idParc +
     "&nom=" + nomParc +
     "&dptmt=" + departement;
 
   const lightbox = document.createElement("div");
-  lightbox.id = "lightbox-planning-parc-nouvelle-demande";
+  lightbox.id = "lightbox-planning-parc-nouvelle-date";
   lightbox.className = "lightbox-fiche-parc-nouvelle-date-overlay";
 
   lightbox.innerHTML = `
     <div class="lightbox-fiche-parc-nouvelle-date-box" role="dialog" aria-modal="true">
 
-      <button class="micro-action lightbox-fiche-parc-nouvelle-date-fermer" type="button" data-action="fermer-planning-parc-nouvelle-demande">
+      <button class="micro-action lightbox-fiche-parc-nouvelle-date-fermer" type="button" data-action="fermer-planning-parc-nouvelle-date">
         Fermer
       </button>
 
@@ -423,8 +423,8 @@ function ouvrirLightboxPlanningParcNouvelleDemande(parc) {
   document.body.appendChild(lightbox);
 }
 
-function fermerLightboxPlanningParcNouvelleDemande() {
-  const lightbox = document.getElementById("lightbox-planning-parc-nouvelle-demande");
+function fermerLightboxPlanningParcNouvelleDate() {
+  const lightbox = document.getElementById("lightbox-planning-parc-nouvelle-date");
 
   if (lightbox) {
     lightbox.remove();
@@ -446,7 +446,7 @@ function fermerLightboxPlanningParcNouvelleDemande() {
     const boutonFermerFiche = event.target.closest("[data-action='fermer-fiche-parc']");
     const boutonFermerChoixDate = event.target.closest("[data-action='fermer-choix-date']");
     const boutonChoixDateRapide = event.target.closest("[data-action='choisir-date-rapide']");
-    const boutonFermerPlanningParcNouvelleDemande = event.target.closest("[data-action='fermer-planning-parc-nouvelle-demande']");
+    const boutonFermerPlanningParcNouvelleDate = event.target.closest("[data-action='fermer-planning-parc-nouvelle-date']");
 
     if (lienFicheParc) {
       event.preventDefault();
@@ -506,7 +506,7 @@ if (boutonChoixDateRapide) {
   }
 
   if (choix === "autre-date") {
-    ouvrirLightboxPlanningParcNouvelleDemande(parc);
+    ouvrirLightboxPlanningParcNouvelleDate(parc);
     return;
   }
 
