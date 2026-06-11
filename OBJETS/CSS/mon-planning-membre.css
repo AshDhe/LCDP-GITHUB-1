@@ -189,3 +189,75 @@
     margin-right: auto;
   }
 }
+
+/* RESPONSIVE - TABLE PLANNING MEMBRE */
+
+@media (max-width: 700px) {
+  #table-planning-membre {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+  }
+
+  #table-planning-membre thead,
+  #table-planning-membre tbody,
+  #table-planning-membre tr,
+  #table-planning-membre th,
+  #table-planning-membre td {
+    display: block;
+    width: 100%;
+  }
+
+  #table-planning-membre thead tr {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  #table-planning-membre th,
+  #table-planning-membre td {
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    border-left: none;
+    border-right: none;
+  }
+
+  #table-planning-membre th {
+    padding: 16px;
+  }
+
+  #table-planning-membre th a,
+  #table-planning-membre th span,
+  #table-planning-membre td > * {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #table-planning-membre th a.button {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  #titre-planning-membre {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  #planning-membre-passe {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #table-planning-membre .carte-planning-membre {
+    width: min(100%, 320px);
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+}
