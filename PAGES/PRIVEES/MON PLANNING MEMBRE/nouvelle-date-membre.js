@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       listeParcs.innerHTML = `
         <tr>
           <td colspan="2">
-            Il n'y a pas de parc par ici.
+            Il n'y a pas de parc accessible par ici.
           </td>
         </tr>
       `;
