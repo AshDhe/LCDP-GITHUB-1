@@ -80,40 +80,43 @@ if (gererSessionExpiree(reponse, "nouvelle-date-membre")) {
     }
   }
 
-  async function chargerParcsDepartement(departement) {
-    try {
-      afficherChargement("Connexion aux parcs");
+async function chargerParcsDepartement(departement) {
+  try {
+    afficherChargement();
 
-      const reponse = await fetch(
-        ENDPOINT_NOUVELLE_DATE_MEMBRE + "/departement?dptmt=" + encodeURIComponent(departement),
-        {
-          method: "GET",
-          credentials: "include"
-        }
-      );
+    const reponse = await fetch(
+      ENDPOINT_NOUVELLE_DATE_MEMBRE + "/departement?dptmt=" + encodeURIComponent(departement),
+      {
+        method: "GET",
+        credentials: "include"
+      }
+    );
 
-const data = await reponse.json();
-
-if (reponse.status === 401) {
-  redirigerConnexionMembre();
-  return;
-}
-
-if (!reponse.ok || !data.success) {
-  throw new Error(data.message || "Impossible de charger les parcs de ce département.");
-}
-
-      departementAffiche = data.departement || departement;
-      modeAutourDeMoi = false;
-      parcsCharges = data.parcs || [];
-
-      afficherTitreDepartement();
-      afficherParcs(parcsCharges);
-
-    } catch (erreur) {
-      afficherErreur(erreur.message);
+    if (gererSessionExpiree(reponse, "nouvelle-date-membre")) {
+      return;
     }
+
+    const data = await reponse.json().catch(() => null);
+
+    if (!reponse.ok || !data || data.success !== true) {
+      throw new Error(
+        data && data.message
+          ? data.message
+          : "Impossible de charger les parcs de ce département."
+      );
+    }
+
+    departementAffiche = data.departement || departement;
+    modeAutourDeMoi = false;
+    parcsCharges = data.parcs || [];
+
+    afficherTitreDepartement();
+    afficherParcs(parcsCharges);
+
+  } catch (erreur) {
+    afficherErreur(erreur.message);
   }
+}
 
   function afficherTitreDepartement() {
     if (!titreDepartement) return;
