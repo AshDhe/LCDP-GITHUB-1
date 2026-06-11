@@ -148,3 +148,45 @@
     margin-right: 6px;
   }
 }
+
+/* RESPONSIVE - TABLEAU PLANNING MEMBRE */
+
+@media (max-width: 700px) {
+  .planning-tableau {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: var(--radius-large);
+    overflow: hidden;
+  }
+
+  .planning-tableau table,
+  .planning-tableau thead,
+  .planning-tableau tbody,
+  .planning-tableau tr,
+  .planning-tableau th,
+  .planning-tableau td {
+    display: block;
+    width: 100%;
+  }
+
+  .planning-tableau tr {
+    border: none;
+  }
+
+  .planning-tableau th,
+  .planning-tableau td {
+    border-left: none;
+    border-right: none;
+    text-align: center;
+  }
+
+  .planning-tableau th {
+    padding: 18px;
+  }
+
+  .planning-tableau th a,
+  .planning-tableau th button {
+    width: 100%;
+  }
+}
