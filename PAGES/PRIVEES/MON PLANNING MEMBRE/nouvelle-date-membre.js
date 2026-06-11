@@ -1,37 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const ENDPOINT_NOUVELLE_DATE_MEMBRE = "https://nouvelle.date.membre-api.lacleduparc.fr";
+
   const listeParcs = document.getElementById("liste-parcs-membre");
   const boutonDemanderIA = document.getElementById("bouton-demander-ia");
   const boutonModifierDepartement = document.getElementById("bouton-modifier-departement");
   const titreDepartement = document.getElementById("titre-departement-membre");
 
-  let departementMembre = "41";
+  let departementMembre = null;
+  let departementAffiche = null;
+  let modeAutourDeMoi = true;
+  let parcsCharges = [];
 
-  const parcsDemo = [
-    {
-      id: "parc-1",
-      nom: "Parc de Ménars",
-      departement: "41",
-      ville: "Ménars",
-      description: "Parc privé accessible aux membres La Clé du Parc."
-    },
-    {
-      id: "parc-2",
-      nom: "Parc de Rochambeau",
-      departement: "41",
-      ville: "Vendôme",
-      description: "Parc partenaire disponible selon les créneaux ouverts."
-    },
-    {
-      id: "parc-3",
-      nom: "Parc de La Ferté-Saint-Aubin",
-      departement: "45",
-      ville: "La Ferté-Saint-Aubin",
-      description: "Parc accessible sur demande selon disponibilités."
-    }
-  ];
-
-  afficherDepartement();
-  afficherParcs();
+  chargerParcsAutourDeMoi();
 
   if (boutonDemanderIA) {
     boutonDemanderIA.addEventListener("click", () => {
@@ -40,34 +20,118 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (boutonModifierDepartement) {
-    boutonModifierDepartement.addEventListener("click", () => {
+    boutonModifierDepartement.addEventListener("click", async () => {
       const nouveauDepartement = prompt(
         "Indiquez le département souhaité :",
-        departementMembre
+        departementAffiche || departementMembre || ""
       );
 
       if (!nouveauDepartement) return;
 
-      departementMembre = nouveauDepartement.trim();
-      afficherDepartement();
-      afficherParcs();
+      departementAffiche = nouveauDepartement.trim();
+      modeAutourDeMoi = false;
+
+      await chargerParcsDepartement(departementAffiche);
     });
   }
 
-  function afficherDepartement() {
+  async function chargerParcsAutourDeMoi() {
+    try {
+      afficherChargement();
+
+      const reponse = await fetch(ENDPOINT_NOUVELLE_DATE_MEMBRE + "/autour-de-moi", {
+        method: "GET",
+        credentials: "include"
+      });
+
+      const data = await reponse.json();
+
+      if (!reponse.ok || !data.success) {
+        throw new Error(data.message || "Impossible de charger les parcs autour de vous.");
+      }
+
+      departementMembre = data.departement;
+      departementAffiche = data.departement;
+      modeAutourDeMoi = true;
+      parcsCharges = data.parcs || [];
+
+      afficherTitreDepartement();
+      afficherParcs(parcsCharges);
+
+    } catch (erreur) {
+      afficherErreur(erreur.message);
+    }
+  }
+
+  async function chargerParcsDepartement(departement) {
+    try {
+      afficherChargement();
+
+      const reponse = await fetch(
+        ENDPOINT_NOUVELLE_DATE_MEMBRE + "/departement?dptmt=" + encodeURIComponent(departement),
+        {
+          method: "GET",
+          credentials: "include"
+        }
+      );
+
+      const data = await reponse.json();
+
+      if (!reponse.ok || !data.success) {
+        throw new Error(data.message || "Impossible de charger les parcs de ce département.");
+      }
+
+      departementAffiche = data.departement || departement;
+      modeAutourDeMoi = false;
+      parcsCharges = data.parcs || [];
+
+      afficherTitreDepartement();
+      afficherParcs(parcsCharges);
+
+    } catch (erreur) {
+      afficherErreur(erreur.message);
+    }
+  }
+
+  function afficherTitreDepartement() {
     if (!titreDepartement) return;
 
-    titreDepartement.textContent = "Votre département : " + departementMembre;
+    if (modeAutourDeMoi) {
+      titreDepartement.textContent = "Autour de moi";
+      return;
+    }
+
+    titreDepartement.textContent = "Parcs dans le " + departementAffiche;
   }
 
-  function afficherParcs() {
+  function afficherChargement() {
     if (!listeParcs) return;
 
-    const parcsFiltres = parcsDemo.filter((parc) => {
-      return parc.departement === departementMembre;
-    });
+    listeParcs.innerHTML = `
+      <tr>
+        <td colspan="2">
+          Chargement des parcs...
+        </td>
+      </tr>
+    `;
+  }
 
-    if (parcsFiltres.length === 0) {
+  function afficherErreur(message) {
+    if (!listeParcs) return;
+
+    listeParcs.innerHTML = `
+      <tr>
+        <td colspan="2">
+          ${echapperHtml(message)}
+        </td>
+      </tr>
+    `;
+  }
+
+  function afficherParcs(parcs) {
+    if (!listeParcs) return;
+
+    if (!parcs.length) {
       listeParcs.innerHTML = `
         <tr>
           <td colspan="2">
@@ -78,139 +142,137 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    listeParcs.innerHTML = parcsFiltres.map(creerCarteParc).join("");
+    listeParcs.innerHTML = parcs.map(creerCarteParc).join("");
   }
 
-function creerCarteParc(parc) {
-  const idParc = parc.idparc || parc.id;
-  const nomParc = echapperHtml(parc.nom);
-  const departement = echapperHtml(parc.dptmt || parc.departement || "");
-  const imageUrl = construireUrlImageParc(parc.imageparc);
+  function creerCarteParc(parc) {
+    const idParc = parc.idparc || parc.id;
+    const nomParc = echapperHtml(parc.nom);
+    const departement = echapperHtml(parc.dptmt || parc.departement || "");
+    const imageUrl = construireUrlImageParc(parc.imageparc);
 
-  return `
-    <tr>
-      <td colspan="2">
+    return `
+      <tr>
+        <td colspan="2">
 
-        <article class="carte-parc-membre">
+          <article class="carte-parc-membre">
 
-          <img
-            class="carte-parc-membre-image"
-            src="${imageUrl}"
-            alt="Image du parc ${nomParc}"
-          >
+            <img
+              class="carte-parc-membre-image"
+              src="${imageUrl}"
+              alt="Image du parc ${nomParc}"
+            >
 
-          <div class="carte-parc-membre-contenu">
+            <div class="carte-parc-membre-contenu">
 
-            <h3>
-              ${nomParc} (${departement})
-            </h3>
+              <h3>
+                ${nomParc} (${departement})
+              </h3>
 
-            <a href="#" class="lien-fiche-parc" data-action="ouvrir-fiche-parc" data-id="${idParc}">
-              Le parc
-            </a>
+              <a href="#" class="lien-fiche-parc" data-action="ouvrir-fiche-parc" data-id="${idParc}">
+                Le parc
+              </a>
 
-            <button class="micro-action" type="button" data-action="nouvelle-date-parc" data-id="${idParc}">
-              Nouvelle date
-            </button>
+              <button class="micro-action" type="button" data-action="nouvelle-date-parc" data-id="${idParc}">
+                Nouvelle date
+              </button>
 
-          </div>
+            </div>
 
-        </article>
+          </article>
 
-      </td>
-    </tr>
-  `;
-}
-
-function construireUrlImageParc(imageparc) {
-  const SITE_BASE = window.SITE_BASE || "";
-  const fichier = imageparc && imageparc.trim() ? imageparc.trim() : "parc-defaut.jpg";
-
-  return SITE_BASE + "/OBJETS/IMAGES/IMAGE%20PARC/" + encodeURIComponent(fichier);
-}
-
-function echapperHtml(valeur) {
-  return String(valeur ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function ouvrirLightboxParc(parc) {
-  fermerLightboxParc();
-
-  const nomParc = echapperHtml(parc.nom);
-  const departement = echapperHtml(parc.dptmt || parc.departement || "");
-  const presentation = echapperHtml(parc.prez || parc.description || "Présentation du parc à renseigner.");
-  const imageUrl = construireUrlImageParc(parc.imageparc);
-
-  const lightbox = document.createElement("div");
-  lightbox.id = "lightbox-fiche-parc";
-  lightbox.className = "lightbox-parc-overlay";
-
-  lightbox.innerHTML = `
-    <div class="lightbox-parc-box" role="dialog" aria-modal="true">
-
-      <button class="micro-action lightbox-parc-fermer" type="button" data-action="fermer-fiche-parc">
-        Fermer
-      </button>
-
-      <img
-        class="lightbox-parc-image"
-        src="${imageUrl}"
-        alt="Image du parc ${nomParc}"
-      >
-
-      <h2>
-        ${nomParc} (${departement})
-      </h2>
-
-      <p>
-        ${presentation}
-      </p>
-
-    </div>
-  `;
-
-  document.body.appendChild(lightbox);
-}
-
-function fermerLightboxParc() {
-  const lightbox = document.getElementById("lightbox-fiche-parc");
-
-  if (lightbox) {
-    lightbox.remove();
-  }
-}
-
-document.addEventListener("click", (event) => {
-  const lienFicheParc = event.target.closest("[data-action='ouvrir-fiche-parc']");
-  const boutonNouvelleDate = event.target.closest("[data-action='nouvelle-date-parc']");
-  const boutonFermerFiche = event.target.closest("[data-action='fermer-fiche-parc']");
-
-  if (lienFicheParc) {
-    event.preventDefault();
-
-    const idParc = lienFicheParc.dataset.id;
-    const parc = parcsDemo.find((item) => String(item.idparc || item.id) === String(idParc));
-
-    if (!parc) return;
-
-    ouvrirLightboxParc(parc);
-    return;
+        </td>
+      </tr>
+    `;
   }
 
-  if (boutonNouvelleDate) {
-    alert("La réservation de cette nouvelle date sera raccordée ensuite.");
-    return;
+  function construireUrlImageParc(imageparc) {
+    const SITE_BASE = window.SITE_BASE || "";
+    const fichier = imageparc && imageparc.trim() ? imageparc.trim() : "parc-defaut.jpg";
+
+    return SITE_BASE + "/OBJETS/IMAGES/IMAGE%20PARC/" + encodeURIComponent(fichier);
   }
 
-  if (boutonFermerFiche) {
+  function ouvrirLightboxParc(parc) {
     fermerLightboxParc();
+
+    const nomParc = echapperHtml(parc.nom);
+    const departement = echapperHtml(parc.dptmt || parc.departement || "");
+    const presentation = echapperHtml(parc.prez || parc.description || "Présentation du parc à renseigner.");
+    const imageUrl = construireUrlImageParc(parc.imageparc);
+
+    const lightbox = document.createElement("div");
+    lightbox.id = "lightbox-fiche-parc";
+    lightbox.className = "lightbox-parc-overlay";
+
+    lightbox.innerHTML = `
+      <div class="lightbox-parc-box" role="dialog" aria-modal="true">
+
+        <button class="micro-action lightbox-parc-fermer" type="button" data-action="fermer-fiche-parc">
+          Fermer
+        </button>
+
+        <img
+          class="lightbox-parc-image"
+          src="${imageUrl}"
+          alt="Image du parc ${nomParc}"
+        >
+
+        <h2>
+          ${nomParc} (${departement})
+        </h2>
+
+        <p>
+          ${presentation}
+        </p>
+
+      </div>
+    `;
+
+    document.body.appendChild(lightbox);
   }
 
-});
+  function fermerLightboxParc() {
+    const lightbox = document.getElementById("lightbox-fiche-parc");
 
+    if (lightbox) {
+      lightbox.remove();
+    }
+  }
+
+  function echapperHtml(valeur) {
+    return String(valeur ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  document.addEventListener("click", (event) => {
+    const lienFicheParc = event.target.closest("[data-action='ouvrir-fiche-parc']");
+    const boutonNouvelleDate = event.target.closest("[data-action='nouvelle-date-parc']");
+    const boutonFermerFiche = event.target.closest("[data-action='fermer-fiche-parc']");
+
+    if (lienFicheParc) {
+      event.preventDefault();
+
+      const idParc = lienFicheParc.dataset.id;
+      const parc = parcsCharges.find((item) => String(item.idparc || item.id) === String(idParc));
+
+      if (!parc) return;
+
+      ouvrirLightboxParc(parc);
+      return;
+    }
+
+    if (boutonNouvelleDate) {
+      alert("La réservation de cette nouvelle date sera raccordée ensuite.");
+      return;
+    }
+
+    if (boutonFermerFiche) {
+      fermerLightboxParc();
+    }
+  });
 });
