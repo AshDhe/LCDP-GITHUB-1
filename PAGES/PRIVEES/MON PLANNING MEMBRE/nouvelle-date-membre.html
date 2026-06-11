@@ -114,24 +114,39 @@
 </main>
 
   <script>
-    document.querySelectorAll("a[href^='/']").forEach((lien) => {
-      lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
+  document.querySelectorAll("a[href^='/']").forEach((lien) => {
+    lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
+  });
+
+  function chargerScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => {
+        console.log("Script chargé :", src);
+        resolve();
+      };
+      script.onerror = () => {
+        console.error("Erreur chargement script :", src);
+        reject(new Error("Erreur chargement script : " + src));
+      };
+      document.body.appendChild(script);
     });
+  }
 
-    function chargerScript(src) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.body.appendChild(script);
-      });
-    }
-
-    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/boite-dialogue.js")
-      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js"))
-      .then(() => chargerScript(window.SITE_BASE + "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/nouvelle-date-membre.js"));
-  </script>
+  chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/boite-dialogue.js")
+    .catch((erreur) => {
+      console.warn(erreur.message);
+    })
+    .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js"))
+    .catch((erreur) => {
+      console.warn(erreur.message);
+    })
+    .then(() => chargerScript(window.SITE_BASE + "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/nouvelle-date-membre.js"))
+    .catch((erreur) => {
+      console.error(erreur.message);
+    });
+   </script>
 
 </body>
 </html>
