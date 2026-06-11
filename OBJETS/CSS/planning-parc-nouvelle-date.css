@@ -3,7 +3,7 @@ body {
   background: var(--color-surface);
 }
 
-.planning-parc-nouvelle-demande-page {
+.planning-parc-nouvelle-date-page {
   width: min(100% - 48px, 960px);
   padding: var(--space-4) 0;
 }
@@ -115,7 +115,7 @@ body {
 }
 
 @media (max-width: 600px) {
-  .planning-parc-nouvelle-demande-page {
+  .planning-parc-nouvelle-date-page {
     width: 100%;
     padding: var(--space-4) var(--container-padding);
   }
