@@ -562,7 +562,31 @@ if (data.action === "ouvrir-horaire-parc-nouvelle-date" && data.url) {
     }
 
 if (boutonFermerPlanningParcNouvelleDate) {
-  gererBoutonFermerPlanningParcNouvelleDate();
+  const iframePlanning = document.querySelector(
+    "#lightbox-planning-parc-nouvelle-date iframe"
+  );
+
+  if (
+    iframePlanning &&
+    iframePlanning.src.includes("horaire-parc-nouvelle-date.html")
+  ) {
+    const url = new URL(iframePlanning.src);
+
+    const idParc = url.searchParams.get("idparc") || "";
+    const nomParc = url.searchParams.get("nom") || "";
+    const departement = url.searchParams.get("dptmt") || "";
+
+    iframePlanning.src =
+      SITE_BASE +
+      "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/planning-parc-nouvelle-date.html" +
+      "?idparc=" + encodeURIComponent(idParc) +
+      "&nom=" + encodeURIComponent(nomParc) +
+      "&dptmt=" + encodeURIComponent(departement);
+
+    return;
+  }
+
+  fermerLightboxPlanningParcNouvelleDate();
   return;
 }
 
