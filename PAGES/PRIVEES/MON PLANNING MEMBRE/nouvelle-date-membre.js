@@ -386,6 +386,51 @@
     }
   }
 
+function ouvrirLightboxPlanningParcNouvelleDemande(parc) {
+  fermerLightboxChoixDate();
+
+  const idParc = encodeURIComponent(parc.idparc || parc.id || "");
+  const nomParc = encodeURIComponent(parc.nom || "");
+  const departement = encodeURIComponent(parc.dptmt || parc.departement || "");
+
+  const urlPlanning =
+    SITE_BASE +
+    "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/planning-parc-nouvelle-demande.html" +
+    "?idparc=" + idParc +
+    "&nom=" + nomParc +
+    "&dptmt=" + departement;
+
+  const lightbox = document.createElement("div");
+  lightbox.id = "lightbox-planning-parc-nouvelle-demande";
+  lightbox.className = "lightbox-fiche-parc-nouvelle-date-overlay";
+
+  lightbox.innerHTML = `
+    <div class="lightbox-fiche-parc-nouvelle-date-box" role="dialog" aria-modal="true">
+
+      <button class="micro-action lightbox-fiche-parc-nouvelle-date-fermer" type="button" data-action="fermer-planning-parc-nouvelle-demande">
+        Fermer
+      </button>
+
+      <iframe
+        class="lightbox-fiche-parc-nouvelle-date-frame"
+        src="${urlPlanning}"
+        title="Planning du parc"
+      ></iframe>
+
+    </div>
+  `;
+
+  document.body.appendChild(lightbox);
+}
+
+function fermerLightboxPlanningParcNouvelleDemande() {
+  const lightbox = document.getElementById("lightbox-planning-parc-nouvelle-demande");
+
+  if (lightbox) {
+    lightbox.remove();
+  }
+}
+
   function echapperHtml(valeur) {
     return String(valeur ?? "")
       .replaceAll("&", "&amp;")
@@ -401,6 +446,7 @@
     const boutonFermerFiche = event.target.closest("[data-action='fermer-fiche-parc']");
     const boutonFermerChoixDate = event.target.closest("[data-action='fermer-choix-date']");
     const boutonChoixDateRapide = event.target.closest("[data-action='choisir-date-rapide']");
+    const boutonFermerPlanningParcNouvelleDemande = event.target.closest("[data-action='fermer-planning-parc-nouvelle-demande']");
 
     if (lienFicheParc) {
       event.preventDefault();
@@ -446,17 +492,33 @@
       return;
     }
 
-    if (boutonChoixDateRapide) {
-      const choix = boutonChoixDateRapide.dataset.choix;
-      const idParc = boutonChoixDateRapide.dataset.id;
+if (boutonChoixDateRapide) {
+  const choix = boutonChoixDateRapide.dataset.choix;
+  const idParc = boutonChoixDateRapide.dataset.id;
 
-      console.log("Choix nouvelle date :", {
-        choix: choix,
-        idparc: idParc
-      });
-
-      alert("Choix sélectionné : " + choix + " pour le parc " + idParc);
-      return;
-    }
+  const parc = parcsCharges.find((item) => {
+    return String(item.idparc || item.id) === String(idParc);
   });
+
+  if (!parc) {
+    afficherErreur("Parc introuvable.");
+    return;
+  }
+
+  if (choix === "autre-date") {
+    ouvrirLightboxPlanningParcNouvelleDemande(parc);
+    return;
+  }
+
+  console.log("Choix nouvelle date :", {
+    choix: choix,
+    idparc: idParc
+  });
+
+  alert("Choix sélectionné : " + choix + " pour le parc " + idParc);
+  return;
+  }
+
+  });
+
 })();
