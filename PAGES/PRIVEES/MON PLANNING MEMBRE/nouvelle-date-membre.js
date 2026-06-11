@@ -1,24 +1,26 @@
 (function initialiserNouvelleDateMembre() {
   console.log("NOUVELLE DATE MEMBRE JS DEMARRE");
-  const ENDPOINT_NOUVELLE_DATE_MEMBRE = "https://nouvelle-date-membre-api.lacleduparc.fr";
+
+  const ENDPOINT_NOUVELLE_DATE_MEMBRE =
+    "https://nouvelle-date-membre-api.lacleduparc.fr";
 
   const SITE_BASE = window.SITE_BASE || "";
 
-function redirigerConnexionMembre(sourcePage) {
-  window.location.href =
-    SITE_BASE +
-    "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html?source=" +
-    encodeURIComponent(sourcePage);
-}
-
-function gererSessionExpiree(reponse, sourcePage) {
-  if (reponse.status === 401) {
-    redirigerConnexionMembre(sourcePage);
-    return true;
+  function redirigerConnexionMembre(sourcePage) {
+    window.location.href =
+      SITE_BASE +
+      "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html?source=" +
+      encodeURIComponent(sourcePage);
   }
 
-  return false;
-}
+  function gererSessionExpiree(reponse, sourcePage) {
+    if (reponse.status === 401) {
+      redirigerConnexionMembre(sourcePage);
+      return true;
+    }
+
+    return false;
+  }
 
   const listeParcs = document.getElementById("liste-parcs-membre");
   const boutonDemanderIA = document.getElementById("bouton-demander-ia");
@@ -32,120 +34,139 @@ function gererSessionExpiree(reponse, sourcePage) {
 
   chargerParcsAutourDeMoi();
 
-if (boutonModifierDepartement) {
-  boutonModifierDepartement.addEventListener("click", ouvrirDialogueDepartement);
-}
-
-async function ouvrirDialogueDepartement() {
-  if (typeof window.afficherBoiteDialogue !== "function") {
-    afficherErreur("La boîte de dialogue est indisponible.");
-    return;
+  if (boutonDemanderIA) {
+    boutonDemanderIA.addEventListener("click", () => {
+      alert("La demande à l’IA sera raccordée ensuite.");
+    });
   }
 
-  const resultat = await window.afficherBoiteDialogue({
-    titre: "Changer de département",
-    texteAnnuler: "Annuler",
-    texteValider: "Valider",
-    champs: [
-      {
-        id: "nouveau-departement-recherche",
-        name: "dptmt",
-        label: "Département souhaité",
-        type: "text",
-        value: departementAffiche || departementMembre || "",
-        required: true
-      }
-    ]
-  });
-
-  if (!resultat) return;
-
-  const nouveauDepartement = String(resultat.dptmt || "").trim();
-
-  if (!nouveauDepartement) {
-    afficherErreur("Le département est obligatoire.");
-    return;
+  if (boutonModifierDepartement) {
+    boutonModifierDepartement.addEventListener("click", ouvrirDialogueDepartement);
   }
 
-  departementAffiche = nouveauDepartement;
-  modeAutourDeMoi = false;
+  function normaliserDepartement(valeur) {
+    const departement = String(valeur || "")
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g, "");
 
-  await chargerParcsDepartement(departementAffiche);
-}
+    if (/^[1-9]$/.test(departement)) {
+      return "0" + departement;
+    }
 
-async function chargerParcsAutourDeMoi() {
-  try {
-    afficherChargement();
+    return departement;
+  }
 
-    const reponse = await fetch(ENDPOINT_NOUVELLE_DATE_MEMBRE + "/autour-de-moi", {
-      method: "GET",
-      credentials: "include"
+  async function ouvrirDialogueDepartement() {
+    if (typeof window.afficherBoiteDialogue !== "function") {
+      afficherErreur("La boîte de dialogue est indisponible.");
+      return;
+    }
+
+    const resultat = await window.afficherBoiteDialogue({
+      titre: "Choisissez un département",
+      texteAnnuler: "Annuler",
+      texteValider: "Valider",
+      champs: [
+        {
+          id: "nouveau-departement-recherche",
+          name: "dptmt",
+          label: "Entrez le n° du département (France métropole)",
+          type: "text",
+          value: "",
+          required: true
+        }
+      ]
     });
 
-    if (gererSessionExpiree(reponse, "nouvelle-date-membre")) {
+    if (!resultat) return;
+
+    const nouveauDepartement = normaliserDepartement(resultat.dptmt);
+
+    if (!nouveauDepartement) {
+      afficherErreur("Le département est obligatoire.");
       return;
     }
 
-    const data = await reponse.json().catch(() => null);
+    departementAffiche = nouveauDepartement;
+    modeAutourDeMoi = false;
 
-    if (!reponse.ok || !data || data.success !== true) {
-      throw new Error(
-        data && data.message
-          ? data.message
-          : "Impossible de charger les parcs autour de vous."
-      );
-    }
-
-    departementMembre = data.departement;
-    departementAffiche = data.departement;
-    modeAutourDeMoi = true;
-    parcsCharges = data.parcs || [];
-
-    afficherTitreDepartement();
-    afficherParcs(parcsCharges);
-
-  } catch (erreur) {
-    afficherErreur(erreur.message);
+    await chargerParcsDepartement(departementAffiche);
   }
-}
 
-async function chargerParcsDepartement(departement) {
-  try {
-    afficherChargement();
+  async function chargerParcsAutourDeMoi() {
+    try {
+      afficherChargement();
 
-    const reponse = await fetch(
-      ENDPOINT_NOUVELLE_DATE_MEMBRE + "/departement?dptmt=" + encodeURIComponent(departement),
-      {
+      const reponse = await fetch(ENDPOINT_NOUVELLE_DATE_MEMBRE + "/autour-de-moi", {
         method: "GET",
         credentials: "include"
+      });
+
+      if (gererSessionExpiree(reponse, "nouvelle-date-membre")) {
+        return;
       }
-    );
 
-    if (gererSessionExpiree(reponse, "nouvelle-date-membre")) {
-      return;
+      const data = await reponse.json().catch(() => null);
+
+      if (!reponse.ok || !data || data.success !== true) {
+        throw new Error(
+          data && data.message
+            ? data.message
+            : "Impossible de charger les parcs autour de vous."
+        );
+      }
+
+      departementMembre = data.departement;
+      departementAffiche = data.departement;
+      modeAutourDeMoi = true;
+      parcsCharges = data.parcs || [];
+
+      afficherTitreDepartement();
+      afficherParcs(parcsCharges);
+
+    } catch (erreur) {
+      afficherErreur(erreur.message);
     }
-
-    const data = await reponse.json().catch(() => null);
-
-    if (!reponse.ok || !data || data.success !== true) {
-      throw new Error(
-        data && data.message
-          ? data.message
-          : "Impossible de charger les parcs de ce département."
-      );
-    }
-
-    departementAffiche = data.departement || departement;
-    modeAutourDeMoi = false;
-    parcsCharges = data.parcs || [];
-
-    afficherTitreDepartement();
-    afficherParcs(parcsCharges);
-
-  } catch (erreur) {
-    afficherErreur(erreur.message);
   }
-}
+
+  async function chargerParcsDepartement(departement) {
+    try {
+      afficherChargement();
+
+      const reponse = await fetch(
+        ENDPOINT_NOUVELLE_DATE_MEMBRE + "/departement?dptmt=" + encodeURIComponent(departement),
+        {
+          method: "GET",
+          credentials: "include"
+        }
+      );
+
+      if (gererSessionExpiree(reponse, "nouvelle-date-membre")) {
+        return;
+      }
+
+      const data = await reponse.json().catch(() => null);
+
+      if (!reponse.ok || !data || data.success !== true) {
+        throw new Error(
+          data && data.message
+            ? data.message
+            : "Impossible de charger les parcs de ce département."
+        );
+      }
+
+      departementAffiche = data.departement || departement;
+      modeAutourDeMoi = false;
+      parcsCharges = data.parcs || [];
+
+      afficherTitreDepartement();
+      afficherParcs(parcsCharges);
+
+    } catch (erreur) {
+      afficherErreur(erreur.message);
+    }
+  }
 
   function afficherTitreDepartement() {
     if (!titreDepartement) return;
@@ -196,66 +217,64 @@ async function chargerParcsDepartement(departement) {
       return;
     }
 
-  let html = "";
+    let html = "";
 
-  for (let i = 0; i < parcs.length; i += 2) {
-    html += `
-      <tr>
-        <td>
-          ${creerCarteParc(parcs[i])}
-        </td>
-        <td>
-          ${parcs[i + 1] ? creerCarteParc(parcs[i + 1]) : ""}
-        </td>
-      </tr>
-    `;
+    for (let i = 0; i < parcs.length; i += 2) {
+      html += `
+        <tr>
+          <td>
+            ${creerCarteParc(parcs[i])}
+          </td>
+          <td>
+            ${parcs[i + 1] ? creerCarteParc(parcs[i + 1]) : ""}
+          </td>
+        </tr>
+      `;
+    }
+
+    listeParcs.innerHTML = html;
   }
 
-  listeParcs.innerHTML = html;
- }
+  function creerCarteParc(parc) {
+    const idParc = parc.idparc || parc.id;
+    const nomParc = echapperHtml(parc.nom);
+    const departement = echapperHtml(parc.dptmt || parc.departement || "");
+    const imageUrl = construireUrlImageParc(parc.imageparc);
 
+    return `
+      <article class="carte-parc-membre">
 
-function creerCarteParc(parc) {
-  const idParc = parc.idparc || parc.id;
-  const nomParc = echapperHtml(parc.nom);
-  const departement = echapperHtml(parc.dptmt || parc.departement || "");
-  const imageUrl = construireUrlImageParc(parc.imageparc);
+        <img
+          class="carte-parc-membre-image"
+          src="${imageUrl}"
+          alt="Image du parc ${nomParc}"
+        >
 
-  return `
-    <article class="carte-parc-membre">
+        <div class="carte-parc-membre-contenu">
 
-      <img
-        class="carte-parc-membre-image"
-        src="${imageUrl}"
-        alt="Image du parc ${nomParc}"
-      >
+          <h3>
+            ${nomParc} (${departement})
+          </h3>
 
-      <div class="carte-parc-membre-contenu">
+          <div class="carte-parc-membre-actions">
 
-        <h3>
-          ${nomParc} (${departement})
-        </h3>
+            <button class="lien-fiche-parc" type="button" data-action="ouvrir-fiche-parc" data-id="${idParc}">
+              Le parc
+            </button>
 
-        <div class="carte-parc-membre-actions">
+            <button class="micro-action" type="button" data-action="nouvelle-date-parc" data-id="${idParc}">
+              Nouvelle date
+            </button>
 
-          <a href="#" class="lien-fiche-parc" data-action="ouvrir-fiche-parc" data-id="${idParc}">
-            Le parc
-          </a>
-
-          <button class="micro-action" type="button" data-action="nouvelle-date-parc" data-id="${idParc}">
-            Nouvelle date
-          </button>
+          </div>
 
         </div>
 
-      </div>
-
-    </article>
-  `;
- }
+      </article>
+    `;
+  }
 
   function construireUrlImageParc(imageparc) {
-    const SITE_BASE = window.SITE_BASE || "";
     const fichier = imageparc && imageparc.trim() ? imageparc.trim() : "parc-defaut.jpg";
 
     return SITE_BASE + "/OBJETS/IMAGES/IMAGE%20PARC/" + encodeURIComponent(fichier);
@@ -317,37 +336,36 @@ function creerCarteParc(parc) {
       .replaceAll("'", "&#039;");
   }
 
-document.addEventListener("click", (event) => {
-  const lienFicheParc = event.target.closest("[data-action='ouvrir-fiche-parc']");
-  const boutonNouvelleDate = event.target.closest("[data-action='nouvelle-date-parc']");
-  const boutonFermerFiche = event.target.closest("[data-action='fermer-fiche-parc']");
+  document.addEventListener("click", (event) => {
+    const lienFicheParc = event.target.closest("[data-action='ouvrir-fiche-parc']");
+    const boutonNouvelleDate = event.target.closest("[data-action='nouvelle-date-parc']");
+    const boutonFermerFiche = event.target.closest("[data-action='fermer-fiche-parc']");
 
-  if (lienFicheParc) {
-    event.preventDefault();
+    if (lienFicheParc) {
+      event.preventDefault();
 
-    const idParc = lienFicheParc.dataset.id;
+      const idParc = lienFicheParc.dataset.id;
 
-    const parc = parcsCharges.find((item) => {
-      return String(item.idparc || item.id) === String(idParc);
-    });
+      const parc = parcsCharges.find((item) => {
+        return String(item.idparc || item.id) === String(idParc);
+      });
 
-    if (!parc) {
-      afficherErreur("Fiche parc introuvable.");
+      if (!parc) {
+        afficherErreur("Fiche parc introuvable.");
+        return;
+      }
+
+      ouvrirLightboxParc(parc);
       return;
     }
 
-    ouvrirLightboxParc(parc);
-    return;
-  }
+    if (boutonNouvelleDate) {
+      alert("La réservation de cette nouvelle date sera raccordée ensuite.");
+      return;
+    }
 
-  if (boutonNouvelleDate) {
-    alert("La réservation de cette nouvelle date sera raccordée ensuite.");
-    return;
-  }
-
-  if (boutonFermerFiche) {
-    fermerLightboxParc();
-  }
- });
-
+    if (boutonFermerFiche) {
+      fermerLightboxParc();
+    }
+  });
 })();
