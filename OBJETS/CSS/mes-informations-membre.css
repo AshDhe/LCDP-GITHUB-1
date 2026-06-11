@@ -1,11 +1,8 @@
 .table {
-  border: 5px solid red !important;
-}
-
-.table {
   width: min(100%, 920px);
   margin: 0 auto;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-large);
   overflow: hidden;
@@ -64,12 +61,18 @@
 @media (max-width: 600px) {
   .table {
     width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    border-color: var(--color-border);
+    outline: none;
   }
 
   .table th,
   .table td {
     padding: 12px 10px;
     font-size: 14px;
+    border-color: var(--color-border);
+    outline: none;
   }
 
   .table th {
