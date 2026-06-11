@@ -27,13 +27,10 @@
   const boutonModifierDepartement = document.getElementById("bouton-modifier-departement");
   const titreDepartement = document.getElementById("titre-departement-membre");
 
-let departementMembre = null;
-let departementAffiche = null;
-let modeAutourDeMoi = true;
-let parcsCharges = [];
-
-let urlPlanningParcNouvelleDateCourante = null;
-let etapePlanningParcNouvelleDate = "planning";
+  let departementMembre = null;
+  let departementAffiche = null;
+  let modeAutourDeMoi = true;
+  let parcsCharges = [];
 
   chargerParcsAutourDeMoi();
 
@@ -389,116 +386,148 @@ let etapePlanningParcNouvelleDate = "planning";
     }
   }
 
-function ouvrirLightboxPlanningParcNouvelleDate(parc) {
-  fermerLightboxChoixDate();
+  function ouvrirLightboxPlanningParcNouvelleDate(parc) {
+    fermerLightboxChoixDate();
 
-  const idParc = encodeURIComponent(parc.idparc || parc.id || "");
-  const nomParc = encodeURIComponent(parc.nom || "");
-  const departement = encodeURIComponent(parc.dptmt || parc.departement || "");
+    const idParc = encodeURIComponent(parc.idparc || parc.id || "");
+    const nomParc = encodeURIComponent(parc.nom || "");
+    const departement = encodeURIComponent(parc.dptmt || parc.departement || "");
 
-  const urlPlanning =
-    SITE_BASE +
-    "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/planning-parc-nouvelle-date.html" +
-    "?idparc=" + idParc +
-    "&nom=" + nomParc +
-    "&dptmt=" + departement;
+    const urlPlanning =
+      SITE_BASE +
+      "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/planning-parc-nouvelle-date.html" +
+      "?idparc=" + idParc +
+      "&nom=" + nomParc +
+      "&dptmt=" + departement;
 
-urlPlanningParcNouvelleDateCourante = urlPlanning;
-etapePlanningParcNouvelleDate = "planning";
+    const lightbox = document.createElement("div");
+    lightbox.id = "lightbox-planning-parc-nouvelle-date";
+    lightbox.className = "lightbox-fiche-parc-nouvelle-date-overlay";
 
-  const lightbox = document.createElement("div");
-  lightbox.id = "lightbox-planning-parc-nouvelle-date";
-  lightbox.className = "lightbox-fiche-parc-nouvelle-date-overlay";
+    lightbox.innerHTML = `
+      <div class="lightbox-fiche-parc-nouvelle-date-box" role="dialog" aria-modal="true">
 
-  lightbox.innerHTML = `
-    <div class="lightbox-fiche-parc-nouvelle-date-box" role="dialog" aria-modal="true">
+        <button
+          class="micro-action lightbox-fiche-parc-nouvelle-date-fermer"
+          type="button"
+          data-action="fermer-planning-parc-nouvelle-date"
+        >
+          Fermer
+        </button>
 
-      <button class="micro-action lightbox-fiche-parc-nouvelle-date-fermer" type="button" data-action="fermer-planning-parc-nouvelle-date">
-        Fermer
-      </button>
+        <iframe
+          class="lightbox-fiche-parc-nouvelle-date-frame"
+          src="${urlPlanning}"
+          title="Planning du parc"
+          data-url-planning="${urlPlanning}"
+          data-page-planning="planning"
+        ></iframe>
 
-      <iframe
-        class="lightbox-fiche-parc-nouvelle-date-frame"
-        src="${urlPlanning}"
-        title="Planning du parc"
-      ></iframe>
+      </div>
+    `;
 
-    </div>
-  `;
+    document.body.appendChild(lightbox);
 
-  document.body.appendChild(lightbox);
-}
+    const iframe = lightbox.querySelector("iframe");
 
-function fermerLightboxPlanningParcNouvelleDate() {
-  const lightbox = document.getElementById("lightbox-planning-parc-nouvelle-date");
-
-  if (lightbox) {
-    lightbox.remove();
+    if (iframe) {
+      iframe.addEventListener("load", () => {
+        mettreAJourEtatIframePlanning(iframe);
+      });
+    }
   }
-}
 
-function gererBoutonFermerPlanningParcNouvelleDate() {
-  if (
-    etapePlanningParcNouvelleDate === "horaire" &&
-    urlPlanningParcNouvelleDateCourante
-  ) {
+  function fermerLightboxPlanningParcNouvelleDate() {
+    const lightbox = document.getElementById("lightbox-planning-parc-nouvelle-date");
+
+    if (lightbox) {
+      lightbox.remove();
+    }
+  }
+
+  function mettreAJourEtatIframePlanning(iframe) {
+    let urlActuelle = "";
+
+    try {
+      urlActuelle = iframe.contentWindow.location.href;
+    } catch (erreur) {
+      urlActuelle = iframe.src || "";
+    }
+
+    if (urlActuelle.includes("horaire-parc-nouvelle-date.html")) {
+      iframe.dataset.pagePlanning = "horaire";
+      return;
+    }
+
+    iframe.dataset.pagePlanning = "planning";
+  }
+
+  function gererBoutonFermerPlanningParcNouvelleDate() {
     const iframe = document.querySelector(
       "#lightbox-planning-parc-nouvelle-date iframe"
     );
 
-    if (iframe) {
-      iframe.src = urlPlanningParcNouvelleDateCourante;
+    if (!iframe) {
+      fermerLightboxPlanningParcNouvelleDate();
+      return;
     }
 
-    etapePlanningParcNouvelleDate = "planning";
-    afficherBoutonFermerPlanningParcNouvelleDate(true);
-    return;
+    mettreAJourEtatIframePlanning(iframe);
+
+    if (iframe.dataset.pagePlanning === "horaire") {
+      const urlPlanning = iframe.dataset.urlPlanning;
+
+      if (urlPlanning) {
+        iframe.src = urlPlanning;
+        iframe.dataset.pagePlanning = "planning";
+        afficherBoutonFermerPlanningParcNouvelleDate(true);
+        return;
+      }
+    }
+
+    fermerLightboxPlanningParcNouvelleDate();
   }
 
-  fermerLightboxPlanningParcNouvelleDate();
-}
+  function afficherBoutonFermerPlanningParcNouvelleDate(visible) {
+    const boutonFermer = document.querySelector(
+      "#lightbox-planning-parc-nouvelle-date [data-action='fermer-planning-parc-nouvelle-date']"
+    );
 
-function afficherBoutonFermerPlanningParcNouvelleDate(visible) {
-  const boutonFermer = document.querySelector(
-    "#lightbox-planning-parc-nouvelle-date [data-action='fermer-planning-parc-nouvelle-date']"
-  );
-
-  if (boutonFermer) {
-    boutonFermer.style.visibility = visible ? "visible" : "hidden";
-  }
-}
-
-window.addEventListener("message", (event) => {
-  const data = event.data || {};
-
-  if (data.source !== "lcdp-planning-parc-nouvelle-date") {
-    return;
+    if (boutonFermer) {
+      boutonFermer.style.visibility = visible ? "visible" : "hidden";
+    }
   }
 
-  if (data.action === "masquer-fermer-planning") {
-    afficherBoutonFermerPlanningParcNouvelleDate(false);
-    return;
-  }
+  window.addEventListener("message", (event) => {
+    const data = event.data || {};
 
-  if (data.action === "afficher-fermer-planning") {
-    afficherBoutonFermerPlanningParcNouvelleDate(true);
-    return;
-  }
+    if (data.source !== "lcdp-planning-parc-nouvelle-date") {
+      return;
+    }
 
-if (data.action === "ouvrir-horaire-parc-nouvelle-date" && data.url) {
-  const iframe = document.querySelector(
-    "#lightbox-planning-parc-nouvelle-date iframe"
-  );
+    if (data.action === "masquer-fermer-planning") {
+      afficherBoutonFermerPlanningParcNouvelleDate(false);
+      return;
+    }
 
-  if (iframe) {
-    iframe.src = data.url;
-  }
+    if (data.action === "afficher-fermer-planning") {
+      afficherBoutonFermerPlanningParcNouvelleDate(true);
+      return;
+    }
 
-  etapePlanningParcNouvelleDate = "horaire";
-  afficherBoutonFermerPlanningParcNouvelleDate(true);
-}
+    if (data.action === "ouvrir-horaire-parc-nouvelle-date" && data.url) {
+      const iframe = document.querySelector(
+        "#lightbox-planning-parc-nouvelle-date iframe"
+      );
 
-});
+      if (iframe) {
+        iframe.src = data.url;
+        iframe.dataset.pagePlanning = "horaire";
+      }
+
+      afficherBoutonFermerPlanningParcNouvelleDate(true);
+    }
+  });
 
   function echapperHtml(valeur) {
     return String(valeur ?? "")
@@ -516,7 +545,7 @@ if (data.action === "ouvrir-horaire-parc-nouvelle-date" && data.url) {
     const boutonFermerChoixDate = event.target.closest("[data-action='fermer-choix-date']");
     const boutonChoixDateRapide = event.target.closest("[data-action='choisir-date-rapide']");
     const boutonFermerPlanningParcNouvelleDate = event.target.closest("[data-action='fermer-planning-parc-nouvelle-date']");
-    
+
     if (lienFicheParc) {
       event.preventDefault();
 
@@ -561,72 +590,36 @@ if (data.action === "ouvrir-horaire-parc-nouvelle-date" && data.url) {
       return;
     }
 
-if (boutonFermerPlanningParcNouvelleDate) {
-  const iframePlanning = document.querySelector(
-    "#lightbox-planning-parc-nouvelle-date iframe"
-  );
+    if (boutonFermerPlanningParcNouvelleDate) {
+      gererBoutonFermerPlanningParcNouvelleDate();
+      return;
+    }
 
-  if (!iframePlanning) {
-    fermerLightboxPlanningParcNouvelleDate();
-    return;
-  }
+    if (boutonChoixDateRapide) {
+      const choix = boutonChoixDateRapide.dataset.choix;
+      const idParc = boutonChoixDateRapide.dataset.id;
 
-  let urlActuelle = "";
+      const parc = parcsCharges.find((item) => {
+        return String(item.idparc || item.id) === String(idParc);
+      });
 
-  try {
-    urlActuelle = iframePlanning.contentWindow.location.href;
-  } catch (erreur) {
-    urlActuelle = iframePlanning.src;
-  }
+      if (!parc) {
+        afficherErreur("Parc introuvable.");
+        return;
+      }
 
-  if (urlActuelle.includes("horaire-parc-nouvelle-date.html")) {
-    const url = new URL(urlActuelle);
+      if (choix === "autre-date") {
+        ouvrirLightboxPlanningParcNouvelleDate(parc);
+        return;
+      }
 
-    const idParc = url.searchParams.get("idparc") || "";
-    const nomParc = url.searchParams.get("nom") || "";
-    const departement = url.searchParams.get("dptmt") || "";
+      console.log("Choix nouvelle date :", {
+        choix: choix,
+        idparc: idParc
+      });
 
-    iframePlanning.src =
-      SITE_BASE +
-      "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/planning-parc-nouvelle-date.html" +
-      "?idparc=" + encodeURIComponent(idParc) +
-      "&nom=" + encodeURIComponent(nomParc) +
-      "&dptmt=" + encodeURIComponent(departement);
-
-    return;
-  }
-
-  fermerLightboxPlanningParcNouvelleDate();
-  return;
-}
-
-if (boutonChoixDateRapide) {
-  const choix = boutonChoixDateRapide.dataset.choix;
-  const idParc = boutonChoixDateRapide.dataset.id;
-
-  const parc = parcsCharges.find((item) => {
-    return String(item.idparc || item.id) === String(idParc);
+      alert("Choix sélectionné : " + choix + " pour le parc " + idParc);
+      return;
+    }
   });
-
-  if (!parc) {
-    afficherErreur("Parc introuvable.");
-    return;
-  }
-
-  if (choix === "autre-date") {
-    ouvrirLightboxPlanningParcNouvelleDate(parc);
-    return;
-  }
-
-  console.log("Choix nouvelle date :", {
-    choix: choix,
-    idparc: idParc
-  });
-
-  alert("Choix sélectionné : " + choix + " pour le parc " + idParc);
-  return;
-  }
-
-  });
-
 })();
