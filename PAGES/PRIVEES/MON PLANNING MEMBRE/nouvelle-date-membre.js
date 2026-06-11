@@ -447,8 +447,7 @@ function fermerLightboxPlanningParcNouvelleDate() {
     const boutonFermerChoixDate = event.target.closest("[data-action='fermer-choix-date']");
     const boutonChoixDateRapide = event.target.closest("[data-action='choisir-date-rapide']");
     const boutonFermerPlanningParcNouvelleDate = event.target.closest("[data-action='fermer-planning-parc-nouvelle-date']");
-    const boutonFermerPlanningParcNouvelleDate = event.target.closest("[data-action='fermer-planning-parc-nouvelle-date']");
-
+    
     if (lienFicheParc) {
       event.preventDefault();
 
