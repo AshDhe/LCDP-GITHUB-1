@@ -7,21 +7,22 @@
 
   <title>Mon planning membre - La Clé du Parc</title>
 
-<script>
-  window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+  <script>
+    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
 
-  document.write(
-    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
-  );
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
+    );
 
-  document.write(
-    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mes-informations-membre.css">'
-  );
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mes-informations-membre.css">'
+    );
 
-  document.write(
-    '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mon-planning-membre.css">'
-  );
-</script></head>
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mon-planning-membre.css">'
+    );
+  </script>
+</head>
 
 <body>
 
@@ -47,30 +48,30 @@
 
       <table class="table" id="table-planning-membre" aria-label="Planning membre">
 
-<thead>
-  <tr>
-    <th>
-      <a class="button" id="bouton-nouvelle-date-planning" href="/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/nouvelle-date-membre.html">
-        Nouvelle date
-      </button>
-    </th>
+        <thead>
+          <tr>
+            <th>
+              <a class="button" id="bouton-nouvelle-date-planning" href="/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/nouvelle-date-membre.html">
+                Nouvelle date
+              </a>
+            </th>
 
-    <th>
-      <span id="titre-planning-membre">Mon planning</span>
-    </th>
+            <th>
+              <span id="titre-planning-membre">Mon planning</span>
+            </th>
 
-    <th>
-      <a href="#" id="planning-membre-passe" data-affichage="passe">
-        Passé
-      </a>
-    </th>
-  </tr>
-</thead>
+            <th>
+              <a href="#" id="planning-membre-passe" data-affichage="passe">
+                Passé
+              </a>
+            </th>
+          </tr>
+        </thead>
 
         <tbody id="liste-planning-membre">
 
           <tr>
-            <td colspan="2">
+            <td colspan="3">
               Aucune date réservée pour le moment.
             </td>
           </tr>
