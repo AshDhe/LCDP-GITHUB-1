@@ -1,3 +1,19 @@
+.section-recontact a#bouton-nouvelle-date-planning.button,
+.section-recontact a#bouton-nouvelle-date-planning.button:link,
+.section-recontact a#bouton-nouvelle-date-planning.button:visited,
+.section-recontact a#bouton-nouvelle-date-planning.button:hover,
+.section-recontact a#bouton-nouvelle-date-planning.button:active {
+  min-height: 68px;
+  padding: 18px 34px;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 auto;
+  white-space: nowrap;
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  color: var(--color-text);
+}
+
 #table-planning-membre {
   table-layout: fixed;
 }
