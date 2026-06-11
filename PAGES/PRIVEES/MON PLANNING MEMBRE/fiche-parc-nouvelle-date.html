@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fiche parc - La Clé du Parc</title>
+
+  <script>
+    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
+    );
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/fiche-parc-nouvelle-date.css">'
+    );
+  </script>
+</head>
+
+<body>
+
+  <main class="site-page fiche-parc-nouvelle-date-page">
+
+    <section class="fiche-parc-nouvelle-date-hero">
+
+      <h1 id="titre-fiche-parc-nouvelle-date">
+        Parc
+      </h1>
+
+      <p id="departement-fiche-parc-nouvelle-date">
+      </p>
+
+    </section>
+
+    <section class="fiche-parc-nouvelle-date-section">
+      <h2>
+        Présentation
+      </h2>
+
+      <p>
+        La présentation du parc sera affichée ici.
+      </p>
+    </section>
+
+    <section class="fiche-parc-nouvelle-date-section">
+      <h2>
+        Galerie photo
+      </h2>
+
+      <p>
+        La galerie photo du parc sera affichée ici.
+      </p>
+    </section>
+
+    <section class="fiche-parc-nouvelle-date-section">
+      <h2>
+        Coordonnées
+      </h2>
+
+      <p>
+        La carte et les coordonnées du parc seront affichées ici.
+      </p>
+    </section>
+
+    <section class="fiche-parc-nouvelle-date-section">
+      <h2>
+        Contact La Clé du Parc
+      </h2>
+
+      <p>
+        Le contact référent sera affiché ici.
+      </p>
+    </section>
+
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    const nomParc = params.get("nom") || "";
+    const departement = params.get("dptmt") || "";
+
+    const titre = document.getElementById("titre-fiche-parc-nouvelle-date");
+    const dptmt = document.getElementById("departement-fiche-parc-nouvelle-date");
+
+    if (titre) {
+      titre.textContent = nomParc ? "Parc de " + nomParc : "Parc";
+    }
+
+    if (dptmt) {
+      dptmt.textContent = departement ? "Département " + departement : "";
+    }
+  </script>
+
+</body>
+</html>

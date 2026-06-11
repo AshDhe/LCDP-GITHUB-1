@@ -280,44 +280,42 @@
     return SITE_BASE + "/OBJETS/IMAGES/IMAGE%20PARC/" + encodeURIComponent(fichier);
   }
 
-  function ouvrirLightboxParc(parc) {
-    fermerLightboxParc();
+function ouvrirLightboxParc(parc) {
+  fermerLightboxParc();
 
-    const nomParc = echapperHtml(parc.nom);
-    const departement = echapperHtml(parc.dptmt || parc.departement || "");
-    const presentation = echapperHtml(parc.prez || parc.description || "Présentation du parc à renseigner.");
-    const imageUrl = construireUrlImageParc(parc.imageparc);
+  const idParc = encodeURIComponent(parc.idparc || parc.id || "");
+  const nomParc = encodeURIComponent(parc.nom || "");
+  const departement = encodeURIComponent(parc.dptmt || parc.departement || "");
 
-    const lightbox = document.createElement("div");
-    lightbox.id = "lightbox-fiche-parc";
-    lightbox.className = "lightbox-parc-overlay";
+  const urlFiche =
+    SITE_BASE +
+    "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/fiche-parc-nouvelle-date.html" +
+    "?idparc=" + idParc +
+    "&nom=" + nomParc +
+    "&dptmt=" + departement;
 
-    lightbox.innerHTML = `
-      <div class="lightbox-parc-box" role="dialog" aria-modal="true">
+  const lightbox = document.createElement("div");
+  lightbox.id = "lightbox-fiche-parc";
+  lightbox.className = "lightbox-fiche-parc-nouvelle-date-overlay";
 
-        <button class="micro-action lightbox-parc-fermer" type="button" data-action="fermer-fiche-parc">
-          Fermer
-        </button>
+  lightbox.innerHTML = `
+    <div class="lightbox-fiche-parc-nouvelle-date-box" role="dialog" aria-modal="true">
 
-        <img
-          class="lightbox-parc-image"
-          src="${imageUrl}"
-          alt="Image du parc ${nomParc}"
-        >
+      <button class="micro-action lightbox-fiche-parc-nouvelle-date-fermer" type="button" data-action="fermer-fiche-parc">
+        Fermer
+      </button>
 
-        <h2>
-          ${nomParc} (${departement})
-        </h2>
+      <iframe
+        class="lightbox-fiche-parc-nouvelle-date-frame"
+        src="${urlFiche}"
+        title="Fiche du parc"
+      ></iframe>
 
-        <p>
-          ${presentation}
-        </p>
+    </div>
+  `;
 
-      </div>
-    `;
-
-    document.body.appendChild(lightbox);
-  }
+  document.body.appendChild(lightbox);
+}
 
   function fermerLightboxParc() {
     const lightbox = document.getElementById("lightbox-fiche-parc");
