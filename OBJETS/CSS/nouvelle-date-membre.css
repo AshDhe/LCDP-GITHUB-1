@@ -1,7 +1,9 @@
 .section-actions-nouvelle-date {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: var(--space-3) 0 var(--space-5);
-  text-align: center;
 }
 
 .section-fermeture-formulaire {
@@ -15,8 +17,9 @@
 #lien-fermer-nouvelle-date:hover,
 #lien-fermer-nouvelle-date:active {
   position: absolute;
-  top: var(--space-3);
   right: 0;
+  top: 50%;
+  transform: translateY(-50%);
   text-decoration: none !important;
   text-decoration-line: none !important;
   color: var(--color-text);
