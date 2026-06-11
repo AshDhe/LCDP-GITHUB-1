@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Horaire d'arrivée - La Clé du Parc</title>
+
+  <script>
+    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
+    );
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/horaire-parc-nouvelle-date.css">'
+    );
+  </script>
+</head>
+
+<body>
+
+  <main class="site-page horaire-parc-nouvelle-date-page">
+
+    <section class="horaire-parc-entete">
+
+      <h1 id="titre-horaire-parc">
+        Votre heure d'arrivée
+      </h1>
+
+      <p id="infos-horaire-parc">
+      </p>
+
+    </section>
+
+    <section class="horaire-parc-section" aria-label="Choix de l'heure d'arrivée">
+
+      <div class="horaire-parc-grille" id="grille-horaires-parc">
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    const idParc = params.get("idparc") || "";
+    const nomParc = params.get("nom") || "";
+    const departement = params.get("dptmt") || "";
+    const dateChoisie = params.get("date") || "";
+
+    const titreHoraire = document.getElementById("titre-horaire-parc");
+    const infosHoraire = document.getElementById("infos-horaire-parc");
+    const grilleHoraires = document.getElementById("grille-horaires-parc");
+
+    const heuresDisponibles = genererHeuresDisponibles();
+
+    if (titreHoraire) {
+      titreHoraire.textContent = dateChoisie
+        ? "Votre heure d'arrivée le " + formaterDateFr(dateChoisie)
+        : "Votre heure d'arrivée";
+    }
+
+    if (infosHoraire) {
+      const details = [];
+
+      if (nomParc) {
+        details.push("Parc de " + nomParc);
+      }
+
+      if (departement) {
+        details.push("Département " + departement);
+      }
+
+      infosHoraire.textContent = details.join(" · ");
+    }
+
+    afficherHoraires();
+
+    function genererHeuresDisponibles() {
+      const heures = [];
+
+      for (let totalMinutes = 6 * 60; totalMinutes <= 21 * 60; totalMinutes += 30) {
+        const heure = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+
+        heures.push(
+          String(heure).padStart(2, "0") + ":" + String(minutes).padStart(2, "0")
+        );
+      }
+
+      return heures;
+    }
+
+    function afficherHoraires() {
+      if (!grilleHoraires) return;
+
+      if (!heuresDisponibles.length) {
+        grilleHoraires.innerHTML = `
+          <p>
+            Aucun horaire d'arrivée n'est disponible pour cette date.
+          </p>
+        `;
+        return;
+      }
+
+      grilleHoraires.innerHTML = heuresDisponibles.map((heure) => {
+        return `
+          <button
+            class="horaire-parc-bouton"
+            type="button"
+            data-action="choisir-heure-arrivee"
+            data-heure="${heure}"
+          >
+            ${formaterHeureAffichee(heure)}
+          </button>
+        `;
+      }).join("");
+    }
+
+    function ouvrirConfirmationHeure(heure) {
+      fermerConfirmationHeure();
+
+      const plagebookd = calculerPlageBookd(heure);
+
+      const lightbox = document.createElement("div");
+      lightbox.id = "dialog-confirmation-heure";
+      lightbox.className = "dialog-overlay";
+
+      lightbox.innerHTML = `
+        <div class="dialog-box" role="dialog" aria-modal="true">
+
+          <h2>
+            Confirmer l'heure d'arrivée
+          </h2>
+
+          <p>
+            Vous avez choisi le ${formaterDateFr(dateChoisie)} à ${formaterHeureAffichee(heure)}.
+          </p>
+
+          <div class="dialog-actions">
+
+            <button class="button button-secondaire" type="button" data-action="annuler-confirmation-heure">
+              Annuler
+            </button>
+
+            <button
+              class="button"
+              type="button"
+              data-action="valider-confirmation-heure"
+              data-heure="${heure}"
+              data-plagebookd="${plagebookd}"
+            >
+              Confirmer
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+      document.body.appendChild(lightbox);
+    }
+
+    function fermerConfirmationHeure() {
+      const lightbox = document.getElementById("dialog-confirmation-heure");
+
+      if (lightbox) {
+        lightbox.remove();
+      }
+    }
+
+    function calculerPlageBookd(heure) {
+      const [heures, minutes] = heure.split(":").map(Number);
+      const totalMinutes = heures * 60 + minutes;
+
+      if (totalMinutes < 13 * 60) {
+        return "plage1";
+      }
+
+      if (totalMinutes < 19 * 60) {
+        return "plage2";
+      }
+
+      return "plage3";
+    }
+
+    function construireDateBookd(dateIso, heure) {
+      return dateIso + "T" + heure + ":00";
+    }
+
+    function formaterDateFr(dateIso) {
+      if (!dateIso) return "";
+
+      const date = new Date(dateIso + "T12:00:00");
+
+      return date.toLocaleDateString("fr-FR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+    }
+
+    function formaterHeureAffichee(heure) {
+      return heure.replace(":", "h");
+    }
+
+    document.addEventListener("click", (event) => {
+      const boutonHeure = event.target.closest("[data-action='choisir-heure-arrivee']");
+      const boutonAnnuler = event.target.closest("[data-action='annuler-confirmation-heure']");
+      const boutonValider = event.target.closest("[data-action='valider-confirmation-heure']");
+
+      if (boutonHeure) {
+        ouvrirConfirmationHeure(boutonHeure.dataset.heure);
+        return;
+      }
+
+      if (boutonAnnuler) {
+        fermerConfirmationHeure();
+        return;
+      }
+
+      if (boutonValider) {
+        const heure = boutonValider.dataset.heure;
+        const plagebookd = boutonValider.dataset.plagebookd;
+        const datebookd = construireDateBookd(dateChoisie, heure);
+
+        console.log("Réservation à enregistrer ensuite :", {
+          idparc: idParc,
+          datebookd: datebookd,
+          plagebookd: plagebookd
+        });
+
+        alert("Réservation à raccorder ensuite : " + formaterDateFr(dateChoisie) + " à " + formaterHeureAffichee(heure));
+
+        fermerConfirmationHeure();
+        return;
+      }
+    });
+  </script>
+
+</body>
+</html>

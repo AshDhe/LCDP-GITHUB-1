@@ -183,6 +183,97 @@
     }
 
     afficherMois();
+  
+
+function ouvrirConfirmationDate(dateIso) {
+  fermerConfirmationDate();
+
+  const lightbox = document.createElement("div");
+  lightbox.id = "dialog-confirmation-date";
+  lightbox.className = "dialog-overlay";
+
+  lightbox.innerHTML = `
+    <div class="dialog-box" role="dialog" aria-modal="true">
+
+      <h2>
+        Confirmer la date
+      </h2>
+
+      <p>
+        Vous avez choisi le ${formaterDateFr(dateIso)}.
+      </p>
+
+      <div class="dialog-actions">
+
+        <button class="button button-secondaire" type="button" data-action="annuler-confirmation-date">
+          Annuler
+        </button>
+
+        <button class="button" type="button" data-action="valider-confirmation-date" data-date="${dateIso}">
+          Continuer
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(lightbox);
+}
+
+function fermerConfirmationDate() {
+  const lightbox = document.getElementById("dialog-confirmation-date");
+
+  if (lightbox) {
+    lightbox.remove();
+  }
+}
+
+function ouvrirPageHoraire(dateIso) {
+  window.location.href =
+    window.SITE_BASE +
+    "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/horaire-parc-nouvelle-date.html" +
+    "?idparc=" + encodeURIComponent(idParc) +
+    "&nom=" + encodeURIComponent(nomParc) +
+    "&dptmt=" + encodeURIComponent(departement) +
+    "&date=" + encodeURIComponent(dateIso);
+}
+
+function formaterDateFr(dateIso) {
+  const date = new Date(dateIso + "T12:00:00");
+
+  return date.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+
+document.addEventListener("click", (event) => {
+  const boutonJour = event.target.closest("[data-date]");
+  const boutonAnnulerDate = event.target.closest("[data-action='annuler-confirmation-date']");
+  const boutonValiderDate = event.target.closest("[data-action='valider-confirmation-date']");
+
+  if (boutonJour && !boutonJour.disabled) {
+    ouvrirConfirmationDate(boutonJour.dataset.date);
+    return;
+  }
+
+  if (boutonAnnulerDate) {
+    fermerConfirmationDate();
+    return;
+  }
+
+  if (boutonValiderDate) {
+    ouvrirPageHoraire(boutonValiderDate.dataset.date);
+    return;
+  }
+});
+
+
+
   </script>
 
 </body>
