@@ -1,14 +1,14 @@
 .carte-parc-membre {
   display: grid;
-  grid-template-columns: 120px 1fr;
+  grid-template-columns: 110px 1fr;
   gap: var(--space-3);
   align-items: center;
   text-align: left;
 }
 
 .carte-parc-membre-image {
-  width: 120px;
-  height: 82px;
+  width: 110px;
+  height: 78px;
   border-radius: var(--radius-medium);
   object-fit: cover;
   object-position: center center;
@@ -25,21 +25,22 @@
 
 .carte-parc-membre h3 {
   margin: 0 0 var(--space-2);
-  font-size: 22px;
+  font-size: 19px;
   line-height: 1.15;
 }
 
 .carte-parc-membre-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
 .lien-fiche-parc {
   display: inline-flex;
   align-items: center;
   min-height: 34px;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.2;
   color: var(--color-text);
   text-decoration: underline;
@@ -55,25 +56,35 @@
 
 @media (max-width: 600px) {
   .carte-parc-membre {
-    grid-template-columns: 92px 1fr;
+    grid-template-columns: 82px 1fr;
     gap: var(--space-2);
+    align-items: center;
   }
 
   .carte-parc-membre-image {
-    width: 92px;
-    height: 68px;
+    width: 82px;
+    height: 62px;
+    border-radius: var(--radius-small);
   }
 
   .carte-parc-membre h3 {
-    font-size: 18px;
+    font-size: 17px;
+    line-height: 1.15;
+    margin-bottom: 8px;
   }
 
   .carte-parc-membre-actions {
-    gap: var(--space-2);
-    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .lien-fiche-parc {
-    font-size: 16px;
+    min-height: 30px;
+    font-size: 15px;
+  }
+
+  .carte-parc-membre-actions .micro-action {
+    min-height: 30px;
+    padding: 5px 10px;
+    font-size: 13px;
   }
 }

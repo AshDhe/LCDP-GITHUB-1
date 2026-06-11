@@ -81,7 +81,9 @@
 @media (max-width: 600px) {
 
   .section-actions-nouvelle-date {
-    padding-top: var(--space-3);
+    position: relative;
+    padding: var(--space-3) 0 var(--space-4);
+    text-align: center;
   }
 
   .section-fermeture-formulaire {
@@ -89,13 +91,17 @@
   }
 
   #lien-fermer-nouvelle-date {
-    top: var(--space-3);
+    position: absolute;
+    top: 0;
     right: 0;
+    text-decoration: none !important;
   }
 
   #bouton-demander-ia {
-    width: 100%;
-    margin-top: var(--space-5);
+    width: min(100%, 340px);
+    min-height: 56px;
+    padding: 14px 20px;
+    font-size: 17px;
   }
 
   #table-nouvelle-date-membre thead th {
@@ -105,5 +111,43 @@
 
   #titre-departement-membre {
     font-size: 24px;
+  }
+
+  #table-nouvelle-date-membre {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  #table-nouvelle-date-membre thead,
+  #table-nouvelle-date-membre tbody,
+  #table-nouvelle-date-membre tr,
+  #table-nouvelle-date-membre th,
+  #table-nouvelle-date-membre td {
+    display: block;
+    width: 100% !important;
+  }
+
+  #table-nouvelle-date-membre thead th {
+    text-align: center !important;
+    border-right: none !important;
+  }
+
+  #table-nouvelle-date-membre thead th:first-child {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  #titre-departement-membre {
+    font-size: 24px;
+    line-height: 1.15;
+  }
+
+  #bouton-modifier-departement {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  #table-nouvelle-date-membre tbody td {
+    padding: 14px 10px;
+    border-right: none !important;
   }
 }
