@@ -493,10 +493,11 @@ p {
 }
 
 
-/* MENUS DE NAVIGATION BAS DE PAGE */
+/* MENUS DE NAVIGATION BAS DE PAGE - MOBILE FIRST */
 
 .exit-menu-bas {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: stretch;
   gap: var(--space-3);
@@ -505,16 +506,17 @@ p {
 
 .exit-menu-bas h2 {
   margin: 0;
-  width: 300px;
+  width: 100%;
   display: flex;
-  font-size: 18px;
+  font-size: 19px;
   line-height: 1.25;
 }
 
 .exit-menu-bas h2 a {
   width: 100%;
+  min-height: 64px;
+  padding: 17px 22px;
 }
-
 
 /* LIGHTBOX */
 
@@ -1041,9 +1043,9 @@ p {
   }
 
 
-  /* RESPONSIVE - MENUS DE NAVIGATION BAS DE PAGE */
+/* RESPONSIVE - MENUS DE NAVIGATION BAS DE PAGE */
 
-  .exit-menu-bas {
+.exit-menu-bas {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1065,7 +1067,6 @@ p {
   min-height: 64px;
   padding: 17px 22px;
 }
-
 
 
   /* RESPONSIVE - LIGHTBOX */
