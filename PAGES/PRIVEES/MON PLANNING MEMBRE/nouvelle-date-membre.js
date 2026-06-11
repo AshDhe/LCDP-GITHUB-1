@@ -280,45 +280,106 @@
     return SITE_BASE + "/OBJETS/IMAGES/IMAGE%20PARC/" + encodeURIComponent(fichier);
   }
 
-function ouvrirLightboxParc(parc) {
-  fermerLightboxParc();
+  function ouvrirLightboxParc(parc) {
+    fermerLightboxParc();
 
-  const idParc = encodeURIComponent(parc.idparc || parc.id || "");
-  const nomParc = encodeURIComponent(parc.nom || "");
-  const departement = encodeURIComponent(parc.dptmt || parc.departement || "");
+    const idParc = encodeURIComponent(parc.idparc || parc.id || "");
+    const nomParc = encodeURIComponent(parc.nom || "");
+    const departement = encodeURIComponent(parc.dptmt || parc.departement || "");
 
-  const urlFiche =
-    SITE_BASE +
-    "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/fiche-parc-nouvelle-date.html" +
-    "?idparc=" + idParc +
-    "&nom=" + nomParc +
-    "&dptmt=" + departement;
+    const urlFiche =
+      SITE_BASE +
+      "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/fiche-parc-nouvelle-date.html" +
+      "?idparc=" + idParc +
+      "&nom=" + nomParc +
+      "&dptmt=" + departement;
 
-  const lightbox = document.createElement("div");
-  lightbox.id = "lightbox-fiche-parc";
-  lightbox.className = "lightbox-fiche-parc-nouvelle-date-overlay";
+    const lightbox = document.createElement("div");
+    lightbox.id = "lightbox-fiche-parc";
+    lightbox.className = "lightbox-fiche-parc-nouvelle-date-overlay";
 
-  lightbox.innerHTML = `
-    <div class="lightbox-fiche-parc-nouvelle-date-box" role="dialog" aria-modal="true">
+    lightbox.innerHTML = `
+      <div class="lightbox-fiche-parc-nouvelle-date-box" role="dialog" aria-modal="true">
 
-      <button class="micro-action lightbox-fiche-parc-nouvelle-date-fermer" type="button" data-action="fermer-fiche-parc">
-        Fermer
-      </button>
+        <button class="micro-action lightbox-fiche-parc-nouvelle-date-fermer" type="button" data-action="fermer-fiche-parc">
+          Fermer
+        </button>
 
-      <iframe
-        class="lightbox-fiche-parc-nouvelle-date-frame"
-        src="${urlFiche}"
-        title="Fiche du parc"
-      ></iframe>
+        <iframe
+          class="lightbox-fiche-parc-nouvelle-date-frame"
+          src="${urlFiche}"
+          title="Fiche du parc"
+        ></iframe>
 
-    </div>
-  `;
+      </div>
+    `;
 
-  document.body.appendChild(lightbox);
-}
+    document.body.appendChild(lightbox);
+  }
 
   function fermerLightboxParc() {
     const lightbox = document.getElementById("lightbox-fiche-parc");
+
+    if (lightbox) {
+      lightbox.remove();
+    }
+  }
+
+  function ouvrirLightboxChoixDate(parc) {
+    fermerLightboxChoixDate();
+
+    const idParc = echapperHtml(parc.idparc || parc.id || "");
+    const nomParc = echapperHtml(parc.nom || "ce parc");
+
+    const lightbox = document.createElement("div");
+    lightbox.id = "lightbox-choix-date";
+    lightbox.className = "dialog-overlay";
+
+    lightbox.innerHTML = `
+      <div class="dialog-box" role="dialog" aria-modal="true" aria-labelledby="titre-choix-date">
+
+        <button
+          class="micro-action"
+          type="button"
+          data-action="fermer-choix-date"
+          aria-label="Fermer"
+          style="float: right; min-width: 40px; min-height: 40px; padding: 6px 12px; font-size: 24px; line-height: 1;"
+        >
+          ×
+        </button>
+
+        <h2 id="titre-choix-date">
+          Nouvelle date
+        </h2>
+
+        <p>
+          Choisissez une date pour ${nomParc}.
+        </p>
+
+        <div class="dialog-actions">
+
+          <button class="button" type="button" data-action="choisir-date-rapide" data-choix="aujourdhui" data-id="${idParc}">
+            Aujourd'hui
+          </button>
+
+          <button class="button" type="button" data-action="choisir-date-rapide" data-choix="demain" data-id="${idParc}">
+            Demain
+          </button>
+
+          <button class="button button-secondaire" type="button" data-action="choisir-date-rapide" data-choix="autre-date" data-id="${idParc}">
+            Autre date
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(lightbox);
+  }
+
+  function fermerLightboxChoixDate() {
+    const lightbox = document.getElementById("lightbox-choix-date");
 
     if (lightbox) {
       lightbox.remove();
@@ -338,6 +399,8 @@ function ouvrirLightboxParc(parc) {
     const lienFicheParc = event.target.closest("[data-action='ouvrir-fiche-parc']");
     const boutonNouvelleDate = event.target.closest("[data-action='nouvelle-date-parc']");
     const boutonFermerFiche = event.target.closest("[data-action='fermer-fiche-parc']");
+    const boutonFermerChoixDate = event.target.closest("[data-action='fermer-choix-date']");
+    const boutonChoixDateRapide = event.target.closest("[data-action='choisir-date-rapide']");
 
     if (lienFicheParc) {
       event.preventDefault();
@@ -358,12 +421,42 @@ function ouvrirLightboxParc(parc) {
     }
 
     if (boutonNouvelleDate) {
-      alert("La réservation de cette nouvelle date sera raccordée ensuite.");
+      const idParc = boutonNouvelleDate.dataset.id;
+
+      const parc = parcsCharges.find((item) => {
+        return String(item.idparc || item.id) === String(idParc);
+      });
+
+      if (!parc) {
+        afficherErreur("Parc introuvable.");
+        return;
+      }
+
+      ouvrirLightboxChoixDate(parc);
       return;
     }
 
     if (boutonFermerFiche) {
       fermerLightboxParc();
+      return;
+    }
+
+    if (boutonFermerChoixDate) {
+      fermerLightboxChoixDate();
+      return;
+    }
+
+    if (boutonChoixDateRapide) {
+      const choix = boutonChoixDateRapide.dataset.choix;
+      const idParc = boutonChoixDateRapide.dataset.id;
+
+      console.log("Choix nouvelle date :", {
+        choix: choix,
+        idparc: idParc
+      });
+
+      alert("Choix sélectionné : " + choix + " pour le parc " + idParc);
+      return;
     }
   });
 })();
