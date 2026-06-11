@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       listeParcs.innerHTML = `
         <tr>
           <td colspan="2">
-            Aucun parc trouvé dans ce département.
+            Il n'y a pas de parc par ici.
           </td>
         </tr>
       `;
