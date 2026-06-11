@@ -36,8 +36,17 @@
   min-height: 68px;
   padding: 18px 34px;
   font-size: 22px;
+  font-weight: 700;
   margin: 0 auto;
   white-space: nowrap;
+  text-decoration: none !important;
+}
+
+#bouton-nouvelle-date-planning:hover,
+#bouton-nouvelle-date-planning:visited,
+#bouton-nouvelle-date-planning:active {
+  text-decoration: none !important;
+  color: var(--color-text);
 }
 
 .carte-planning-membre p {
