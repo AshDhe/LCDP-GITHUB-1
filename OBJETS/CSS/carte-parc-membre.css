@@ -20,11 +20,14 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
   min-width: 0;
+  height: 100%;
 }
 
 .carte-parc-membre h3 {
-  margin: 0 0 var(--space-2);
+  margin: 0;
   font-size: 19px;
   line-height: 1.15;
 }
@@ -33,18 +36,23 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  flex-wrap: wrap;
 }
 
 .lien-fiche-parc {
   display: inline-flex;
   align-items: center;
   min-height: 34px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-main);
   font-size: 16px;
   line-height: 1.2;
+  font-weight: 400;
   color: var(--color-text);
   text-decoration: underline;
   text-underline-offset: 4px;
+  cursor: pointer;
 }
 
 .carte-parc-membre-actions .micro-action {
@@ -67,10 +75,13 @@
     border-radius: var(--radius-small);
   }
 
+  .carte-parc-membre-contenu {
+    gap: 6px;
+  }
+
   .carte-parc-membre h3 {
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.15;
-    margin-bottom: 8px;
   }
 
   .carte-parc-membre-actions {
