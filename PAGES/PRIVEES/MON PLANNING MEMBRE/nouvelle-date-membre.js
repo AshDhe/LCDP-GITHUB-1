@@ -566,11 +566,21 @@ if (boutonFermerPlanningParcNouvelleDate) {
     "#lightbox-planning-parc-nouvelle-date iframe"
   );
 
-  if (
-    iframePlanning &&
-    iframePlanning.src.includes("horaire-parc-nouvelle-date.html")
-  ) {
-    const url = new URL(iframePlanning.src);
+  if (!iframePlanning) {
+    fermerLightboxPlanningParcNouvelleDate();
+    return;
+  }
+
+  let urlActuelle = "";
+
+  try {
+    urlActuelle = iframePlanning.contentWindow.location.href;
+  } catch (erreur) {
+    urlActuelle = iframePlanning.src;
+  }
+
+  if (urlActuelle.includes("horaire-parc-nouvelle-date.html")) {
+    const url = new URL(urlActuelle);
 
     const idParc = url.searchParams.get("idparc") || "";
     const nomParc = url.searchParams.get("nom") || "";
