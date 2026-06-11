@@ -1126,7 +1126,7 @@ p {
   }
 
   .dialog-actions {
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: var(--space-2);
   }
 
