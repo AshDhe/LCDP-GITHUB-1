@@ -81,43 +81,133 @@ document.addEventListener("DOMContentLoaded", () => {
     listeParcs.innerHTML = parcsFiltres.map(creerCarteParc).join("");
   }
 
-  function creerCarteParc(parc) {
-    return `
-      <tr>
-        <td colspan="2">
+function creerCarteParc(parc) {
+  const idParc = parc.idparc || parc.id;
+  const nomParc = echapperHtml(parc.nom);
+  const departement = echapperHtml(parc.dptmt || parc.departement || "");
+  const imageUrl = construireUrlImageParc(parc.imageparc);
 
-          <article class="carte-parc-membre">
+  return `
+    <tr>
+      <td colspan="2">
+
+        <article class="carte-parc-membre">
+
+          <img
+            class="carte-parc-membre-image"
+            src="${imageUrl}"
+            alt="Image du parc ${nomParc}"
+          >
+
+          <div class="carte-parc-membre-contenu">
 
             <h3>
-              ${parc.nom}
+              ${nomParc} (${departement})
             </h3>
 
-            <p>
-              ${parc.ville} (${parc.departement})
-            </p>
+            <a href="#" class="lien-fiche-parc" data-action="ouvrir-fiche-parc" data-id="${idParc}">
+              Le parc
+            </a>
 
-            <p>
-              ${parc.description}
-            </p>
-
-            <button class="micro-action" type="button" data-action="voir-disponibilites" data-id="${parc.id}">
-              Voir les disponibilités
+            <button class="micro-action" type="button" data-action="nouvelle-date-parc" data-id="${idParc}">
+              Nouvelle date
             </button>
 
-          </article>
+          </div>
 
-        </td>
-      </tr>
-    `;
+        </article>
+
+      </td>
+    </tr>
+  `;
+}
+
+function construireUrlImageParc(imageparc) {
+  const SITE_BASE = window.SITE_BASE || "";
+  const fichier = imageparc && imageparc.trim() ? imageparc.trim() : "parc-defaut.jpg";
+
+  return SITE_BASE + "/OBJETS/IMAGES/IMAGE%20PARC/" + encodeURIComponent(fichier);
+}
+
+function echapperHtml(valeur) {
+  return String(valeur ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function ouvrirLightboxParc(parc) {
+  fermerLightboxParc();
+
+  const nomParc = echapperHtml(parc.nom);
+  const departement = echapperHtml(parc.dptmt || parc.departement || "");
+  const presentation = echapperHtml(parc.prez || parc.description || "Présentation du parc à renseigner.");
+  const imageUrl = construireUrlImageParc(parc.imageparc);
+
+  const lightbox = document.createElement("div");
+  lightbox.id = "lightbox-fiche-parc";
+  lightbox.className = "lightbox-parc-overlay";
+
+  lightbox.innerHTML = `
+    <div class="lightbox-parc-box" role="dialog" aria-modal="true">
+
+      <button class="micro-action lightbox-parc-fermer" type="button" data-action="fermer-fiche-parc">
+        Fermer
+      </button>
+
+      <img
+        class="lightbox-parc-image"
+        src="${imageUrl}"
+        alt="Image du parc ${nomParc}"
+      >
+
+      <h2>
+        ${nomParc} (${departement})
+      </h2>
+
+      <p>
+        ${presentation}
+      </p>
+
+    </div>
+  `;
+
+  document.body.appendChild(lightbox);
+}
+
+function fermerLightboxParc() {
+  const lightbox = document.getElementById("lightbox-fiche-parc");
+
+  if (lightbox) {
+    lightbox.remove();
+  }
+}
+
+document.addEventListener("click", (event) => {
+  const lienFicheParc = event.target.closest("[data-action='ouvrir-fiche-parc']");
+  const boutonNouvelleDate = event.target.closest("[data-action='nouvelle-date-parc']");
+  const boutonFermerFiche = event.target.closest("[data-action='fermer-fiche-parc']");
+
+  if (lienFicheParc) {
+    event.preventDefault();
+
+    const idParc = lienFicheParc.dataset.id;
+    const parc = parcsDemo.find((item) => String(item.idparc || item.id) === String(idParc));
+
+    if (!parc) return;
+
+    ouvrirLightboxParc(parc);
+    return;
   }
 
-  document.addEventListener("click", (event) => {
-    const boutonDisponibilites = event.target.closest("[data-action='voir-disponibilites']");
+  if (boutonNouvelleDate) {
+    alert("La réservation de cette nouvelle date sera raccordée ensuite.");
+    return;
+  }
 
-    if (!boutonDisponibilites) return;
-
-    const idParc = boutonDisponibilites.dataset.id;
-
-    alert("Les disponibilités du parc " + idParc + " seront raccordées ensuite.");
-  });
+  if (boutonFermerFiche) {
+    fermerLightboxParc();
+  }
 });
