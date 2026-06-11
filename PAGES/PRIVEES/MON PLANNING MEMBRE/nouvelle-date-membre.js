@@ -27,10 +27,13 @@
   const boutonModifierDepartement = document.getElementById("bouton-modifier-departement");
   const titreDepartement = document.getElementById("titre-departement-membre");
 
-  let departementMembre = null;
-  let departementAffiche = null;
-  let modeAutourDeMoi = true;
-  let parcsCharges = [];
+let departementMembre = null;
+let departementAffiche = null;
+let modeAutourDeMoi = true;
+let parcsCharges = [];
+
+let urlPlanningParcNouvelleDateCourante = null;
+let etapePlanningParcNouvelleDate = "planning";
 
   chargerParcsAutourDeMoi();
 
@@ -400,6 +403,9 @@ function ouvrirLightboxPlanningParcNouvelleDate(parc) {
     "&nom=" + nomParc +
     "&dptmt=" + departement;
 
+urlPlanningParcNouvelleDateCourante = urlPlanning;
+etapePlanningParcNouvelleDate = "planning";
+
   const lightbox = document.createElement("div");
   lightbox.id = "lightbox-planning-parc-nouvelle-date";
   lightbox.className = "lightbox-fiche-parc-nouvelle-date-overlay";
@@ -431,6 +437,26 @@ function fermerLightboxPlanningParcNouvelleDate() {
   }
 }
 
+function gererBoutonFermerPlanningParcNouvelleDate() {
+  if (
+    etapePlanningParcNouvelleDate === "horaire" &&
+    urlPlanningParcNouvelleDateCourante
+  ) {
+    const iframe = document.querySelector(
+      "#lightbox-planning-parc-nouvelle-date iframe"
+    );
+
+    if (iframe) {
+      iframe.src = urlPlanningParcNouvelleDateCourante;
+    }
+
+    etapePlanningParcNouvelleDate = "planning";
+    afficherBoutonFermerPlanningParcNouvelleDate(true);
+    return;
+  }
+
+  fermerLightboxPlanningParcNouvelleDate();
+}
 
 function afficherBoutonFermerPlanningParcNouvelleDate(visible) {
   const boutonFermer = document.querySelector(
@@ -459,17 +485,18 @@ window.addEventListener("message", (event) => {
     return;
   }
 
-  if (data.action === "ouvrir-horaire-parc-nouvelle-date" && data.url) {
-    const iframe = document.querySelector(
-      "#lightbox-planning-parc-nouvelle-date iframe"
-    );
+if (data.action === "ouvrir-horaire-parc-nouvelle-date" && data.url) {
+  const iframe = document.querySelector(
+    "#lightbox-planning-parc-nouvelle-date iframe"
+  );
 
-    if (iframe) {
-      iframe.src = data.url;
-    }
-
-    afficherBoutonFermerPlanningParcNouvelleDate(true);
+  if (iframe) {
+    iframe.src = data.url;
   }
+
+  etapePlanningParcNouvelleDate = "horaire";
+  afficherBoutonFermerPlanningParcNouvelleDate(true);
+}
 
 });
 
@@ -535,7 +562,7 @@ window.addEventListener("message", (event) => {
     }
 
 if (boutonFermerPlanningParcNouvelleDate) {
-  fermerLightboxPlanningParcNouvelleDate();
+  gererBoutonFermerPlanningParcNouvelleDate();
   return;
 }
 
