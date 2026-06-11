@@ -2,6 +2,24 @@
   console.log("NOUVELLE DATE MEMBRE JS DEMARRE");
   const ENDPOINT_NOUVELLE_DATE_MEMBRE = "https://nouvelle-date-membre-api.lacleduparc.fr";
 
+  const SITE_BASE = window.SITE_BASE || "";
+
+function redirigerConnexionMembre(sourcePage) {
+  window.location.href =
+    SITE_BASE +
+    "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html?source=" +
+    encodeURIComponent(sourcePage);
+}
+
+function gererSessionExpiree(reponse, sourcePage) {
+  if (reponse.status === 401) {
+    redirigerConnexionMembre(sourcePage);
+    return true;
+  }
+
+  return false;
+}
+
   const listeParcs = document.getElementById("liste-parcs-membre");
   const boutonDemanderIA = document.getElementById("bouton-demander-ia");
   const boutonModifierDepartement = document.getElementById("bouton-modifier-departement");
@@ -38,18 +56,23 @@
 
   async function chargerParcsAutourDeMoi() {
     try {
-      afficherChargement();
+      afficherChargement("Connexion aux parcs");
 
       const reponse = await fetch(ENDPOINT_NOUVELLE_DATE_MEMBRE + "/autour-de-moi", {
         method: "GET",
         credentials: "include"
       });
 
-      const data = await reponse.json();
+const data = await reponse.json();
 
-      if (!reponse.ok || !data.success) {
-        throw new Error(data.message || "Impossible de charger les parcs autour de vous.");
-      }
+if (reponse.status === 401) {
+  redirigerConnexionMembre();
+  return;
+}
+
+if (!reponse.ok || !data.success) {
+  throw new Error(data.message || "Impossible de charger les parcs autour de vous.");
+}
 
       departementMembre = data.departement;
       departementAffiche = data.departement;
@@ -66,7 +89,7 @@
 
   async function chargerParcsDepartement(departement) {
     try {
-      afficherChargement();
+      afficherChargement("Connexion aux parcs");
 
       const reponse = await fetch(
         ENDPOINT_NOUVELLE_DATE_MEMBRE + "/departement?dptmt=" + encodeURIComponent(departement),
@@ -76,11 +99,16 @@
         }
       );
 
-      const data = await reponse.json();
+const data = await reponse.json();
 
-      if (!reponse.ok || !data.success) {
-        throw new Error(data.message || "Impossible de charger les parcs de ce département.");
-      }
+if (reponse.status === 401) {
+  redirigerConnexionMembre();
+  return;
+}
+
+if (!reponse.ok || !data.success) {
+  throw new Error(data.message || "Impossible de charger les parcs de ce département.");
+}
 
       departementAffiche = data.departement || departement;
       modeAutourDeMoi = false;
