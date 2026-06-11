@@ -5,11 +5,11 @@ body {
 
 .planning-parc-nouvelle-demande-page {
   width: min(100% - 48px, 960px);
-  padding: var(--space-5) 0;
+  padding: var(--space-4) 0;
 }
 
 .planning-parc-entete {
-  padding-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
 }
 
 .planning-parc-entete h1 {
@@ -23,23 +23,35 @@ body {
 }
 
 .planning-parc-calendrier {
-  padding-top: var(--space-3);
+  padding-top: var(--space-2);
   border-top: 1px solid var(--color-border);
 }
 
 .planning-parc-navigation {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: var(--space-3);
+  display: flex;
   align-items: center;
-  margin-bottom: var(--space-4);
+  justify-content: center;
+  gap: var(--space-3);
+  margin: var(--space-2) 0 var(--space-4);
 }
 
 .planning-parc-navigation h2 {
+  min-width: 210px;
   margin: 0;
   text-align: center;
   text-transform: capitalize;
-  font-size: clamp(24px, 2.6vw, 34px);
+  font-size: clamp(26px, 2.8vw, 38px);
+  line-height: 1.1;
+}
+
+.planning-parc-navigation .micro-action {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 999px;
+  font-size: 22px;
+  line-height: 1;
 }
 
 .planning-parc-jours-semaine {
@@ -48,8 +60,13 @@ body {
   gap: 8px;
   margin-bottom: 8px;
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--color-text-muted);
+}
+
+.planning-parc-jours-semaine span {
+  display: block;
+  text-align: center;
 }
 
 .planning-parc-grille {
@@ -59,6 +76,7 @@ body {
 }
 
 .jour-planning {
+  width: 100%;
   aspect-ratio: 1 / 1;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-small);
@@ -104,6 +122,19 @@ body {
 
   .planning-parc-navigation {
     gap: var(--space-2);
+    margin-top: var(--space-1);
+  }
+
+  .planning-parc-navigation h2 {
+    min-width: 150px;
+    font-size: 26px;
+  }
+
+  .planning-parc-navigation .micro-action {
+    width: 38px;
+    height: 38px;
+    min-height: 38px;
+    font-size: 18px;
   }
 
   .planning-parc-jours-semaine,
@@ -111,8 +142,12 @@ body {
     gap: 5px;
   }
 
+  .planning-parc-jours-semaine {
+    font-size: 12px;
+  }
+
   .jour-planning {
-    font-size: 15px;
+    font-size: 14px;
     border-radius: 8px;
   }
 }
