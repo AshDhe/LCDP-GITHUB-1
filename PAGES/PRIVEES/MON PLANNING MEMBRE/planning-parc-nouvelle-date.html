@@ -282,25 +282,25 @@
     }
 
     document.addEventListener("click", (event) => {
-      const boutonJour = event.target.closest("[data-date]");
-      const boutonAnnulerDate = event.target.closest("[data-action='annuler-confirmation-date']");
-      const boutonValiderDate = event.target.closest("[data-action='valider-confirmation-date']");
+  const boutonAnnulerDate = event.target.closest("[data-action='annuler-confirmation-date']");
+  const boutonValiderDate = event.target.closest("[data-action='valider-confirmation-date']");
+  const boutonJour = event.target.closest(".jour-planning[data-date]");
 
-      if (boutonJour && !boutonJour.disabled) {
-        ouvrirConfirmationDate(boutonJour.dataset.date);
-        return;
-      }
+  if (boutonAnnulerDate) {
+    fermerConfirmationDate();
+    return;
+  }
 
-      if (boutonAnnulerDate) {
-        fermerConfirmationDate();
-        return;
-      }
+  if (boutonValiderDate) {
+    ouvrirPageHoraire(boutonValiderDate.dataset.date);
+    return;
+  }
 
-      if (boutonValiderDate) {
-        ouvrirPageHoraire(boutonValiderDate.dataset.date);
-        return;
-      }
-    });
+  if (boutonJour && !boutonJour.disabled) {
+    ouvrirConfirmationDate(boutonJour.dataset.date);
+    return;
+  }
+});
 
     afficherMois();
   </script>
