@@ -210,4 +210,7 @@ document.addEventListener("click", (event) => {
   if (boutonFermerFiche) {
     fermerLightboxParc();
   }
+
+});
+
 });
