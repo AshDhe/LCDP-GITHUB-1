@@ -1,6 +1,6 @@
 (function initialiserNouvelleDateMembre() {
   console.log("NOUVELLE DATE MEMBRE JS DEMARRE");
-  const ENDPOINT_NOUVELLE_DATE_MEMBRE = "https://nouvelle.date.membre-api.lacleduparc.fr";
+  const ENDPOINT_NOUVELLE_DATE_MEMBRE = "https://nouvelle-date-membre-api.lacleduparc.fr";
 
   const listeParcs = document.getElementById("liste-parcs-membre");
   const boutonDemanderIA = document.getElementById("bouton-demander-ia");
