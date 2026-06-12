@@ -77,6 +77,7 @@ body {
   gap: 7px;
 }
 
+
 .jour-planning {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -89,10 +90,47 @@ body {
   cursor: pointer;
 }
 
-.jour-planning span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.jour-planning {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-main);
+  cursor: pointer;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.jour-planning:disabled {
+  cursor: default;
+}
+
+.jour-planning-numero {
+  display: block;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.jour-planning-plages {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 4px;
+  flex: 1;
+  width: 100%;
+}
+
+.jour-planning-plage {
+  display: block;
+  width: 100%;
+  min-height: 12px;
+  border-radius: 5px;
 }
 
 .jour-planning-vide {
@@ -100,11 +138,11 @@ body {
   pointer-events: none;
 }
 
-.jour-planning-passe {
+.jour-planning-passe,
+.jour-planning-ferme {
   background: var(--color-surface-soft);
   color: var(--color-text-muted);
   opacity: 0.45;
-  cursor: default;
 }
 
 .jour-planning-actif {
@@ -115,6 +153,24 @@ body {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+
+.plage-couleur-gris-clair {
+  background: #e6e6e6;
+}
+
+.plage-couleur-vert {
+  background: #cfeecf;
+}
+
+.plage-couleur-orange {
+  background: #ffd8a8;
+}
+
+.plage-couleur-gris-fonce {
+  background: #5c5c5c;
+}
+
 
 @media (max-width: 600px) {
   .planning-parc-nouvelle-date-page {
@@ -148,8 +204,23 @@ body {
     font-size: 12px;
   }
 
-  .jour-planning {
-    font-size: 14px;
-    border-radius: 8px;
-  }
+ .jour-planning {
+  font-size: 14px;
+  border-radius: 8px;
+  padding: 7px;
+}
+
+.jour-planning-numero {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.jour-planning-plages {
+  gap: 3px;
+}
+
+.jour-planning-plage {
+  min-height: 8px;
+  border-radius: 4px;
+}
 }
