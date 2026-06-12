@@ -1241,3 +1241,47 @@ p {
 
 }
 
+
+/* LIGHTBOX GLOBALES - CENTRAGE DES CONTENUS */
+
+.dialog-box {
+  text-align: center;
+}
+
+.dialog-box h1,
+.dialog-box h2,
+.dialog-box h3,
+.dialog-box p {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dialog-actions {
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+
+.dialog-actions .button,
+.dialog-actions .button-secondaire,
+.dialog-actions button {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+
+@media (max-width: 600px) {
+  .dialog-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .dialog-actions .button,
+  .dialog-actions .button-secondaire,
+  .dialog-actions button {
+    width: 100%;
+    max-width: 260px;
+  }
+}
+
