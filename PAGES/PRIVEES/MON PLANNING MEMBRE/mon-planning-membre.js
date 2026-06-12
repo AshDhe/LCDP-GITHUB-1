@@ -2,21 +2,67 @@ function initialiserMonPlanningMembre() {
   const SITE_BASE = window.SITE_BASE || "";
   const ENDPOINT_FLUXM =
     "https://worker-fluxm-api.lacleduparc.fr";
+  const ENDPOINT_IA_SHIFT_FLUXM =
+    "https://worker-ia-shift-fluxm.lacleduparc.fr";
+  const ROUTE_RECHERCHE_IA =
+    ENDPOINT_IA_SHIFT_FLUXM + "/chercher-parcs";
 
   const listePlanning = document.getElementById("liste-planning-membre");
   const lienPasse = document.getElementById("planning-membre-passe");
   const boutonNouvelleDate = document.getElementById("bouton-nouvelle-date-planning");
+  const boutonIaPlanning = document.getElementById("bouton-ia-planning");
+
+  const lightboxIaPlanning = document.getElementById("lightbox-ia-planning");
+  const conversationIaPlanning = document.getElementById("ia-planning-conversation");
+  const transcriptionIaPlanning = document.getElementById("ia-planning-transcription-texte");
+  const statutIaPlanning = document.getElementById("ia-planning-statut");
+  const erreurIaPlanning = document.getElementById("ia-planning-erreur");
+  const boutonFermerIaPlanning = document.getElementById("bouton-fermer-ia-planning");
+  const boutonRecommencerIaPlanning = document.getElementById("bouton-recommencer-ia-planning");
+  const boutonMicroIaPlanning = document.getElementById("bouton-micro-ia-planning");
 
   const URL_NOUVELLE_DATE =
     SITE_BASE + "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/nouvelle-date-membre.html";
 
   let affichageActuel = "avenir";
   let reservations = [];
+  let reconnaissanceVocale = null;
+  let reconnaissanceActive = false;
+  let demandeIaEnCours = false;
+  let texteReconnuIa = "";
+  let derniereDemandeIaEnvoyee = "";
 
   if (boutonNouvelleDate) {
     boutonNouvelleDate.addEventListener("click", (event) => {
       event.preventDefault();
       window.location.href = URL_NOUVELLE_DATE;
+    });
+  }
+
+  if (boutonIaPlanning) {
+    boutonIaPlanning.addEventListener("click", (event) => {
+      event.preventDefault();
+      ouvrirLightboxIaPlanning();
+    });
+  }
+
+  if (boutonFermerIaPlanning) {
+    boutonFermerIaPlanning.addEventListener("click", fermerLightboxIaPlanning);
+  }
+
+  if (boutonRecommencerIaPlanning) {
+    boutonRecommencerIaPlanning.addEventListener("click", reinitialiserLightboxIaPlanning);
+  }
+
+  if (boutonMicroIaPlanning) {
+    boutonMicroIaPlanning.addEventListener("click", gererClicMicroIaPlanning);
+  }
+
+  if (lightboxIaPlanning) {
+    lightboxIaPlanning.addEventListener("click", (event) => {
+      if (event.target === lightboxIaPlanning) {
+        fermerLightboxIaPlanning();
+      }
     });
   }
 
@@ -392,6 +438,340 @@ function initialiserMonPlanningMembre() {
 
     if (lightbox) {
       lightbox.remove();
+    }
+  }
+
+  function ouvrirLightboxIaPlanning() {
+    if (!lightboxIaPlanning) return;
+
+    reinitialiserLightboxIaPlanning();
+    lightboxIaPlanning.hidden = false;
+
+    if (boutonMicroIaPlanning) {
+      boutonMicroIaPlanning.focus();
+    }
+  }
+
+  function fermerLightboxIaPlanning() {
+    arreterReconnaissanceVocaleIa();
+
+    if (lightboxIaPlanning) {
+      lightboxIaPlanning.hidden = true;
+    }
+  }
+
+  function reinitialiserLightboxIaPlanning() {
+    arreterReconnaissanceVocaleIa();
+
+    demandeIaEnCours = false;
+    texteReconnuIa = "";
+    derniereDemandeIaEnvoyee = "";
+
+    if (conversationIaPlanning) {
+      conversationIaPlanning.innerHTML = `
+        <p class="ia-planning-message ia-planning-message-systeme">
+          Exemple : “Je cherche un parc calme demain après-midi près de Blois.”
+        </p>
+      `;
+    }
+
+    if (transcriptionIaPlanning) {
+      transcriptionIaPlanning.textContent = "Aucune demande pour le moment.";
+    }
+
+    afficherStatutIaPlanning("Micro en attente.");
+    afficherErreurIaPlanning("");
+
+    if (boutonMicroIaPlanning) {
+      boutonMicroIaPlanning.disabled = false;
+      boutonMicroIaPlanning.textContent = "🎙️ Parler";
+    }
+
+    if (boutonRecommencerIaPlanning) {
+      boutonRecommencerIaPlanning.disabled = false;
+    }
+  }
+
+  function gererClicMicroIaPlanning() {
+    if (demandeIaEnCours) return;
+
+    if (reconnaissanceActive) {
+      arreterReconnaissanceVocaleIa();
+      return;
+    }
+
+    demarrerReconnaissanceVocaleIa();
+  }
+
+  function demarrerReconnaissanceVocaleIa() {
+    const APIReconnaissance =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!APIReconnaissance) {
+      afficherErreurIaPlanning(
+        "La reconnaissance vocale n’est pas disponible sur ce navigateur."
+      );
+      afficherStatutIaPlanning("Micro indisponible.");
+      return;
+    }
+
+    if (!reconnaissanceVocale) {
+      reconnaissanceVocale = new APIReconnaissance();
+      reconnaissanceVocale.lang = "fr-FR";
+      reconnaissanceVocale.interimResults = true;
+      reconnaissanceVocale.continuous = false;
+      reconnaissanceVocale.maxAlternatives = 1;
+
+      reconnaissanceVocale.onstart = () => {
+        reconnaissanceActive = true;
+        texteReconnuIa = "";
+        derniereDemandeIaEnvoyee = "";
+        afficherErreurIaPlanning("");
+        afficherStatutIaPlanning("Je t’écoute...");
+        mettreAJourBoutonMicroIaPlanning();
+      };
+
+      reconnaissanceVocale.onresult = (event) => {
+        let texteFinal = "";
+        let texteIntermediaire = "";
+
+        for (let index = 0; index < event.results.length; index += 1) {
+          const resultat = event.results[index];
+          const transcription = resultat[0] && resultat[0].transcript
+            ? resultat[0].transcript
+            : "";
+
+          if (resultat.isFinal) {
+            texteFinal += transcription;
+          } else {
+            texteIntermediaire += transcription;
+          }
+        }
+
+        texteReconnuIa = texteFinal.trim();
+
+        const texteAffiche = (texteReconnuIa + " " + texteIntermediaire).trim();
+
+        if (transcriptionIaPlanning) {
+          transcriptionIaPlanning.textContent =
+            texteAffiche || "Aucune demande pour le moment.";
+        }
+      };
+
+      reconnaissanceVocale.onerror = (event) => {
+        reconnaissanceActive = false;
+        mettreAJourBoutonMicroIaPlanning();
+
+        if (event.error === "no-speech") {
+          afficherErreurIaPlanning("Je n’ai pas entendu de demande.");
+          afficherStatutIaPlanning("Micro en attente.");
+          return;
+        }
+
+        if (event.error === "not-allowed") {
+          afficherErreurIaPlanning("Le navigateur n’a pas accès au micro.");
+          afficherStatutIaPlanning("Micro bloqué.");
+          return;
+        }
+
+        afficherErreurIaPlanning("La reconnaissance vocale a échoué.");
+        afficherStatutIaPlanning("Micro en attente.");
+      };
+
+      reconnaissanceVocale.onend = () => {
+        reconnaissanceActive = false;
+        mettreAJourBoutonMicroIaPlanning();
+
+        const demande = String(texteReconnuIa || "").trim();
+
+        if (!demande) {
+          afficherStatutIaPlanning("Micro en attente.");
+          return;
+        }
+
+        if (demande === derniereDemandeIaEnvoyee) {
+          return;
+        }
+
+        derniereDemandeIaEnvoyee = demande;
+        envoyerDemandeIaPlanning(demande);
+      };
+    }
+
+    try {
+      reconnaissanceVocale.start();
+    } catch (erreur) {
+      afficherErreurIaPlanning("Le micro est déjà en cours d’écoute.");
+    }
+  }
+
+  function arreterReconnaissanceVocaleIa() {
+    if (!reconnaissanceVocale || !reconnaissanceActive) {
+      reconnaissanceActive = false;
+      mettreAJourBoutonMicroIaPlanning();
+      return;
+    }
+
+    reconnaissanceVocale.stop();
+  }
+
+  async function envoyerDemandeIaPlanning(demande) {
+    demandeIaEnCours = true;
+    afficherErreurIaPlanning("");
+    afficherStatutIaPlanning("Recherche en cours...");
+    ajouterMessageIaPlanning("utilisateur", demande);
+
+    if (boutonMicroIaPlanning) {
+      boutonMicroIaPlanning.disabled = true;
+      boutonMicroIaPlanning.textContent = "Recherche...";
+    }
+
+    if (boutonRecommencerIaPlanning) {
+      boutonRecommencerIaPlanning.disabled = true;
+    }
+
+    try {
+      const reponse = await fetch(ROUTE_RECHERCHE_IA, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: demande,
+          source: "mon-planning-membre"
+        })
+      });
+
+      const data = await reponse.json().catch(() => null);
+
+      if (reponse.status === 401) {
+        redirigerConnexionMembre("mon-planning-membre");
+        return;
+      }
+
+      if (!reponse.ok || !data || data.success === false) {
+        throw new Error(
+          data && data.message
+            ? data.message
+            : "La recherche IA n’a pas répondu correctement."
+        );
+      }
+
+      const texteReponse = extraireTexteReponseIaPlanning(data);
+
+      ajouterMessageIaPlanning(
+        "assistant",
+        texteReponse || "Je n’ai pas trouvé de parc correspondant à cette demande."
+      );
+
+      afficherStatutIaPlanning("Réponse affichée.");
+
+    } catch (erreur) {
+      afficherErreurIaPlanning(erreur.message);
+      afficherStatutIaPlanning("Recherche interrompue.");
+    } finally {
+      demandeIaEnCours = false;
+
+      if (boutonMicroIaPlanning) {
+        boutonMicroIaPlanning.disabled = false;
+        boutonMicroIaPlanning.textContent = "🎙️ Parler";
+      }
+
+      if (boutonRecommencerIaPlanning) {
+        boutonRecommencerIaPlanning.disabled = false;
+      }
+    }
+  }
+
+  function extraireTexteReponseIaPlanning(data) {
+    if (!data) return "";
+
+    if (typeof data.reponse === "string") return data.reponse;
+    if (typeof data.response === "string") return data.response;
+    if (typeof data.message === "string") return data.message;
+    if (typeof data.texte === "string") return data.texte;
+
+    if (Array.isArray(data.parcs)) {
+      return creerTexteDepuisParcsIaPlanning(data.parcs);
+    }
+
+    if (Array.isArray(data.resultats)) {
+      return creerTexteDepuisParcsIaPlanning(data.resultats);
+    }
+
+    return "";
+  }
+
+  function creerTexteDepuisParcsIaPlanning(parcs) {
+    if (!parcs.length) {
+      return "Je n’ai pas trouvé de parc disponible pour cette demande.";
+    }
+
+    return parcs
+      .map((parc, index) => {
+        const nom = parc.nom || parc.nomparc || parc.nom_parc || "Parc";
+        const dptmt = parc.dptmt || parc.departement || "";
+        const disponibilite = parc.disponibilite || parc.creneau || parc.horaire || "";
+
+        return [
+          index + 1 + ". Parc de " + nom + (dptmt ? " (" + dptmt + ")" : ""),
+          disponibilite ? "Créneau : " + disponibilite : ""
+        ]
+          .filter(Boolean)
+          .join("\n");
+      })
+      .join("\n\n");
+  }
+
+  function ajouterMessageIaPlanning(type, texte) {
+    if (!conversationIaPlanning) return;
+
+    const message = document.createElement("p");
+
+    message.className =
+      "ia-planning-message " +
+      (type === "utilisateur"
+        ? "ia-planning-message-utilisateur"
+        : "ia-planning-message-assistant");
+
+    message.innerHTML = echapperHtml(texte).replaceAll("\n", "<br>");
+
+    conversationIaPlanning.appendChild(message);
+    conversationIaPlanning.scrollTop = conversationIaPlanning.scrollHeight;
+  }
+
+  function afficherStatutIaPlanning(message) {
+    if (statutIaPlanning) {
+      statutIaPlanning.textContent = message;
+    }
+  }
+
+  function afficherErreurIaPlanning(message) {
+    if (!erreurIaPlanning) return;
+
+    if (!message) {
+      erreurIaPlanning.hidden = true;
+      erreurIaPlanning.textContent = "";
+      return;
+    }
+
+    erreurIaPlanning.hidden = false;
+    erreurIaPlanning.textContent = message;
+  }
+
+  function mettreAJourBoutonMicroIaPlanning() {
+    if (!boutonMicroIaPlanning) return;
+
+    if (reconnaissanceActive) {
+      boutonMicroIaPlanning.textContent = "Arrêter";
+      boutonMicroIaPlanning.disabled = false;
+      return;
+    }
+
+    if (!demandeIaEnCours) {
+      boutonMicroIaPlanning.textContent = "🎙️ Parler";
+      boutonMicroIaPlanning.disabled = false;
     }
   }
 
