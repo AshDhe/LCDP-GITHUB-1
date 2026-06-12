@@ -64,21 +64,38 @@
   text-underline-offset: 5px;
 }
 
+/* CARTES PLANNING MEMBRE */
+
 .carte-planning-membre {
-  width: min(100%, 520px);
+  width: min(100%, 540px);
   margin-left: auto;
   margin-right: auto;
+  padding: 18px 20px;
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.carte-planning-membre p {
-  margin: 0 0 10px;
+.carte-planning-membre-ligne {
+  margin: 0;
   max-width: none;
   color: var(--color-text);
 }
 
-.carte-planning-membre p:last-of-type {
-  margin-bottom: 16px;
+.carte-planning-membre-invitation {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.carte-planning-membre-date,
+.carte-planning-membre-parc {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .date-planning-membre,
@@ -89,31 +106,69 @@
 }
 
 .date-planning-membre {
-  margin-right: 18px;
   font-size: 18px;
   font-weight: 700;
 }
 
 .heure-planning-membre {
-  font-size: 18px;
+  font-size: 17px;
   color: var(--color-text-muted);
 }
 
 .parc-planning-membre {
-  margin-right: 6px;
   font-size: 18px;
   font-weight: 700;
 }
 
 .departement-planning-membre {
-  font-size: 18px;
+  font-size: 17px;
   color: var(--color-text-muted);
 }
 
-.carte-planning-membre .micro-action {
-  margin-right: 8px;
+.carte-planning-membre-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
 }
 
+.carte-planning-membre-actions .micro-action {
+  margin: 0;
+}
+
+/* DESKTOP : CARTE HORIZONTALISÉE */
+
+@media (min-width: 760px) {
+  .carte-planning-membre {
+    width: min(100%, 920px);
+    display: grid;
+    grid-template-columns: 1.2fr 1.1fr auto;
+    align-items: center;
+    column-gap: 20px;
+    row-gap: 8px;
+    text-align: left;
+  }
+
+  .carte-planning-membre-invitation {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .carte-planning-membre-date {
+    grid-column: 1;
+  }
+
+  .carte-planning-membre-parc {
+    grid-column: 2;
+  }
+
+  .carte-planning-membre-actions {
+    grid-column: 3;
+    justify-content: flex-end;
+    margin-top: 0;
+  }
+}
 
 /* RESPONSIVE MOBILE */
 
@@ -196,10 +251,16 @@
   }
 
   .carte-planning-membre {
-    width: min(100%, 320px);
+    width: min(100%, 340px);
     margin-left: auto;
     margin-right: auto;
+    padding: 16px 14px;
     text-align: center;
+  }
+
+  .carte-planning-membre-date,
+  .carte-planning-membre-parc {
+    align-items: center;
   }
 
   .date-planning-membre,
@@ -207,7 +268,6 @@
   .parc-planning-membre,
   .departement-planning-membre {
     display: block;
-    margin-right: 0;
   }
 
   .heure-planning-membre,
@@ -215,8 +275,13 @@
     margin-top: 2px;
   }
 
-  .carte-planning-membre .micro-action {
-    margin-top: 6px;
-    margin-right: 6px;
+  .carte-planning-membre-actions {
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .carte-planning-membre-actions .micro-action {
+    margin: 0;
   }
 }
