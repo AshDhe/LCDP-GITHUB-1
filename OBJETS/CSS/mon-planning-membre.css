@@ -64,6 +64,133 @@
   text-underline-offset: 5px;
 }
 
+.planning-actions-principales {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-recontact button#bouton-ia-planning.button,
+.section-recontact button#bouton-ia-planning.button:hover,
+.section-recontact button#bouton-ia-planning.button:active {
+  min-height: 56px;
+  padding: 14px 24px;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 auto;
+  white-space: nowrap;
+  text-decoration: none !important;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.section-recontact button#bouton-ia-planning.button:hover {
+  border-color: var(--color-primary);
+  background: var(--color-surface-soft);
+}
+
+/* LIGHTBOX IA PLANNING */
+
+.dialog-box-ia-planning {
+  width: min(100%, 620px);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  text-align: left;
+}
+
+.dialog-box-ia-planning h2,
+.dialog-box-ia-planning p {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.dialog-box-ia-planning h2 {
+  margin-bottom: 12px;
+}
+
+.ia-planning-intro {
+  max-width: none;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.ia-planning-conversation {
+  width: 100%;
+  min-height: 150px;
+  max-height: 260px;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface-soft);
+  overflow-y: auto;
+}
+
+.ia-planning-message {
+  max-width: none;
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.ia-planning-message:last-child {
+  margin-bottom: 0;
+}
+
+.ia-planning-message-systeme {
+  background: transparent;
+  color: var(--color-text-muted);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.ia-planning-message-utilisateur {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+}
+
+.ia-planning-message-assistant {
+  background: rgba(35, 68, 56, 0.08);
+  border: 1px solid rgba(35, 68, 56, 0.16);
+}
+
+.ia-planning-transcription {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: #ffffff;
+}
+
+.ia-planning-label {
+  max-width: none;
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+#ia-planning-transcription-texte {
+  max-width: none;
+  margin: 0;
+  font-size: 16px;
+  color: var(--color-text);
+}
+
+.ia-planning-statut {
+  max-width: none;
+  margin: 12px 0 0;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.ia-planning-actions {
+  margin-top: 18px;
+}
+
 /* CARTES PLANNING MEMBRE */
 
 .carte-planning-membre {
@@ -139,6 +266,7 @@
   font-size: 16px;
   margin: 0;
 }
+
 /* DESKTOP : CARTE HORIZONTALISÉE */
 
 @media (min-width: 760px) {
@@ -219,7 +347,12 @@
     text-align: center !important;
   }
 
-  #bouton-nouvelle-date-planning {
+  .planning-actions-principales {
+    width: 100%;
+  }
+
+  #bouton-nouvelle-date-planning,
+  #bouton-ia-planning {
     width: 100%;
     max-width: 280px;
     min-height: 56px;
@@ -285,5 +418,21 @@
 
   .carte-planning-membre-actions .micro-action {
     margin: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .dialog-box-ia-planning {
+    width: min(100%, 340px);
+    max-height: calc(100vh - 36px);
+  }
+
+  .ia-planning-conversation {
+    min-height: 130px;
+    max-height: 220px;
+  }
+
+  .ia-planning-message {
+    font-size: 14px;
   }
 }
