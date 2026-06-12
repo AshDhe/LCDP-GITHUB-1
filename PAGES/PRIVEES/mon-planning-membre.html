@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Mon planning membre - La Clé du Parc</title>
+
+  <script>
+    window.SITE_BASE = location.hostname.includes("github.io") ? "/LCDP-GITHUB-1" : "";
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/bases.css">'
+    );
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mes-informations-membre.css">'
+    );
+
+    document.write(
+      '<link rel="stylesheet" href="' + window.SITE_BASE + '/OBJETS/CSS/mon-planning-membre.css">'
+    );
+  </script>
+</head>
+
+<body>
+
+  <div id="burger-menu-container"></div>
+  <div id="boite-dialogue-container"></div>
+  <div id="lightbox-information-container"></div>
+
+  <main class="site-page">
+
+    <section class="landing-text hero-text">
+
+      <h1 class="site-title">
+        Mon planning membre
+      </h1>
+
+      <h2 class="site-subtitle">
+        Retrouvez ici votre planning La Clé du Parc.
+      </h2>
+
+    </section>
+
+<section class="section-recontact" aria-label="Planning du membre">
+
+  <div class="planning-ia-haut">
+    <button class="button" id="bouton-ia-planning" type="button">
+      Demander à l’IA
+    </button>
+  </div>
+
+  <table class="table" id="table-planning-membre" aria-label="Planning membre">
+
+    <thead>
+      <tr>
+        <th>
+          <a class="button" id="bouton-nouvelle-date-planning" href="/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/nouvelle-date-membre.html">
+            Nouvelle date
+          </a>
+        </th>
+
+        <th>
+          <span id="titre-planning-membre">Mon planning</span>
+        </th>
+
+        <th>
+          <a href="#" id="planning-membre-passe" data-affichage="passe">
+            Passé
+          </a>
+        </th>
+      </tr>
+    </thead>
+
+        <tbody id="liste-planning-membre">
+
+          <tr>
+            <td colspan="3">
+              Aucune date réservée pour le moment.
+            </td>
+          </tr>
+
+          <!--
+            Les cartes planning membre seront injectées ici par mon-planning-membre.js.
+          -->
+
+        </tbody>
+
+      </table>
+
+    </section>
+
+    <section class="exit-menu-bas" aria-label="Retour au compte membre">
+      <h2>
+        <a href="/PAGES/PRIVEES/MON%20COMPTE%20MEMBRE/mon-compte-membre.html">
+          Retour à mon compte membre
+        </a>
+      </h2>
+    </section>
+
+  </main>
+
+  <div id="lightbox-ia-planning" class="dialog-overlay lightbox-ia-planning" hidden>
+    <div class="dialog-box dialog-box-ia-planning" role="dialog" aria-modal="true" aria-labelledby="titre-lightbox-ia-planning">
+
+      <h2 id="titre-lightbox-ia-planning">
+        Assistant IA des parcs
+      </h2>
+
+      <p class="ia-planning-intro">
+        Appuie sur le micro, puis formule ta demande oralement.
+      </p>
+
+      <div class="ia-planning-conversation" id="ia-planning-conversation" aria-live="polite">
+        <p class="ia-planning-message ia-planning-message-systeme">
+          Exemple : “Je cherche un parc calme demain après-midi près de Blois.”
+        </p>
+      </div>
+
+      <div class="ia-planning-transcription">
+        <p class="ia-planning-label">
+          Demande orale reconnue :
+        </p>
+
+        <p id="ia-planning-transcription-texte">
+          Aucune demande pour le moment.
+        </p>
+      </div>
+
+      <p id="ia-planning-statut" class="ia-planning-statut">
+        Micro en attente.
+      </p>
+
+      <p id="ia-planning-erreur" class="form-erreur" hidden></p>
+
+      <div class="dialog-actions ia-planning-actions">
+
+        <button class="button button-secondaire" type="button" id="bouton-fermer-ia-planning">
+          Fermer
+        </button>
+
+        <button class="button button-secondaire" type="button" id="bouton-recommencer-ia-planning">
+          Recommencer
+        </button>
+
+        <button class="button" type="button" id="bouton-micro-ia-planning">
+          🎙️ Parler
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script>
+    document.querySelectorAll("a[href^='/']").forEach((lien) => {
+      lien.setAttribute("href", window.SITE_BASE + lien.getAttribute("href"));
+    });
+
+    function chargerScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+    }
+
+    chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/boite-dialogue.js")
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/lightbox-information.js"))
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/burger-menu.js"))
+      .then(() => chargerScript(window.SITE_BASE + "/OBJETS/BLOCS/footer.js"))
+      .then(() => chargerScript(window.SITE_BASE + "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/mon-planning-membre.js"));
+  </script>
+
+</body>
+</html>
