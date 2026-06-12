@@ -48,6 +48,9 @@
     const ENDPOINT_FLUXM =
       "https://worker-fluxm-api.lacleduparc.fr";
 
+    const ENDPOINT_NOUVELLE_DATE_MEMBRE =
+      "https://nouvelle-date-membre-api.lacleduparc.fr";
+
     const params = new URLSearchParams(window.location.search);
 
     const idParc = params.get("idparc") || "";
@@ -59,7 +62,7 @@
     const infosHoraire = document.getElementById("infos-horaire-parc");
     const grilleHoraires = document.getElementById("grille-horaires-parc");
 
-    const heuresDisponibles = genererHeuresDisponibles();
+    let plagesJour = [];
 
     if (titreHoraire) {
       titreHoraire.textContent = dateChoisie
@@ -81,24 +84,111 @@
       infosHoraire.textContent = details.join(" · ");
     }
 
-    afficherHoraires();
+    initialiserHoraires();
 
-    function envoyerMessageParent(action) {
-      window.parent.postMessage(
-        {
-          source: "lcdp-planning-parc-nouvelle-date",
-          action: action
-        },
-        "*"
-      );
+    async function initialiserHoraires() {
+      if (!grilleHoraires) return;
+
+      grilleHoraires.innerHTML = `
+        <p class="horaire-parc-message">
+          Chargement des horaires disponibles...
+        </p>
+      `;
+
+      try {
+        const jourPlanning = await chargerPlanningJour();
+        plagesJour = construirePlagesJour(jourPlanning);
+        afficherHoraires();
+      } catch (erreur) {
+        grilleHoraires.innerHTML = `
+          <p class="horaire-parc-message">
+            ${echapperHtml(erreur.message)}
+          </p>
+        `;
+      }
     }
 
-    function masquerBoutonFermerParent() {
-      envoyerMessageParent("masquer-fermer-planning");
+    async function chargerPlanningJour() {
+      if (!idParc || !dateChoisie) {
+        throw new Error("Parc ou date manquant.");
+      }
+
+      const [annee, mois] = dateChoisie.split("-").map(Number);
+
+      const url =
+        ENDPOINT_NOUVELLE_DATE_MEMBRE +
+        "/planning-parc-mois?idparc=" + encodeURIComponent(idParc) +
+        "&annee=" + encodeURIComponent(annee) +
+        "&mois=" + encodeURIComponent(mois);
+
+      const reponse = await fetch(url, {
+        method: "GET",
+        credentials: "include"
+      });
+
+      const data = await reponse.json().catch(() => null);
+
+      if (reponse.status === 401) {
+        window.top.location.href =
+          window.SITE_BASE +
+          "/PAGES/PUBLIQUES/CONNEXION%20MEMBRE/connexion-membre.html?source=horaire-parc-nouvelle-date";
+        return null;
+      }
+
+      if (!reponse.ok || !data || data.success !== true) {
+        throw new Error(
+          data && data.message
+            ? data.message
+            : "Impossible de charger les horaires du parc."
+        );
+      }
+
+      const planning = data.planning || [];
+      const jour = planning.find((item) => item.date === dateChoisie);
+
+      if (!jour) {
+        throw new Error("Aucun horaire disponible pour cette date.");
+      }
+
+      return jour;
     }
 
-    function afficherBoutonFermerParent() {
-      envoyerMessageParent("afficher-fermer-planning");
+    function construirePlagesJour(jourPlanning) {
+      if (!jourPlanning || !jourPlanning.plages) {
+        return [];
+      }
+
+      const plages = [];
+
+      ajouterPlageSiOuverte(plages, "plage1", jourPlanning.plages.plage1, {
+        debut: "06:00",
+        fin: "13:00"
+      });
+
+      ajouterPlageSiOuverte(plages, "plage2", jourPlanning.plages.plage2, {
+        debut: "13:00",
+        fin: "19:00"
+      });
+
+      ajouterPlageSiOuverte(plages, "plage3", jourPlanning.plages.plage3, {
+        debut: "19:00",
+        fin: "21:30"
+      });
+
+      return plages;
+    }
+
+    function ajouterPlageSiOuverte(plages, nomPlage, plage, defaut) {
+      if (!plage || plage.ouverte !== true) {
+        return;
+      }
+
+      plages.push({
+        nom: nomPlage,
+        debut: plage.debut || defaut.debut,
+        fin: plage.fin || defaut.fin,
+        couleur: normaliserCouleur(plage.couleur)
+      });
     }
 
     function genererHeuresDisponibles() {
@@ -119,27 +209,115 @@
     function afficherHoraires() {
       if (!grilleHoraires) return;
 
-      if (!heuresDisponibles.length) {
+      const heuresDisponibles = genererHeuresDisponibles();
+
+      const boutons = heuresDisponibles
+        .map((heure) => {
+          const plage = trouverPlagePourHeure(heure);
+
+          if (!plage) {
+            return "";
+          }
+
+          return `
+            <button
+              class="horaire-parc-bouton ${classeCouleurHoraire(plage.couleur)}"
+              type="button"
+              data-action="choisir-heure-arrivee"
+              data-heure="${heure}"
+              data-plagebookd="${plage.nom}"
+            >
+              ${formaterHeureAffichee(heure)}
+            </button>
+          `;
+        })
+        .join("");
+
+      if (!boutons.trim()) {
         grilleHoraires.innerHTML = `
-          <p>
+          <p class="horaire-parc-message">
             Aucun horaire d'arrivée n'est disponible pour cette date.
           </p>
         `;
         return;
       }
 
-      grilleHoraires.innerHTML = heuresDisponibles.map((heure) => {
-        return `
-          <button
-            class="horaire-parc-bouton"
-            type="button"
-            data-action="choisir-heure-arrivee"
-            data-heure="${heure}"
-          >
-            ${formaterHeureAffichee(heure)}
-          </button>
-        `;
-      }).join("");
+      grilleHoraires.innerHTML = boutons;
+    }
+
+    function trouverPlagePourHeure(heure) {
+      const totalMinutes = convertirHeureEnMinutes(heure);
+
+      return plagesJour.find((plage) => {
+        const debut = convertirHeureEnMinutes(plage.debut);
+        const fin = convertirHeureEnMinutes(plage.fin);
+
+        return totalMinutes >= debut && totalMinutes < fin;
+      }) || null;
+    }
+
+    function convertirHeureEnMinutes(heure) {
+      const [heures, minutes] = String(heure || "00:00").split(":").map(Number);
+
+      if (!Number.isFinite(heures) || !Number.isFinite(minutes)) {
+        return 0;
+      }
+
+      return heures * 60 + minutes;
+    }
+
+    function normaliserCouleur(couleur) {
+      if (couleur === "vert") {
+        return "vert";
+      }
+
+      if (couleur === "orange") {
+        return "orange";
+      }
+
+      if (couleur === "gris_fonce") {
+        return "gris_fonce";
+      }
+
+      if (couleur === "fonce") {
+        return "gris_fonce";
+      }
+
+      return "gris_clair";
+    }
+
+    function classeCouleurHoraire(couleur) {
+      if (couleur === "vert") {
+        return "horaire-couleur-vert";
+      }
+
+      if (couleur === "orange") {
+        return "horaire-couleur-orange";
+      }
+
+      if (couleur === "gris_fonce") {
+        return "horaire-couleur-gris-fonce";
+      }
+
+      return "horaire-couleur-gris-clair";
+    }
+
+    function envoyerMessageParent(action) {
+      window.parent.postMessage(
+        {
+          source: "lcdp-planning-parc-nouvelle-date",
+          action: action
+        },
+        "*"
+      );
+    }
+
+    function masquerBoutonFermerParent() {
+      envoyerMessageParent("masquer-fermer-planning");
+    }
+
+    function afficherBoutonFermerParent() {
+      envoyerMessageParent("afficher-fermer-planning");
     }
 
     function supprimerConfirmationHeure() {
@@ -150,11 +328,9 @@
       }
     }
 
-    function ouvrirConfirmationHeure(heure) {
+    function ouvrirConfirmationHeure(heure, plagebookd) {
       masquerBoutonFermerParent();
       supprimerConfirmationHeure();
-
-      const plagebookd = calculerPlageBookd(heure);
 
       const lightbox = document.createElement("div");
       lightbox.id = "dialog-confirmation-heure";
@@ -233,21 +409,6 @@
       document.body.appendChild(lightbox);
     }
 
-    function calculerPlageBookd(heure) {
-      const [heures, minutes] = heure.split(":").map(Number);
-      const totalMinutes = heures * 60 + minutes;
-
-      if (totalMinutes < 13 * 60) {
-        return "plage1";
-      }
-
-      if (totalMinutes < 19 * 60) {
-        return "plage2";
-      }
-
-      return "plage3";
-    }
-
     function construireDateBookd(dateIso, heure) {
       const dateLocale = new Date(dateIso + "T" + heure + ":00");
 
@@ -313,6 +474,15 @@
         "/PAGES/PRIVEES/MON%20PLANNING%20MEMBRE/mon-planning-membre.html";
     }
 
+    function echapperHtml(valeur) {
+      return String(valeur ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
     document.addEventListener("click", async (event) => {
       const boutonHeure = event.target.closest("[data-action='choisir-heure-arrivee']");
       const boutonAnnuler = event.target.closest("[data-action='annuler-confirmation-heure']");
@@ -320,7 +490,10 @@
       const boutonRetourPlanning = event.target.closest("[data-action='retour-mon-planning']");
 
       if (boutonHeure) {
-        ouvrirConfirmationHeure(boutonHeure.dataset.heure);
+        ouvrirConfirmationHeure(
+          boutonHeure.dataset.heure,
+          boutonHeure.dataset.plagebookd
+        );
         return;
       }
 
