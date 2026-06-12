@@ -70,6 +70,9 @@
   </main>
 
   <script>
+    const ENDPOINT_NOUVELLE_DATE_MEMBRE =
+      "https://nouvelle-date-membre-api.lacleduparc.fr";
+
     const params = new URLSearchParams(window.location.search);
 
     const nomParc = params.get("nom") || "";
@@ -149,7 +152,7 @@
       return annee + "-" + mois + "-" + jour;
     }
 
-    function afficherMois() {
+    async function afficherMois() {
       if (!titreMois || !grillePlanning) return;
 
       const dateMois = new Date(anneeAffichee, moisAffiche, 1);
@@ -157,6 +160,35 @@
       titreMois.textContent = dateMois.toLocaleDateString("fr-FR", {
         month: "long",
         year: "numeric"
+      });
+
+      grillePlanning.innerHTML = `
+        <div class="jour-planning-message">
+          Chargement du planning...
+        </div>
+      `;
+
+      let planning = [];
+
+      try {
+        planning = await chargerPlanningParcMois({
+          idparc: idParc,
+          annee: anneeAffichee,
+          mois: moisAffiche + 1
+        });
+      } catch (erreur) {
+        grillePlanning.innerHTML = `
+          <div class="jour-planning-message">
+            ${echapperHtml(erreur.message)}
+          </div>
+        `;
+        return;
+      }
+
+      const planningParDate = new Map();
+
+      planning.forEach((jour) => {
+        planningParDate.set(jour.date, jour);
       });
 
       const premierJourMois = new Date(anneeAffichee, moisAffiche, 1);
@@ -175,13 +207,20 @@
         const dateJour = new Date(anneeAffichee, moisAffiche, jour);
         dateJour.setHours(0, 0, 0, 0);
 
+        const dateIso = formaterDateIsoLocale(dateJour);
+        const donneesJour = planningParDate.get(dateIso) || creerJourFerme(dateIso, jour);
+
         const estPasse = dateJour < aujourdHui;
         const estAujourdhui = dateJour.getTime() === aujourdHui.getTime();
+        const estOuvert = donneesJour.ouvert === true;
+        const estCliquable = !estPasse && estOuvert;
 
         let classes = "jour-planning";
 
         if (estPasse) {
           classes += " jour-planning-passe";
+        } else if (!estOuvert) {
+          classes += " jour-planning-ferme";
         } else {
           classes += " jour-planning-actif";
         }
@@ -194,18 +233,90 @@
           <button
             class="${classes}"
             type="button"
-            data-idparc="${idParc}"
-            data-date="${formaterDateIsoLocale(dateJour)}"
-            ${estPasse ? "disabled" : ""}
+            data-idparc="${echapperHtml(idParc)}"
+            data-date="${dateIso}"
+            ${estCliquable ? "" : "disabled"}
           >
-            <span>
+            <span class="jour-planning-numero">
               ${jour}
+            </span>
+
+            <span class="jour-planning-plages">
+              <span class="jour-planning-plage ${classeCouleurPlage(donneesJour.plages.plage1, estPasse)}"></span>
+              <span class="jour-planning-plage ${classeCouleurPlage(donneesJour.plages.plage2, estPasse)}"></span>
+              <span class="jour-planning-plage ${classeCouleurPlage(donneesJour.plages.plage3, estPasse)}"></span>
             </span>
           </button>
         `;
       }
 
       grillePlanning.innerHTML = html;
+    }
+
+    async function chargerPlanningParcMois(params) {
+      const url =
+        ENDPOINT_NOUVELLE_DATE_MEMBRE +
+        "/planning-parc-mois?idparc=" + encodeURIComponent(params.idparc) +
+        "&annee=" + encodeURIComponent(params.annee) +
+        "&mois=" + encodeURIComponent(params.mois);
+
+      const reponse = await fetch(url, {
+        method: "GET",
+        credentials: "include"
+      });
+
+      const data = await reponse.json().catch(() => null);
+
+      if (reponse.status === 401) {
+        throw new Error("Session membre expirée.");
+      }
+
+      if (!reponse.ok || !data || data.success !== true) {
+        throw new Error(
+          data && data.message
+            ? data.message
+            : "Impossible de charger le planning du parc."
+        );
+      }
+
+      return data.planning || [];
+    }
+
+    function creerJourFerme(dateIso, jour) {
+      return {
+        date: dateIso,
+        jour: jour,
+        ouvert: false,
+        plages: {
+          plage1: { ouverte: false, couleur: "gris_clair" },
+          plage2: { ouverte: false, couleur: "gris_clair" },
+          plage3: { ouverte: false, couleur: "gris_clair" }
+        }
+      };
+    }
+
+    function classeCouleurPlage(plage, estPasse) {
+      if (estPasse) {
+        return "plage-couleur-gris-clair";
+      }
+
+      if (!plage || plage.ouverte !== true) {
+        return "plage-couleur-gris-clair";
+      }
+
+      if (plage.couleur === "vert") {
+        return "plage-couleur-vert";
+      }
+
+      if (plage.couleur === "orange") {
+        return "plage-couleur-orange";
+      }
+
+      if (plage.couleur === "gris_fonce") {
+        return "plage-couleur-gris-fonce";
+      }
+
+      return "plage-couleur-gris-clair";
     }
 
     function supprimerConfirmationDate() {
@@ -281,26 +392,35 @@
       });
     }
 
+    function echapperHtml(valeur) {
+      return String(valeur ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
     document.addEventListener("click", (event) => {
-  const boutonAnnulerDate = event.target.closest("[data-action='annuler-confirmation-date']");
-  const boutonValiderDate = event.target.closest("[data-action='valider-confirmation-date']");
-  const boutonJour = event.target.closest(".jour-planning[data-date]");
+      const boutonAnnulerDate = event.target.closest("[data-action='annuler-confirmation-date']");
+      const boutonValiderDate = event.target.closest("[data-action='valider-confirmation-date']");
+      const boutonJour = event.target.closest(".jour-planning[data-date]");
 
-  if (boutonAnnulerDate) {
-    fermerConfirmationDate();
-    return;
-  }
+      if (boutonAnnulerDate) {
+        fermerConfirmationDate();
+        return;
+      }
 
-  if (boutonValiderDate) {
-    ouvrirPageHoraire(boutonValiderDate.dataset.date);
-    return;
-  }
+      if (boutonValiderDate) {
+        ouvrirPageHoraire(boutonValiderDate.dataset.date);
+        return;
+      }
 
-  if (boutonJour && !boutonJour.disabled) {
-    ouvrirConfirmationDate(boutonJour.dataset.date);
-    return;
-  }
-});
+      if (boutonJour && !boutonJour.disabled) {
+        ouvrirConfirmationDate(boutonJour.dataset.date);
+        return;
+      }
+    });
 
     afficherMois();
   </script>
