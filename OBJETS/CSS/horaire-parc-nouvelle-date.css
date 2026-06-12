@@ -35,6 +35,12 @@ body {
   margin: 0 auto;
 }
 
+.horaire-parc-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
 .horaire-parc-bouton {
   min-height: 58px;
   border: 1px solid var(--color-border);
@@ -44,10 +50,39 @@ body {
   font-family: var(--font-main);
   font-size: 18px;
   cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    opacity 0.15s ease;
 }
 
 .horaire-parc-bouton:hover {
   border-color: var(--color-primary);
+}
+
+.horaire-couleur-vert {
+  background: #cfeecf;
+  border-color: #a9d9a9;
+  color: var(--color-text);
+}
+
+.horaire-couleur-orange {
+  background: #ffd8a8;
+  border-color: #f0b96f;
+  color: var(--color-text);
+}
+
+.horaire-couleur-gris-fonce {
+  background: #5c5c5c;
+  border-color: #4a4a4a;
+  color: #ffffff;
+}
+
+.horaire-couleur-gris-clair {
+  background: #e6e6e6;
+  border-color: #d6d6d6;
+  color: var(--color-text-muted);
 }
 
 @media (max-width: 600px) {
