@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+function initialiserMonPlanningMembre() {
   const SITE_BASE = window.SITE_BASE || "";
   const ENDPOINT_FLUXM =
     "https://worker-fluxm-api.lacleduparc.fr";
@@ -448,4 +448,10 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.reload();
     }
   });
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initialiserMonPlanningMembre);
+} else {
+  initialiserMonPlanningMembre();
+}
