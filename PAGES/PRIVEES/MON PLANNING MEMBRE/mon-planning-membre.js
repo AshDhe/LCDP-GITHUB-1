@@ -103,15 +103,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const maintenant = new Date();
 
-    const reservationsFiltrees = reservations.filter((reservation) => {
-      const dateReservation = new Date(reservation.datebookd);
+    const reservationsFiltrees = reservations
+      .filter((reservation) => {
+        const dateReservation = new Date(reservation.datebookd);
 
-      if (affichageActuel === "avenir") {
-        return dateReservation >= maintenant;
-      }
+        if (affichageActuel === "avenir") {
+          return dateReservation >= maintenant;
+        }
 
-      return dateReservation < maintenant;
-    });
+        return dateReservation < maintenant;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.datebookd);
+        const dateB = new Date(b.datebookd);
+
+        if (affichageActuel === "avenir") {
+          return dateA - dateB;
+        }
+
+        return dateB - dateA;
+      });
 
     if (reservationsFiltrees.length === 0) {
       listePlanning.innerHTML = `
@@ -135,34 +146,70 @@ document.addEventListener("DOMContentLoaded", () => {
     const nomParc = parc.nom || "Parc";
     const departement = parc.dptmt || "";
 
+    const ligneInvitation = creerLigneInvitation(reservation);
+
     return `
       <tr>
         <td colspan="3">
           <article class="carte-planning-membre">
 
-            <p>
-              <span class="date-planning-membre">${formaterDateReservation(reservation.datebookd)}</span>
-              <span class="heure-planning-membre">Arrivée à ${formaterHeureReservation(reservation.datebookd)}</span>
-            </p>
-
-            <p>
-              <span class="parc-planning-membre">${echapperHtml(nomParc)}</span>
-              <span class="departement-planning-membre">${departement ? "(" + echapperHtml(departement) + ")" : ""}</span>
-            </p>
-
-            <button class="micro-action" type="button" data-action="adresse">
-              Voir l’adresse
-            </button>
-
             ${
-              estPasse
-                ? ""
-                : `
-                  <button class="micro-action" type="button" data-action="annuler" data-id="${reservation.idflux}">
-                    Annuler
-                  </button>
+              ligneInvitation
+                ? `
+                  <p class="carte-planning-membre-ligne carte-planning-membre-invitation">
+                    ${ligneInvitation}
+                  </p>
                 `
+                : ""
             }
+
+            <p class="carte-planning-membre-ligne carte-planning-membre-date">
+              <span class="date-planning-membre">
+                ${formaterDateCourte(reservation.datebookd)}
+              </span>
+
+              <span class="heure-planning-membre">
+                ${formaterHeureReservation(reservation.datebookd)}
+              </span>
+            </p>
+
+            <p class="carte-planning-membre-ligne carte-planning-membre-parc">
+              <span class="parc-planning-membre">
+                Parc de ${echapperHtml(nomParc)}
+              </span>
+
+              <span class="departement-planning-membre">
+                ${departement ? "(" + echapperHtml(departement) + ")" : ""}
+              </span>
+            </p>
+
+            <div class="carte-planning-membre-actions">
+
+              <button
+                class="micro-action"
+                type="button"
+                data-action="adresse"
+                data-idparc="${echapperHtml(parc.idparc || reservation.idparc || "")}"
+              >
+                Voir l’adresse
+              </button>
+
+              ${
+                estPasse
+                  ? ""
+                  : `
+                    <button
+                      class="micro-action"
+                      type="button"
+                      data-action="annuler"
+                      data-id="${echapperHtml(reservation.idflux)}"
+                    >
+                      Annuler
+                    </button>
+                  `
+              }
+
+            </div>
 
           </article>
         </td>
@@ -170,22 +217,182 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  function formaterDateReservation(dateIso) {
-    return new Date(dateIso).toLocaleDateString("fr-FR", {
+  function creerLigneInvitation(reservation) {
+    if (reservation.invitation !== true) {
+      return "";
+    }
+
+    const parrain =
+      reservation.parrain ||
+      reservation.inviteur ||
+      reservation.membre_parrain ||
+      null;
+
+    if (!parrain) {
+      return "Invitation";
+    }
+
+    const nom = parrain.nommembre || parrain.nom || "";
+    const prenom = parrain.prenommembre || parrain.prenom || "";
+
+    const identite = [nom, prenom]
+      .map((valeur) => String(valeur || "").trim())
+      .filter(Boolean)
+      .join(" ");
+
+    return identite
+      ? "Invitation (" + echapperHtml(identite) + ")"
+      : "Invitation";
+  }
+
+  function formaterDateCourte(dateIso) {
+    const dateFormatee = new Date(dateIso).toLocaleDateString("fr-FR", {
       timeZone: "Europe/Paris",
       weekday: "long",
       day: "numeric",
-      month: "long",
-      year: "numeric"
+      month: "long"
     });
+
+    return majusculePremiereLettre(dateFormatee);
   }
 
   function formaterHeureReservation(dateIso) {
-    return new Date(dateIso).toLocaleTimeString("fr-FR", {
+    const heure = new Date(dateIso).toLocaleTimeString("fr-FR", {
       timeZone: "Europe/Paris",
       hour: "2-digit",
       minute: "2-digit"
-    }).replace(":", "h");
+    });
+
+    return heure
+      .replace(":", "h")
+      .replace("h00", "h");
+  }
+
+  function majusculePremiereLettre(texte) {
+    const valeur = String(texte || "");
+
+    if (!valeur) return "";
+
+    return valeur.charAt(0).toUpperCase() + valeur.slice(1);
+  }
+
+  async function annulerReservation(idflux) {
+    const reponse = await fetch(ENDPOINT_FLUXM + "/annuler-reservation", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        idflux: idflux
+      })
+    });
+
+    const data = await reponse.json().catch(() => null);
+
+    if (reponse.status === 401) {
+      redirigerConnexionMembre("mon-planning-membre");
+      return;
+    }
+
+    if (!reponse.ok || !data || data.success !== true) {
+      throw new Error(
+        data && data.message
+          ? data.message
+          : "Impossible d’annuler cette réservation."
+      );
+    }
+
+    return data.reservation;
+  }
+
+  function ouvrirLightboxConfirmationAnnulation(idflux) {
+    fermerLightboxPlanningMembre();
+
+    const lightbox = document.createElement("div");
+    lightbox.id = "lightbox-planning-membre";
+    lightbox.className = "dialog-overlay";
+
+    lightbox.innerHTML = `
+      <div class="dialog-box" role="dialog" aria-modal="true">
+
+        <h2>
+          Confirmer l’annulation
+        </h2>
+
+        <p>
+          Voulez-vous vraiment annuler cette date ?
+        </p>
+
+        <div class="dialog-actions">
+
+          <button
+            class="button button-secondaire"
+            type="button"
+            data-action="annuler-lightbox-annulation"
+          >
+            Non
+          </button>
+
+          <button
+            class="button"
+            type="button"
+            data-action="confirmer-annulation-reservation"
+            data-id="${echapperHtml(idflux)}"
+          >
+            Oui
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(lightbox);
+  }
+
+  function ouvrirLightboxAnnulationEnregistree() {
+    fermerLightboxPlanningMembre();
+
+    const lightbox = document.createElement("div");
+    lightbox.id = "lightbox-planning-membre";
+    lightbox.className = "dialog-overlay";
+
+    lightbox.innerHTML = `
+      <div class="dialog-box" role="dialog" aria-modal="true">
+
+        <h2>
+          Annulation enregistrée
+        </h2>
+
+        <p>
+          Votre annulation est enregistrée.
+        </p>
+
+        <div class="dialog-actions">
+
+          <button
+            class="button"
+            type="button"
+            data-action="retour-planning-apres-annulation"
+          >
+            OK
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(lightbox);
+  }
+
+  function fermerLightboxPlanningMembre() {
+    const lightbox = document.getElementById("lightbox-planning-membre");
+
+    if (lightbox) {
+      lightbox.remove();
+    }
   }
 
   function echapperHtml(valeur) {
@@ -197,9 +404,12 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll("'", "&#039;");
   }
 
-  document.addEventListener("click", (event) => {
+  document.addEventListener("click", async (event) => {
     const boutonAdresse = event.target.closest("[data-action='adresse']");
     const boutonAnnuler = event.target.closest("[data-action='annuler']");
+    const boutonAnnulerLightbox = event.target.closest("[data-action='annuler-lightbox-annulation']");
+    const boutonConfirmerAnnulation = event.target.closest("[data-action='confirmer-annulation-reservation']");
+    const boutonRetourPlanning = event.target.closest("[data-action='retour-planning-apres-annulation']");
 
     if (boutonAdresse) {
       alert("L’adresse sera raccordée ensuite.");
@@ -207,7 +417,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (boutonAnnuler) {
-      alert("L’annulation de la réservation sera raccordée ensuite.");
+      ouvrirLightboxConfirmationAnnulation(boutonAnnuler.dataset.id);
+      return;
+    }
+
+    if (boutonAnnulerLightbox) {
+      fermerLightboxPlanningMembre();
+      return;
+    }
+
+    if (boutonConfirmerAnnulation) {
+      const idflux = boutonConfirmerAnnulation.dataset.id;
+
+      boutonConfirmerAnnulation.disabled = true;
+      boutonConfirmerAnnulation.textContent = "Annulation...";
+
+      try {
+        await annulerReservation(idflux);
+        ouvrirLightboxAnnulationEnregistree();
+      } catch (erreur) {
+        boutonConfirmerAnnulation.disabled = false;
+        boutonConfirmerAnnulation.textContent = "Oui";
+        alert(erreur.message);
+      }
+
+      return;
+    }
+
+    if (boutonRetourPlanning) {
+      window.location.reload();
     }
   });
 });
